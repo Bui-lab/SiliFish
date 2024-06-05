@@ -1,4 +1,6 @@
-﻿namespace SiliFish.UI.Controls
+﻿using SiliFish.UI.Controls.Display;
+
+namespace SiliFish.UI.Controls
 {
     partial class ModelOutputControl
     {
@@ -61,7 +63,7 @@
             pLine2D = new Panel();
             linkSaveHTML2D = new LinkLabel();
             btn2DRender = new Button();
-            webView2DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
+            webView2DRender = new SiliFishWebView();
             t3DRender = new TabPage();
             p3DRenderOptions = new Panel();
             cb3DOffline = new CheckBox();
@@ -86,11 +88,11 @@
             pLine3D = new Panel();
             linkSaveHTML3D = new LinkLabel();
             btn3DRender = new Button();
-            webView3DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
+            webView3DRender = new SiliFishWebView();
             tPlot = new TabPage();
             tabPlotSub = new TabControl();
             tPlotHTML = new TabPage();
-            webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
+            webViewPlot = new SiliFishWebView();
             tPlotWindows = new TabPage();
             pPictureBox = new Panel();
             pictureBox = new PictureBox();
@@ -124,12 +126,12 @@
             colRCTrainSomite = new DataGridViewTextBoxColumn();
             colRCTrainStart = new DataGridViewTextBoxColumn();
             colRCTrainEnd = new DataGridViewTextBoxColumn();
-            colRCTrainMidPoint = new DataGridViewTextBoxColumn();
+            colRCTrainMedianPoint = new DataGridViewTextBoxColumn();
             colRCTrainCenter = new DataGridViewTextBoxColumn();
             colRCTrainStartDelay = new DataGridViewTextBoxColumn();
-            colRCTrainMidPointDelay = new DataGridViewTextBoxColumn();
+            colRCTrainMedianDelay = new DataGridViewTextBoxColumn();
             colRCTrainCenterDelay = new DataGridViewTextBoxColumn();
-            webViewRCTrains = new Microsoft.Web.WebView2.WinForms.WebView2();
+            webViewRCTrains = new SiliFishWebView();
             tSpikeSummary = new TabPage();
             splitContainer1 = new SplitContainer();
             dgSpikeSummary = new DataGridView();
@@ -153,18 +155,7 @@
             cellSelectionStats = new Display.CellSelectionControl();
             panel3 = new Panel();
             tAnimation = new TabPage();
-            webViewAnimation = new Microsoft.Web.WebView2.WinForms.WebView2();
-            pAnimation = new Panel();
-            timeRangeAnimation = new General.StartEndTimeControl();
-            pLineAnimation = new Panel();
-            eAnimationdt = new NumericUpDown();
-            lAnimationdt = new Label();
-            linkSaveAnimationCSV = new LinkLabel();
-            lAnimationTime = new Label();
-            linkSaveAnimationHTML = new LinkLabel();
-            btnAnimate = new Button();
-            cmAnimation = new ContextMenuStrip(components);
-            cmiAnimationClearCache = new ToolStripMenuItem();
+            animationControl = new AnimationControl();
             saveFileHTML = new SaveFileDialog();
             saveFileJson = new SaveFileDialog();
             openFileJson = new OpenFileDialog();
@@ -216,10 +207,6 @@
             ((System.ComponentModel.ISupportInitialize)dgEpisodes).BeginInit();
             panel1.SuspendLayout();
             tAnimation.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webViewAnimation).BeginInit();
-            pAnimation.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)eAnimationdt).BeginInit();
-            cmAnimation.SuspendLayout();
             SuspendLayout();
             // 
             // tabOutputs
@@ -1190,7 +1177,7 @@
             dgRCTrains.AllowUserToAddRows = false;
             dgRCTrains.AllowUserToDeleteRows = false;
             dgRCTrains.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgRCTrains.Columns.AddRange(new DataGridViewColumn[] { colRCTrainNumber, colRCTrainCellGroup, colRCTrainSomite, colRCTrainStart, colRCTrainEnd, colRCTrainMidPoint, colRCTrainCenter, colRCTrainStartDelay, colRCTrainMidPointDelay, colRCTrainCenterDelay });
+            dgRCTrains.Columns.AddRange(new DataGridViewColumn[] { colRCTrainNumber, colRCTrainCellGroup, colRCTrainSomite, colRCTrainStart, colRCTrainEnd, colRCTrainMedianPoint, colRCTrainCenter, colRCTrainStartDelay, colRCTrainMedianDelay, colRCTrainCenterDelay });
             dgRCTrains.ContextMenuStrip = cmGrid;
             dgRCTrains.Dock = DockStyle.Fill;
             dgRCTrains.Location = new Point(0, 0);
@@ -1240,14 +1227,14 @@
             colRCTrainEnd.ReadOnly = true;
             colRCTrainEnd.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
-            // colRCTrainMidPoint
+            // colRCTrainMedianPoint
             // 
             dataGridViewCellStyle3.Format = "N2";
-            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle3;
-            colRCTrainMidPoint.HeaderText = "Mid Point";
-            colRCTrainMidPoint.Name = "colRCTrainMidPoint";
-            colRCTrainMidPoint.ReadOnly = true;
-            colRCTrainMidPoint.SortMode = DataGridViewColumnSortMode.Programmatic;
+            colRCTrainMedianPoint.DefaultCellStyle = dataGridViewCellStyle3;
+            colRCTrainMedianPoint.HeaderText = "Median";
+            colRCTrainMedianPoint.Name = "colRCTrainMedianPoint";
+            colRCTrainMedianPoint.ReadOnly = true;
+            colRCTrainMedianPoint.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // colRCTrainCenter
             // 
@@ -1268,14 +1255,14 @@
             colRCTrainStartDelay.ReadOnly = true;
             colRCTrainStartDelay.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
-            // colRCTrainMidPointDelay
+            // colRCTrainMedianDelay
             // 
             dataGridViewCellStyle6.Format = "N2";
-            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle6;
-            colRCTrainMidPointDelay.HeaderText = "RC Delay [Mid Point]";
-            colRCTrainMidPointDelay.Name = "colRCTrainMidPointDelay";
-            colRCTrainMidPointDelay.ReadOnly = true;
-            colRCTrainMidPointDelay.SortMode = DataGridViewColumnSortMode.Programmatic;
+            colRCTrainMedianDelay.DefaultCellStyle = dataGridViewCellStyle6;
+            colRCTrainMedianDelay.HeaderText = "RC Delay [Median]";
+            colRCTrainMedianDelay.Name = "colRCTrainMedianDelay";
+            colRCTrainMedianDelay.ReadOnly = true;
+            colRCTrainMedianDelay.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // colRCTrainCenterDelay
             // 
@@ -1513,8 +1500,7 @@
             // 
             // tAnimation
             // 
-            tAnimation.Controls.Add(webViewAnimation);
-            tAnimation.Controls.Add(pAnimation);
+            tAnimation.Controls.Add(animationControl);
             tAnimation.Location = new Point(4, 24);
             tAnimation.Name = "tAnimation";
             tAnimation.Size = new Size(694, 767);
@@ -1522,140 +1508,13 @@
             tAnimation.Text = "Animation";
             tAnimation.UseVisualStyleBackColor = true;
             // 
-            // webViewAnimation
+            // animationControl
             // 
-            webViewAnimation.AllowExternalDrop = true;
-            webViewAnimation.BackColor = Color.White;
-            webViewAnimation.CreationProperties = null;
-            webViewAnimation.DefaultBackgroundColor = Color.White;
-            webViewAnimation.Dock = DockStyle.Fill;
-            webViewAnimation.Location = new Point(0, 64);
-            webViewAnimation.Name = "webViewAnimation";
-            webViewAnimation.Size = new Size(694, 703);
-            webViewAnimation.TabIndex = 2;
-            webViewAnimation.ZoomFactor = 1D;
-            webViewAnimation.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
-            // 
-            // pAnimation
-            // 
-            pAnimation.BackColor = Color.FromArgb(236, 239, 241);
-            pAnimation.Controls.Add(timeRangeAnimation);
-            pAnimation.Controls.Add(pLineAnimation);
-            pAnimation.Controls.Add(eAnimationdt);
-            pAnimation.Controls.Add(lAnimationdt);
-            pAnimation.Controls.Add(linkSaveAnimationCSV);
-            pAnimation.Controls.Add(lAnimationTime);
-            pAnimation.Controls.Add(linkSaveAnimationHTML);
-            pAnimation.Controls.Add(btnAnimate);
-            pAnimation.Dock = DockStyle.Top;
-            pAnimation.Location = new Point(0, 0);
-            pAnimation.Name = "pAnimation";
-            pAnimation.Size = new Size(694, 64);
-            pAnimation.TabIndex = 5;
-            // 
-            // timeRangeAnimation
-            // 
-            timeRangeAnimation.EndTime = 1000;
-            timeRangeAnimation.Location = new Point(3, 4);
-            timeRangeAnimation.Name = "timeRangeAnimation";
-            timeRangeAnimation.Size = new Size(207, 56);
-            timeRangeAnimation.StartTime = 0;
-            timeRangeAnimation.TabIndex = 68;
-            // 
-            // pLineAnimation
-            // 
-            pLineAnimation.BackColor = Color.LightGray;
-            pLineAnimation.Dock = DockStyle.Bottom;
-            pLineAnimation.Location = new Point(0, 63);
-            pLineAnimation.Name = "pLineAnimation";
-            pLineAnimation.Size = new Size(694, 1);
-            pLineAnimation.TabIndex = 38;
-            // 
-            // eAnimationdt
-            // 
-            eAnimationdt.DecimalPlaces = 2;
-            eAnimationdt.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            eAnimationdt.Location = new Point(286, 6);
-            eAnimationdt.Name = "eAnimationdt";
-            eAnimationdt.Size = new Size(53, 23);
-            eAnimationdt.TabIndex = 37;
-            eAnimationdt.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            // 
-            // lAnimationdt
-            // 
-            lAnimationdt.AutoSize = true;
-            lAnimationdt.Location = new Point(261, 9);
-            lAnimationdt.Name = "lAnimationdt";
-            lAnimationdt.Size = new Size(19, 15);
-            lAnimationdt.TabIndex = 36;
-            lAnimationdt.Text = "Δt";
-            // 
-            // linkSaveAnimationCSV
-            // 
-            linkSaveAnimationCSV.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            linkSaveAnimationCSV.AutoSize = true;
-            linkSaveAnimationCSV.Enabled = false;
-            linkSaveAnimationCSV.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveAnimationCSV.Location = new Point(633, 37);
-            linkSaveAnimationCSV.Name = "linkSaveAnimationCSV";
-            linkSaveAnimationCSV.Size = new Size(58, 15);
-            linkSaveAnimationCSV.TabIndex = 34;
-            linkSaveAnimationCSV.TabStop = true;
-            linkSaveAnimationCSV.Text = "Save CSV ";
-            linkSaveAnimationCSV.TextAlign = ContentAlignment.MiddleRight;
-            linkSaveAnimationCSV.LinkClicked += linkSaveAnimationCSV_LinkClicked;
-            // 
-            // lAnimationTime
-            // 
-            lAnimationTime.Location = new Point(345, 6);
-            lAnimationTime.Name = "lAnimationTime";
-            lAnimationTime.Size = new Size(271, 54);
-            lAnimationTime.TabIndex = 33;
-            lAnimationTime.Text = "Last animation:";
-            // 
-            // linkSaveAnimationHTML
-            // 
-            linkSaveAnimationHTML.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            linkSaveAnimationHTML.AutoSize = true;
-            linkSaveAnimationHTML.Enabled = false;
-            linkSaveAnimationHTML.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveAnimationHTML.Location = new Point(622, 14);
-            linkSaveAnimationHTML.Name = "linkSaveAnimationHTML";
-            linkSaveAnimationHTML.Size = new Size(69, 15);
-            linkSaveAnimationHTML.TabIndex = 31;
-            linkSaveAnimationHTML.TabStop = true;
-            linkSaveAnimationHTML.Text = "Save HTML ";
-            linkSaveAnimationHTML.TextAlign = ContentAlignment.MiddleRight;
-            linkSaveAnimationHTML.LinkClicked += linkSaveAnimationHTML_LinkClicked;
-            // 
-            // btnAnimate
-            // 
-            btnAnimate.BackColor = Color.FromArgb(96, 125, 139);
-            btnAnimate.ContextMenuStrip = cmAnimation;
-            btnAnimate.Enabled = false;
-            btnAnimate.FlatAppearance.BorderColor = Color.LightGray;
-            btnAnimate.FlatStyle = FlatStyle.Flat;
-            btnAnimate.ForeColor = Color.White;
-            btnAnimate.Location = new Point(264, 32);
-            btnAnimate.Name = "btnAnimate";
-            btnAnimate.Size = new Size(75, 24);
-            btnAnimate.TabIndex = 29;
-            btnAnimate.Text = "Animate";
-            btnAnimate.UseVisualStyleBackColor = false;
-            btnAnimate.Click += btnAnimate_Click;
-            // 
-            // cmAnimation
-            // 
-            cmAnimation.Items.AddRange(new ToolStripItem[] { cmiAnimationClearCache });
-            cmAnimation.Name = "cmWebView";
-            cmAnimation.Size = new Size(138, 26);
-            // 
-            // cmiAnimationClearCache
-            // 
-            cmiAnimationClearCache.Name = "cmiAnimationClearCache";
-            cmiAnimationClearCache.Size = new Size(137, 22);
-            cmiAnimationClearCache.Text = "Clear Cache";
-            cmiAnimationClearCache.Click += cmiAnimationClearCache_Click;
+            animationControl.Dock = DockStyle.Fill;
+            animationControl.Location = new Point(0, 0);
+            animationControl.Name = "animationControl";
+            animationControl.Size = new Size(694, 767);
+            animationControl.TabIndex = 0;
             // 
             // saveFileHTML
             // 
@@ -1742,11 +1601,6 @@
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             tAnimation.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webViewAnimation).EndInit();
-            pAnimation.ResumeLayout(false);
-            pAnimation.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)eAnimationdt).EndInit();
-            cmAnimation.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -1757,7 +1611,7 @@
         private TabControl tabPlotSub;
         private TabPage tPlotWindows;
         private TabPage tPlotHTML;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webViewPlot;
+        private SiliFishWebView webViewPlot;
         private Panel pPlot;
         private LinkLabel linkExportPlotData;
         private Panel pLinePlots;
@@ -1766,7 +1620,7 @@
         private Label lPlotPlot;
         private ComboBox ddPlot;
         private TabPage t2DRender;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView2DRender;
+        private SiliFishWebView webView2DRender;
         private Panel p2DRender;
         private Panel pLine2D;
         private LinkLabel linkSaveHTML2D;
@@ -1780,7 +1634,7 @@
         private Label legendOutgoing;
         private Label legendGap;
         private Label legendIncoming;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView3DRender;
+        private SiliFishWebView webView3DRender;
         private Panel p3DRender;
         private CheckBox cb3DGapJunc;
         private CheckBox cb3DChemJunc;
@@ -1790,15 +1644,6 @@
         private LinkLabel linkSaveHTML3D;
         private Button btn3DRender;
         private TabPage tAnimation;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webViewAnimation;
-        private Panel pAnimation;
-        private Panel pLineAnimation;
-        private NumericUpDown eAnimationdt;
-        private Label lAnimationdt;
-        private LinkLabel linkSaveAnimationCSV;
-        private Label lAnimationTime;
-        private LinkLabel linkSaveAnimationHTML;
-        private Button btnAnimate;
         private SaveFileDialog saveFileHTML;
         private SaveFileDialog saveFileJson;
         private OpenFileDialog openFileJson;
@@ -1818,8 +1663,6 @@
         private ToolStripMenuItem cmiNonInteractivePlot;
         private ContextMenuStrip cmPlotImageSave;
         private ToolStripMenuItem cmiPlotImageSave;
-        private ContextMenuStrip cmAnimation;
-        private ToolStripMenuItem cmiAnimationClearCache;
         private CheckBox cb3DShowUnselectedNodes;
         private Panel p3DRenderOptions;
         private CheckBox cb3DLegend;
@@ -1849,17 +1692,7 @@
         internal TabPage tRCTrains;
         internal DataGridView dgRCTrains;
         private SplitContainer splitRCTrains;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webViewRCTrains;
-        private DataGridViewTextBoxColumn colRCTrainNumber;
-        private DataGridViewTextBoxColumn colRCTrainCellGroup;
-        private DataGridViewTextBoxColumn colRCTrainSomite;
-        private DataGridViewTextBoxColumn colRCTrainStart;
-        private DataGridViewTextBoxColumn colRCTrainEnd;
-        private DataGridViewTextBoxColumn colRCTrainMidPoint;
-        private DataGridViewTextBoxColumn colRCTrainCenter;
-        private DataGridViewTextBoxColumn colRCTrainStartDelay;
-        private DataGridViewTextBoxColumn colRCTrainMidPointDelay;
-        private DataGridViewTextBoxColumn colRCTrainCenterDelay;
+        private SiliFishWebView webViewRCTrains;
         private CheckBox cb2DHideNonspiking;
         private CheckBox cb2DShowUnselectedNodes;
         private Panel p2DRenderOptions;
@@ -1891,7 +1724,17 @@
         private DataGridView dgEpisodes;
         private General.StartEndTimeControl timeRangePlot;
         private General.StartEndTimeControl timeRangeStat;
-        private General.StartEndTimeControl timeRangeAnimation;
         private GroupBox gr2DCellPoolLegend;
+        private DataGridViewTextBoxColumn colRCTrainNumber;
+        private DataGridViewTextBoxColumn colRCTrainCellGroup;
+        private DataGridViewTextBoxColumn colRCTrainSomite;
+        private DataGridViewTextBoxColumn colRCTrainStart;
+        private DataGridViewTextBoxColumn colRCTrainEnd;
+        private DataGridViewTextBoxColumn colRCTrainMedianPoint;
+        private DataGridViewTextBoxColumn colRCTrainCenter;
+        private DataGridViewTextBoxColumn colRCTrainStartDelay;
+        private DataGridViewTextBoxColumn colRCTrainMedianDelay;
+        private DataGridViewTextBoxColumn colRCTrainCenterDelay;
+        private AnimationControl animationControl;
     }
 }

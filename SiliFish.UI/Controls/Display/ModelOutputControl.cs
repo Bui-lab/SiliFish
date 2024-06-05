@@ -1,5 +1,4 @@
 ﻿using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.WinForms;
 using Services;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
@@ -27,34 +26,9 @@ namespace SiliFish.UI.Controls
     public partial class ModelOutputControl : UserControl
     {
         public event EventHandler PlottingSelection;
-        class RCGridComparer : System.Collections.IComparer
-        {
-            public int Compare(object x, object y)
-            {
-                DataGridViewRow row1 = (DataGridViewRow)x;
-                DataGridViewRow row2 = (DataGridViewRow)y;
-                //Sort by "Cell Group", "Train #", "Somite"
-                string cellPool1 = row1.Cells["colRCTrainCellGroup"].Value.ToString();
-                string cellPool2 = row2.Cells["colRCTrainCellGroup"].Value.ToString();
-                int train1 = int.Parse(row1.Cells["colRCTrainNumber"].Value.ToString());
-                int train2 = int.Parse(row2.Cells["colRCTrainNumber"].Value.ToString());
-                int somite1 = int.Parse(row1.Cells["colRCTrainSomite"].Value.ToString());
-                int somite2 = int.Parse(row2.Cells["colRCTrainSomite"].Value.ToString());
-                int compareResult = string.Compare(cellPool1, cellPool2);
-                if (compareResult == 0)
-                    compareResult = train1.CompareTo(train2);
-                if (compareResult == 0)
-                    compareResult = somite1.CompareTo(somite2);
 
-                return compareResult;
-            }
-        }
         string errorMessage;
-        string htmlAnimation = "";
         string htmlPlot = "";
-        decimal tAnimdt;
-        int tAnimStart = 0;
-        int tAnimEnd = 0;
         int tPlotStart = 0;
         int tPlotEnd = 0;
         int numOfPlots = 0;
@@ -138,7 +112,7 @@ namespace SiliFish.UI.Controls
             this.model = model;
             timeRangePlot.EndTime = 
                 timeRangeStat.EndTime = model.Settings.SimulationEndTime;
-
+            animationControl.SetRunningModel(simulation, model);
             cellSelectionPlot.RunningModel = model;
             cellSelectionStats.RunningModel = model;
             PopulatePlotTypes();
@@ -205,49 +179,37 @@ namespace SiliFish.UI.Controls
         }
         public void CompleteRun(RunParam runParam)
         {
-            decimal dt = (decimal)runParam.DeltaT;
-            eAnimationdt.Minimum = dt;
-            eAnimationdt.Increment = dt;
-            eAnimationdt.Value = dt; //10 * dt;
+            animationControl.CompleteRun(runParam);
 
             int tMax = runParam.MaxTime;
             timeRangePlot.EndTime = 
-            timeRangeStat.EndTime = 
-            timeRangeAnimation.EndTime = tMax;
+            timeRangeStat.EndTime = tMax;
 
             cmPlot.Enabled =
                 btnListStats.Enabled =
-                btnPlotHTML.Enabled =
-                btnAnimate.Enabled = true;
+                btnPlotHTML.Enabled = true;
         }
 
         public void CancelRun()
         {
+            animationControl.CancelRun();
             cmPlot.Enabled =
-                btnPlotHTML.Enabled =
-                btnAnimate.Enabled = true; //to make partial results available
+                btnPlotHTML.Enabled = true; //to make partial results available
         }
         #region webViewPlot
         private void WebViewInitializations()
         {
             InitAsync();
             Wait();
-            webView2DRender.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
-            webView3DRender.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
-            webViewAnimation.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
-            webViewPlot.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
-            webViewRCTrains.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
-
             //webview's context menu does not work. Using amcharts's export menu where necessary
             webViewRCTrains.CoreWebView2.ContextMenuRequested += AmChartsCoreWebView2_ContextMenuRequested;
-            webViewAnimation.CoreWebView2.ContextMenuRequested += AmChartsCoreWebView2_ContextMenuRequested;
         }
         private async void InitAsync()
         {
             await webViewPlot.EnsureCoreWebView2Async();
             await webView2DRender.EnsureCoreWebView2Async();
             await webView3DRender.EnsureCoreWebView2Async();
-            await webViewAnimation.EnsureCoreWebView2Async();
+            //TODO await animationControl.InitAsync();
             await webViewRCTrains.EnsureCoreWebView2Async();
         }
 
@@ -255,63 +217,13 @@ namespace SiliFish.UI.Controls
         {
             while (webViewPlot.Tag == null ||
                 webView2DRender.Tag == null || webView3DRender.Tag == null ||
-                webViewAnimation.Tag == null || webViewRCTrains.Tag == null)
+                webViewRCTrains.Tag == null)
                 Application.DoEvents();
         }
 
         private void webView_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
         {
             (sender as Control).Tag = true;
-        }
-
-        private static void WarningMessage(string s)
-        {
-            MessageBox.Show(s, "Warning");
-        }
-
-        private void RegenerateWebview(WebView2 webView)
-        {
-            if (webView == null) return;
-            string name = webView.Name;
-            Control parent = webView.Parent;
-            parent.Controls.Remove(webView);
-            try { webView.Dispose(); }
-            catch { }
-
-            webView = new WebView2();
-
-            (webView as System.ComponentModel.ISupportInitialize).BeginInit();
-            webView.AllowExternalDrop = true;
-            webView.CreationProperties = null;
-            webView.DefaultBackgroundColor = Color.White;
-            webView.Dock = DockStyle.Fill;
-            webView.Location = new Point(0, 30);
-            webView.Name = name;
-            webView.Size = new Size(622, 481);
-            webView.TabIndex = 1;
-            webView.ZoomFactor = 1D;
-            webView.CoreWebView2InitializationCompleted += new EventHandler<CoreWebView2InitializationCompletedEventArgs>(webView_CoreWebView2InitializationCompleted);
-
-            (webView as System.ComponentModel.ISupportInitialize).EndInit();
-            parent.Controls.Add(webView);
-            webView.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
-
-        }
-        private void CoreWebView2_ProcessFailed(object sender, CoreWebView2ProcessFailedEventArgs e)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(tempFile))
-                { }
-                else
-                {
-                    string target = (sender as CoreWebView2).DocumentTitle;
-                    target = FileUtil.CopyFileToOutputFolder(tempFile, target);
-                    RegenerateWebview(sender as WebView2);
-                    Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as " + target + "."));
-                }
-            }
-            catch { }
         }
 
         private void AmChartsCoreWebView2_ContextMenuRequested(object sender, CoreWebView2ContextMenuRequestedEventArgs args)
@@ -331,14 +243,7 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
-        private static async void ClearBrowserCache(WebView2 webView)
-        {
-            await webView.CoreWebView2.Profile.ClearBrowsingDataAsync();
-        }
-        private void cmiAnimationClearCache_Click(object sender, EventArgs e)
-        {
-            ClearBrowserCache(webViewAnimation);
-        }
+
         #endregion
 
 
@@ -1264,7 +1169,7 @@ namespace SiliFish.UI.Controls
             bool navigated = false;
             webViewRCTrains.NavigateTo(histHtml, title, GlobalSettings.TempFolder, ref tempFile, ref navigated);
         }
-        private void GenerateRCTrains()//TODO can be less UI dependent
+        private void GenerateRCTrains()
         {
             if (simulation == null || !simulation.SimulationRun) return;
             UseWaitCursor = true;
@@ -1285,46 +1190,27 @@ namespace SiliFish.UI.Controls
             foreach (string pool in pools)
             {
                 List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
-                List<TrainOfBursts> burstTrains = SpikeDynamics.GenerateColumnsOfBursts(model.DynamicsParam, simulation.RunParam.DeltaT,
+                List<TrainOfBurstCars> burstTrains = SpikeDynamics.GenerateColumnsOfBursts(model.DynamicsParam, simulation.RunParam.DeltaT,
                     pooledCells, iSpikeStart, iSpikeEnd);
-                foreach (TrainOfBursts burstTrain in burstTrains)
+                foreach (TrainOfBurstCars burstTrain in burstTrains)
                 {
-                    foreach (var (iID, sID, Bursts) in burstTrain.BurstList)
+                    burstTrain.CalculateCarDelays();
+                    foreach (BurstOrSpikeCar car in burstTrain.BurstCarList)
                     {
                         dgRCTrains.RowCount++;
                         int rowIndex = dgRCTrains.RowCount - 1;
                         if (scrollRow < 0) scrollRow = rowIndex;
                         dgRCTrains[colRCTrainNumber.Index, rowIndex].Value = burstTrain.iTrainID;
-                        dgRCTrains[colRCTrainCellGroup.Index, rowIndex].Value = sID;
-                        dgRCTrains[colRCTrainSomite.Index, rowIndex].Value = iID;
-                        dgRCTrains[colRCTrainStart.Index, rowIndex].Value = Bursts.Start;
-                        dgRCTrains[colRCTrainEnd.Index, rowIndex].Value = Bursts.End;
-                        dgRCTrains[colRCTrainMidPoint.Index, rowIndex].Value = Bursts.Center;
-                        dgRCTrains[colRCTrainCenter.Index, rowIndex].Value = Bursts.WeightedCenter;
+                        dgRCTrains[colRCTrainCellGroup.Index, rowIndex].Value = car.sCarID;
+                        dgRCTrains[colRCTrainSomite.Index, rowIndex].Value = car.iCarID;
+                        dgRCTrains[colRCTrainStart.Index, rowIndex].Value = car.BurstOrSpike.Start;
+                        dgRCTrains[colRCTrainEnd.Index, rowIndex].Value = car.BurstOrSpike.End;
+                        dgRCTrains[colRCTrainMedianPoint.Index, rowIndex].Value = car.BurstOrSpike.Center;
+                        dgRCTrains[colRCTrainCenter.Index, rowIndex].Value = car.BurstOrSpike.WeightedCenter;
+                        dgRCTrains[colRCTrainStartDelay.Index, rowIndex].Value = car.DelayStart;
+                        dgRCTrains[colRCTrainMedianDelay.Index, rowIndex].Value = car.DelayMedian;
+                        dgRCTrains[colRCTrainCenterDelay.Index, rowIndex].Value = car.DelayCenter;
                     }
-                }
-            }
-            dgRCTrains.Sort(new RCGridComparer());
-            for (int i = 1; i < dgRCTrains.RowCount; i++)
-            {
-                DataGridViewRow rowPrev = dgRCTrains.Rows[i - 1];
-                DataGridViewRow rowCurrent = dgRCTrains.Rows[i];
-                //Sort by "Cell Group", "Train #", "Somite"
-                string cellPoolPrev = rowPrev.Cells[colRCTrainCellGroup.Index].Value.ToString();
-                string cellPoolCurrent = rowCurrent.Cells[colRCTrainCellGroup.Index].Value.ToString();
-                int trainPrev = int.Parse(rowPrev.Cells[colRCTrainNumber.Index].Value.ToString());
-                int trainCurrent = int.Parse(rowCurrent.Cells[colRCTrainNumber.Index].Value.ToString());
-                if (cellPoolPrev == cellPoolCurrent && trainPrev == trainCurrent)
-                {
-                    rowCurrent.Cells[colRCTrainStartDelay.Index].Value =
-                        double.Parse(rowCurrent.Cells[colRCTrainStart.Index].Value.ToString()) -
-                        double.Parse(rowPrev.Cells[colRCTrainStart.Index].Value.ToString());
-                    rowCurrent.Cells[colRCTrainMidPointDelay.Index].Value =
-                        double.Parse(rowCurrent.Cells[colRCTrainMidPoint.Index].Value.ToString()) -
-                        double.Parse(rowPrev.Cells[colRCTrainMidPoint.Index].Value.ToString());
-                    rowCurrent.Cells[colRCTrainCenterDelay.Index].Value =
-                        double.Parse(rowCurrent.Cells[colRCTrainCenter.Index].Value.ToString()) -
-                        double.Parse(rowPrev.Cells[colRCTrainCenter.Index].Value.ToString());
                 }
             }
             tabStats.SelectedTab = tRCTrains;
@@ -1338,7 +1224,7 @@ namespace SiliFish.UI.Controls
             int colIndex = e.ColumnIndex;
             if (colIndex == colRCTrainCenterDelay.Index ||
                 colIndex == colRCTrainStartDelay.Index ||
-                colIndex == colRCTrainMidPointDelay.Index)
+                colIndex == colRCTrainMedianDelay.Index)
                 GenerateHistogramOfRCColumn(colIndex);
         }
 
@@ -1479,80 +1365,6 @@ namespace SiliFish.UI.Controls
 
         #endregion
 
-        #region Animation
-        int lastAnimationStartIndex;
-        double[] lastAnimationTimeArray;
-        Dictionary<string, Coordinate[]> lastAnimationSpineCoordinates;
-
-        public object ModelGenerator { get; private set; }
-
-        private void Animate()
-        {
-            try
-            {
-                if (simulation == null || !simulation.SimulationRun) return;
-                htmlAnimation = AnimationGenerator.GenerateAnimation(simulation, tAnimStart, tAnimEnd, (double)tAnimdt, out lastAnimationSpineCoordinates);
-                Invoke(CompleteAnimation);
-            }
-            catch { Invoke(CancelAnimation); }
-        }
-        private void CompleteAnimation()
-        {
-            bool navigated = false;
-            webViewAnimation.NavigateTo(htmlAnimation, "Animation", GlobalSettings.TempFolder, ref tempFile, ref navigated);
-            if (!navigated)
-                Warner.LargeFileWarning(tempFile);
-            linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = true;
-            lAnimationTime.Text = $"Last animation: {DateTime.Now:t}";
-            btnAnimate.Enabled = true;
-        }
-        private void CancelAnimation()
-        {
-            webViewAnimation.NavigateToString("about:blank");
-            linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = false;
-            lAnimationTime.Text = $"Last animation aborted.";
-            btnAnimate.Enabled = true;
-        }
-        private void btnAnimate_Click(object sender, EventArgs e)
-        {
-            if (simulation == null || !simulation.SimulationRun) return;
-
-            btnAnimate.Enabled = false;
-
-            tAnimStart = timeRangeAnimation.StartTime;
-            tAnimEnd = timeRangeAnimation.EndTime;
-            if (tAnimStart > simulation.RunParam.MaxTime || tAnimStart < 0)
-                tAnimStart = 0;
-            if (tAnimEnd > simulation.RunParam.MaxTime)
-                tAnimEnd = simulation.RunParam.MaxTime;
-            double dt = simulation.RunParam.DeltaT;
-            lastAnimationStartIndex = (int)(tAnimStart / dt);
-            int lastAnimationEndIndex = (int)(tAnimEnd / dt);
-            lastAnimationTimeArray = model.TimeArray;
-            model.SetAnimationParameters(model.KinemParam);
-
-            tAnimdt = eAnimationdt.Value;
-            Invoke(Animate);
-        }
-        private void linkSaveAnimationHTML_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(htmlAnimation))
-                return;
-            if (saveFileHTML.ShowDialog() != DialogResult.OK)
-                return;
-            File.WriteAllText(saveFileHTML.FileName, htmlAnimation.ToString());
-        }
-        private void linkSaveAnimationCSV_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(htmlAnimation))
-                return;
-            if (saveFileCSV.ShowDialog() != DialogResult.OK)
-                return;
-
-            ModelFile.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex);
-        }
-
-#endregion
 #endregion
     }
 

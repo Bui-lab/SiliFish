@@ -28,83 +28,84 @@ namespace SiliFish.Services.Dynamics
         }
 
         /// <summary>
-        /// Looking at the earliest episode, starts with the earliest somite, and goes caudal and rostral to find the episodes that belong to the same undulatory movement
+        /// Looking at the earliest episode, starts with the earliest somite, and goes caudal and rostral to find the episodes 
+        /// that belong to the same undulatory movement
         /// </summary>
         /// <param name="TimeArray"></param>
         /// <param name="cells">of a single cell pool and sagittal plane</param>
         /// <returns></returns>
-        public static List<TrainOfBursts> GenerateColumnsOfBursts(DynamicsParam settings, double dt, List<Cell> cells, int iStart, int iEnd)
+        public static List<TrainOfBurstCars> GenerateColumnsOfBursts(DynamicsParam settings, double dt, List<Cell> cells, int iStart, int iEnd)
         {
-            List<TrainOfBursts> trueTrains = [];
-            List<TrainOfBursts> ungroupedTrains = [];
+            List<TrainOfBurstCars> trueTrains = [];
+            List<TrainOfBurstCars> ungroupedTrains = [];
             foreach (Cell cell in cells)
             {
                 List<int> spikes = cell.GetSpikeIndices(iStart, iEnd);
                 if (spikes.Count == 0) continue;
                 List<BurstOrSpike> burstOrSpikes = BurstOrSpike.SpikesToBursts(settings, dt, spikes, out double _);
-                TrainOfBursts train = new(burstOrSpikes, "Somite and Pool", "burst1",  cell.Somite, cell.CellPool.ID);
+                TrainOfBurstCars train = new(burstOrSpikes, "Somite and Pool", "burst1",  cell.Somite, cell.CellPool.ID);
                 ungroupedTrains.Add(train);
             }
-            ungroupedTrains = [.. ungroupedTrains.OrderBy(ut => ut.EarliestSpike.burst.SpikeTimeList[0])];
+            ungroupedTrains = [.. ungroupedTrains.OrderBy(ut => ut.EarliestSpike.BurstOrSpike.SpikeTimeList[0])];
             int curIndex = 0;
             double posDelay = settings.RCPositiveDelay;
             double negDelay = Math.Abs(settings.RCNegativeDelay);
             while (ungroupedTrains.Count != 0)
             {
-                TrainOfBursts keyTrain = ungroupedTrains.First();
-                (int iID, string sID, BurstOrSpike Bursts) keyBursts = keyTrain.BurstList[0];
-                keyTrain.BurstList.Remove(keyBursts);
-                if (keyTrain.BurstList.Count == 0)
+                TrainOfBurstCars keyTrain = ungroupedTrains.First();
+                BurstOrSpikeCar keyBurstsCar = keyTrain.BurstCarList[0];
+                keyTrain.BurstCarList.Remove(keyBurstsCar);
+                if (keyTrain.BurstCarList.Count == 0)
                     ungroupedTrains.Remove(keyTrain);
                 //going downward caudally
-                TrainOfBursts curTrain = keyTrain;
-                BurstOrSpike curBurst = keyBursts.Bursts;
-                TrainOfBursts trueTrain = new([], description: "Train Seq and Pool", burstDescription: "Somite and Pool", curIndex++, keyBursts.sID);
-                trueTrain.BurstList.Add((keyBursts.iID, keyBursts.sID, curBurst));
+                TrainOfBurstCars curTrain = keyTrain;
+                BurstOrSpikeCar curBurst = new(keyBurstsCar.BurstOrSpike, keyBurstsCar.iCarID, keyBurstsCar.sCarID);
+                TrainOfBurstCars trueTrain = new([], description: "Train Seq and Pool", burstDescription: "Somite and Pool", curIndex++, keyBurstsCar.sCarID);
+                trueTrain.BurstCarList.Add(curBurst);
                 //curTrain.iID is the somite. 
                 while (ungroupedTrains.Count != 0)
                 {
-                    TrainOfBursts caudalTrain = ungroupedTrains.FirstOrDefault(t => t.iTrainID == curTrain.iTrainID + 1);
+                    TrainOfBurstCars caudalTrain = ungroupedTrains.FirstOrDefault(t => t.iTrainID == curTrain.iTrainID + 1);
                     if (caudalTrain == null)
                         break;
-                    double start = curBurst.SpikeTimeList[0];
-                    double end = curBurst.SpikeTimeList[^1];
-                    (int caudaliID, string caudalsID, BurstOrSpike caudalBurst) = caudalTrain.BurstList
+                    double start = curBurst.BurstOrSpike.SpikeTimeList[0];
+                    double end = curBurst.BurstOrSpike.SpikeTimeList[^1];
+                    BurstOrSpikeCar caudalBurst = caudalTrain.BurstCarList
                         .FirstOrDefault(b =>
-                            start - negDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + posDelay
+                            start - negDelay <= b.BurstOrSpike.SpikeTimeList[0] && b.BurstOrSpike.SpikeTimeList[0] <= end + posDelay
                             );
                     if (caudalBurst == null)
                         break;
-                    trueTrain.BurstList.Add((caudaliID, caudalsID, caudalBurst));
-                    caudalTrain.BurstList.RemoveAll(b =>
-                                start - negDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + posDelay);
+                    trueTrain.BurstCarList.Add(caudalBurst);
+                    caudalTrain.BurstCarList.RemoveAll(b =>
+                                start - negDelay <= b.BurstOrSpike.SpikeTimeList[0] && b.BurstOrSpike.SpikeTimeList[0] <= end + posDelay);
                     curTrain = caudalTrain;
                     curBurst = caudalBurst;
                 }
                 //going upward rostrally
                 curTrain = keyTrain;
-                curBurst = keyBursts.Bursts;
+                curBurst = keyBurstsCar;
                 while (ungroupedTrains.Count != 0)
                 {
-                    TrainOfBursts rostralTrain = ungroupedTrains.FirstOrDefault(t => t.iTrainID == curTrain.iTrainID - 1);
+                    TrainOfBurstCars rostralTrain = ungroupedTrains.FirstOrDefault(t => t.iTrainID == curTrain.iTrainID - 1);
                     if (rostralTrain == null)
                         break;
-                    double start = curBurst.SpikeTimeList[0];
-                    double end = curBurst.SpikeTimeList[^1];
-                    (int rostraliID, string rostralsID, BurstOrSpike rostralBurst) = rostralTrain.BurstList
+                    double start = curBurst.BurstOrSpike.SpikeTimeList[0];
+                    double end = curBurst.BurstOrSpike.SpikeTimeList[^1];
+                    BurstOrSpikeCar rostralBurst = rostralTrain.BurstCarList
                         .FirstOrDefault(b =>
-                            start - posDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + negDelay
+                            start - posDelay <= b.BurstOrSpike.SpikeTimeList[0] && b.BurstOrSpike.SpikeTimeList[0] <= end + negDelay
                             );
                     if (rostralBurst == null)
                         break;
-                    trueTrain.BurstList.Add((rostraliID, rostralsID, rostralBurst));
-                    rostralTrain.BurstList.RemoveAll(b =>
-                                start - posDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + negDelay);
+                    trueTrain.BurstCarList.Add(rostralBurst);
+                    rostralTrain.BurstCarList.RemoveAll(b =>
+                                start - posDelay <= b.BurstOrSpike.SpikeTimeList[0] && b.BurstOrSpike.SpikeTimeList[0] <= end + negDelay);
                     curTrain = rostralTrain;
                     curBurst = rostralBurst;
                 }
-                ungroupedTrains.RemoveAll(t => t.BurstList.Count == 0);
-                ungroupedTrains = [.. ungroupedTrains.OrderBy(ut => ut.EarliestSpike.burst.SpikeTimeList[0])];
+                ungroupedTrains.RemoveAll(t => t.BurstCarList.Count == 0);
+                ungroupedTrains = [.. ungroupedTrains.OrderBy(ut => ut.EarliestSpike.BurstOrSpike.SpikeTimeList[0])];
                 trueTrains.Add(trueTrain);
             }
 
@@ -117,79 +118,79 @@ namespace SiliFish.Services.Dynamics
         /// <param name="TimeArray"></param>
         /// <param name="cells">of a single cell pool and sagittal plane</param>
         /// <returns></returns>
-        public static List<TrainOfBursts> GenerateLeftRightAlternations(DynamicsParam settings, double dt, List<Cell> cells, int iStart, int iEnd)
+        public static List<TrainOfBurstCars> GenerateLeftRightAlternations(DynamicsParam settings, double dt, List<Cell> cells, int iStart, int iEnd)
         {
-            List<TrainOfBursts> trueTrains = [];
-            List<TrainOfBursts> ungroupedTrains = [];
+            List<TrainOfBurstCars> trueTrains = [];
+            List<TrainOfBurstCars> ungroupedTrains = [];
             
             foreach (Cell cell in cells)
             {
                 List<int> spikes = cell.GetSpikeIndices(iStart, iEnd);
                 if (spikes.Count == 0) continue;
                 List<BurstOrSpike> burstOrSpikes = BurstOrSpike.SpikesToBursts(settings, dt, spikes, out double _);
-                TrainOfBursts train = new(burstOrSpikes, "Somite and Pool", "burst3", cell.Somite, cell.CellPool.ID);
+                TrainOfBurstCars train = new(burstOrSpikes, "Somite and Pool", "burst3", cell.Somite, cell.CellPool.ID);
                 ungroupedTrains.Add(train);
             }
-            ungroupedTrains = [.. ungroupedTrains.OrderBy(ut => ut.EarliestSpike.burst.SpikeTimeList[0])];
+            ungroupedTrains = [.. ungroupedTrains.OrderBy(ut => ut.EarliestSpike.BurstOrSpike.SpikeTimeList[0])];
             int curIndex = 0;
             double posDelay = settings.RCPositiveDelay;
             double negDelay = Math.Abs(settings.RCNegativeDelay);
             while (ungroupedTrains.Count != 0)
             {
-                TrainOfBursts keyTrain = ungroupedTrains.First();
-                (int iID, string sID, BurstOrSpike Bursts) keyBursts = keyTrain.BurstList[0];
-                keyTrain.BurstList.Remove(keyBursts);
-                if (keyTrain.BurstList.Count == 0)
+                TrainOfBurstCars keyTrain = ungroupedTrains.First();
+                BurstOrSpikeCar keyBursts = keyTrain.BurstCarList[0];
+                keyTrain.BurstCarList.Remove(keyBursts);
+                if (keyTrain.BurstCarList.Count == 0)
                     ungroupedTrains.Remove(keyTrain);
                 //going downward caudally
-                TrainOfBursts curTrain = keyTrain;
-                BurstOrSpike curBurst = keyBursts.Bursts;
-                TrainOfBursts trueTrain = new([], "? and ?", "burst4", curIndex++, null);
-                trueTrain.BurstList.Add((keyBursts.iID, keyBursts.sID, curBurst));
+                TrainOfBurstCars curTrain = keyTrain;
+                BurstOrSpikeCar curBurst = keyBursts;
+                TrainOfBurstCars trueTrain = new([], "? and ?", "burst4", curIndex++, null);
+                trueTrain.BurstCarList.Add(curBurst);
                 //curTrain.iID is the somite. 
                 while (ungroupedTrains.Count != 0)
                 {
-                    TrainOfBursts caudalTrain = ungroupedTrains.FirstOrDefault(t => t.iTrainID == curTrain.iTrainID + 1);
+                    TrainOfBurstCars caudalTrain = ungroupedTrains.FirstOrDefault(t => t.iTrainID == curTrain.iTrainID + 1);
                     if (caudalTrain == null)
                         break;
-                    double start = curBurst.SpikeTimeList[0];
-                    double end = curBurst.SpikeTimeList[^1];
-                    (int caudaliID, string caudalsID, BurstOrSpike caudalBurst) = caudalTrain.BurstList
+                    double start = curBurst.BurstOrSpike.SpikeTimeList[0];
+                    double end = curBurst.BurstOrSpike.SpikeTimeList[^1];
+                    BurstOrSpikeCar caudalBurst = caudalTrain.BurstCarList
                         .FirstOrDefault(b =>
-                            start - negDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + posDelay
+                            start - negDelay <= b.BurstOrSpike.SpikeTimeList[0] && b.BurstOrSpike.SpikeTimeList[0] <= end + posDelay
                             );
                     if (caudalBurst == null)
                         break;
-                    trueTrain.BurstList.Add((caudaliID, caudalsID, caudalBurst));
-                    caudalTrain.BurstList.RemoveAll(b =>
-                                start - negDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + posDelay);
+                    trueTrain.BurstCarList.Add(caudalBurst);
+                    caudalTrain.BurstCarList.RemoveAll(b =>
+                                start - negDelay <= b.BurstOrSpike.SpikeTimeList[0] && b.BurstOrSpike.SpikeTimeList[0] <= end + posDelay);
                     curTrain = caudalTrain;
                     curBurst = caudalBurst;
                 }
                 //going upward rostrally
                 curTrain = keyTrain;
-                curBurst = keyBursts.Bursts;
+                curBurst = keyBursts;
                 while (ungroupedTrains.Count != 0)
                 {
-                    TrainOfBursts rostralTrain = ungroupedTrains.FirstOrDefault(t => t.iTrainID == curTrain.iTrainID - 1);
+                    TrainOfBurstCars rostralTrain = ungroupedTrains.FirstOrDefault(t => t.iTrainID == curTrain.iTrainID - 1);
                     if (rostralTrain == null)
                         break;
-                    double start = curBurst.SpikeTimeList[0];
-                    double end = curBurst.SpikeTimeList[^1];
-                    (int rostraliID, string rostralsID, BurstOrSpike rostralBurst) = rostralTrain.BurstList
+                    double start = curBurst.BurstOrSpike.SpikeTimeList[0];
+                    double end = curBurst.BurstOrSpike.SpikeTimeList[^1];
+                    BurstOrSpikeCar rostralBurst = rostralTrain.BurstCarList
                         .FirstOrDefault(b =>
-                            start - posDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + negDelay
+                            start - posDelay <= b.BurstOrSpike.SpikeTimeList[0] && b.BurstOrSpike.SpikeTimeList[0] <= end + negDelay
                             );
                     if (rostralBurst == null)
                         break;
-                    trueTrain.BurstList.Add((rostraliID, rostralsID, rostralBurst));
-                    rostralTrain.BurstList.RemoveAll(b =>
-                                start - posDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + negDelay);
+                    trueTrain.BurstCarList.Add(rostralBurst);
+                    rostralTrain.BurstCarList.RemoveAll(b =>
+                                start - posDelay <= b.BurstOrSpike.SpikeTimeList[0] && b.BurstOrSpike.SpikeTimeList[0] <= end + negDelay);
                     curTrain = rostralTrain;
                     curBurst = rostralBurst;
                 }
-                ungroupedTrains.RemoveAll(t => t.BurstList.Count == 0);
-                ungroupedTrains = [.. ungroupedTrains.OrderBy(ut => ut.EarliestSpike.burst.SpikeTimeList[0])];
+                ungroupedTrains.RemoveAll(t => t.BurstCarList.Count == 0);
+                ungroupedTrains = [.. ungroupedTrains.OrderBy(ut => ut.EarliestSpike.BurstOrSpike.SpikeTimeList[0])];
                 trueTrains.Add(trueTrain);
             }
 

@@ -58,6 +58,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\Display\AnimationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\DynamicsTestByDistControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
