@@ -10,9 +10,22 @@ namespace SiliFish.UI.Controls.Display
         public SiliFishWebView()
         {
             InitializeComponent();
-            CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
-        }
+            CoreWebView2InitializationCompleted += new EventHandler<CoreWebView2InitializationCompletedEventArgs>(webView_CoreWebView2InitializationCompleted);
 
+            if (CoreWebView2 != null) 
+                CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
+        }
+        /// <summary>
+        /// if AmCharts is displayed, the context menu needs to be reviewed
+        /// </summary>
+        public bool ShowsAmCharts
+        {
+            set
+            {
+                if (value)
+                    CoreWebView2.ContextMenuRequested += AmChartsCoreWebView2_ContextMenuRequested;
+            }
+        }
         private void RegenerateWebview(WebView2 webView)
         {
             if (webView == null) return;
@@ -64,6 +77,24 @@ namespace SiliFish.UI.Controls.Display
             (sender as Control).Tag = true;
         }
 
+        
+        private void AmChartsCoreWebView2_ContextMenuRequested(object sender, CoreWebView2ContextMenuRequestedEventArgs args)
+        {
+            IList<CoreWebView2ContextMenuItem> menuList = args.MenuItems;
+            CoreWebView2ContextMenuTargetKind context = args.ContextMenuTarget.Kind;
+            if (context == CoreWebView2ContextMenuTargetKind.Page)
+            {
+                for (int index = menuList.Count - 1; index >= 0; index--)
+                {
+                    if (menuList[index].Name == "saveImageAs" ||
+                        menuList[index].Name == "copyImage" ||
+                        menuList[index].Name == "inspectElement")
+                    {
+                        menuList.RemoveAt(index);
+                    }
+                }
+            }
+        }
         public async void ClearBrowserCache()
         {
             await CoreWebView2.Profile.ClearBrowsingDataAsync();

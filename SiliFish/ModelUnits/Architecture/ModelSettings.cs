@@ -1,6 +1,7 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
+using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -96,6 +97,16 @@ namespace SiliFish.ModelUnits.Architecture
             return paramExternal;
         }
 
-
+        public RunParam GetRunParam()
+        {
+            RunParam param = new()
+            {
+                SkipDuration = SimulationSkipTime,
+                MaxTime = SimulationEndTime,
+                DeltaT = SimulationDeltaT,
+                TrackJunctionCurrent = JunctionLevelTracking
+            };
+            return param;
+        }
     }
 }

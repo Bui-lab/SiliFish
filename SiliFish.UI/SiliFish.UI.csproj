@@ -52,16 +52,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2210.55" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2535.41" />
     <PackageReference Include="OxyPlot.WindowsForms" Version="2.1.2" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Controls\Display\AnimationControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Controls\DynamicsTestByDistControl.cs">
+	  <Compile Update="Controls\Display\AnimationControl.cs">
+		  <SubType>UserControl</SubType>
+	  </Compile>
+	  <Compile Update="Controls\Display\ThreeDRenderControl.cs">
+	    <SubType>UserControl</SubType>
+	  </Compile>
+	  <Compile Update="Controls\Display\TwoDRenderControl.cs">
+	    <SubType>UserControl</SubType>
+	  </Compile>
+	  <Compile Update="Controls\Display\PlotControl.cs">
+	    <SubType>UserControl</SubType>
+	  </Compile>
+	  <Compile Update="Controls\Display\ModelOutputControl.cs" />
+	  <Compile Update="Controls\Display\StatOutputControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\General\StimulusMultiplier.cs">
@@ -70,16 +80,13 @@
     <Compile Update="Controls\General\HistoryListControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\JunctionControl.cs">
+    <Compile Update="Controls\Model Edit\JunctionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\Model Edit\CellControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\Model Edit\StimulusControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Controls\ProjectionTestControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="BaseForm.cs">

@@ -18,7 +18,9 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         {
             if (chart.NumOfDataPoints + plotGenerator.NumOfDataPoints > GlobalSettings.PlotDataPointLimit)
             {
-                plotGenerator.errorMessage = $"The number of data points exceed {GlobalSettings.PlotDataPointLimit}. Not all charts are plotted. Please limit the selection or the time range.";
+                plotGenerator.errorMessage = $"The number of data points exceed {GlobalSettings.PlotDataPointLimit}. " +
+                    $"Not all charts are plotted. Please limit the selection or the time range." +
+                    $"(You can set the number of data points that triggers this warning through 'Settings')";
                 if (charts.Count == 0)
                     charts.Add(chart);//add the first chart, even if it exceeds the limit
                 return false;

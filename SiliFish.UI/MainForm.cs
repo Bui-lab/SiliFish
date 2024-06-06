@@ -66,10 +66,7 @@ namespace SiliFish.UI
                 modelControl.SetModel(model);
                 modelOutputControl.SetRunningModel(null, model);
                 modelControl.SetSelectionToLast();
-                runParam.SkipDuration = model.Settings.SimulationSkipTime;//TODO add a function to modelSettings that return runparam
-                runParam.MaxTime = model.Settings.SimulationEndTime;
-                runParam.DeltaT = model.Settings.SimulationDeltaT;
-                runParam.TrackJunctionCurrent = model.Settings.JunctionLevelTracking;
+                runParam = model.Settings.GetRunParam();
                 FillRunParams();
                 SetCurrentMode(RunMode.RunningModel, null);
             }
@@ -271,8 +268,6 @@ namespace SiliFish.UI
             }
             runParam = simulationSettings.GetValues();
             runParam.TrackJunctionCurrent = runningModel.Settings.JunctionLevelTracking;
-            runParam.DeltaT = runningModel.Settings.SimulationDeltaT;
-            runParam.MaxTime = runningModel.Settings.SimulationEndTime;
 
             btnRun.Text = "Stop Run";
             return true;

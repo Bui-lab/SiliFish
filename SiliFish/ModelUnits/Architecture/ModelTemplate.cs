@@ -44,7 +44,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
             else
             {
-                //TODO error handling differences.Add("Models not comparable.");
+                differences.Add(new Difference("Models not comparable."));
             }
             if (differences.Count != 0)
                 return differences;

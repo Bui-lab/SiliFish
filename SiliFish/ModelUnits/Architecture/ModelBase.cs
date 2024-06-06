@@ -31,7 +31,6 @@ namespace SiliFish.ModelUnits.Architecture
             {
                 settings = value;
                 Distribution.Random = new Random(settings.Seed);
-                //TODO Distribution.RandomizationOn = ;
             }
         }
         [JsonPropertyOrder(2)]

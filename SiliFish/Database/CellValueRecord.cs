@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SiliFish.Database
 {
     [PrimaryKey(nameof(Id))]
-    //TODO slower - don't include for temp table [Microsoft.EntityFrameworkCore.Index(nameof(ValueType), nameof(TimeIndex))]
+    //slows down drastically - [Microsoft.EntityFrameworkCore.Index(nameof(ValueType), nameof(TimeIndex))]
     public class CellValueRecord
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

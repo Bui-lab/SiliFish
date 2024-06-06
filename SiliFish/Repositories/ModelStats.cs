@@ -253,71 +253,36 @@ namespace SiliFish.Repositories
                 return (null, null);
             }
         }
-        /*
-        public static void GenerateRCTrains(Simulation simulation, List<Cell> Cells, List<CellPool> Pools, double startTime, double endTime)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="simulation"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns>CellSpikes and CellPoolSpikes</returns>
+        public static (Dictionary<string, int>, Dictionary<string, int>) GenerateSpikeSummary(Simulation simulation, double startTime, double endTime)
         {
-            if (simulation == null || !simulation.SimulationRun) return;
-            RunningModel model = simulation.Model;
-            Cells ??= [];
-            if (Cells.Count == 0 && Pools != null)
-                foreach (CellPool pool in Pools)
-                    Cells.AddRange(pool.Cells);
+            Dictionary<string, int> CellSpikes = [];
+            Dictionary<string, int> CellPoolSpikes = [];
             int iSpikeStart = simulation.RunParam.iIndex(startTime);
             int iSpikeEnd = simulation.RunParam.iIndex(endTime);
 
-            List<string> pools = Cells.Select(c => c.CellPool.ID).Distinct().ToList();
-            //Sort by "Cell Group", "Train #", "Somite"
-
-            foreach (string pool in pools)
+            foreach (CellPool cellPool in simulation.Model.GetCellPools().Cast<CellPool>())
             {
-                List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
-                List<TrainOfBursts> burstTrains = SpikeDynamics.GenerateColumnsOfBursts(model.DynamicsParam, simulation.RunParam.DeltaT,
-                    pooledCells, iSpikeStart, iSpikeEnd);
-                foreach (TrainOfBursts burstTrain in burstTrains)
+                int sum = 0;
+                foreach (Cell cell in cellPool.Cells)
                 {
-                    foreach (var (iID, sID, Bursts) in burstTrain.BurstList)
-                    {
-                        dgRCTrains.RowCount++;
-                        int rowIndex = dgRCTrains.RowCount - 1;
-                        if (scrollRow < 0) scrollRow = rowIndex;
-                        dgRCTrains[colRCTrainNumber.Index, rowIndex].Value = burstTrain.iTrainID;
-                        dgRCTrains[colRCTrainCellGroup.Index, rowIndex].Value = sID;
-                        dgRCTrains[colRCTrainSomite.Index, rowIndex].Value = iID;
-                        dgRCTrains[colRCTrainStart.Index, rowIndex].Value = Bursts.Start;
-                        dgRCTrains[colRCTrainEnd.Index, rowIndex].Value = Bursts.End;
-                        dgRCTrains[colRCTrainMidPoint.Index, rowIndex].Value = Bursts.Center;
-                        dgRCTrains[colRCTrainCenter.Index, rowIndex].Value = Bursts.WeightedCenter;
-                    }
+                    int spikeCount = cell.GetSpikeIndices(iSpikeStart, iSpikeEnd).Count;
+                    CellSpikes[cell.ID] = spikeCount;
+                    sum += spikeCount;
                 }
+                if (CellPoolSpikes.ContainsKey(cellPool.ID))
+                    CellPoolSpikes[cellPool.ID] += sum;
+                else
+                    CellPoolSpikes[cellPool.ID] = sum;
             }
-            dgRCTrains.Sort(new RCGridComparer());
-            for (int i = 1; i < dgRCTrains.RowCount; i++)
-            {
-                DataGridViewRow rowPrev = dgRCTrains.Rows[i - 1];
-                DataGridViewRow rowCurrent = dgRCTrains.Rows[i];
-                //Sort by "Cell Group", "Train #", "Somite"
-                string cellPoolPrev = rowPrev.Cells[colRCTrainCellGroup.Index].Value.ToString();
-                string cellPoolCurrent = rowCurrent.Cells[colRCTrainCellGroup.Index].Value.ToString();
-                int trainPrev = int.Parse(rowPrev.Cells[colRCTrainNumber.Index].Value.ToString());
-                int trainCurrent = int.Parse(rowCurrent.Cells[colRCTrainNumber.Index].Value.ToString());
-                if (cellPoolPrev == cellPoolCurrent && trainPrev == trainCurrent)
-                {
-                    rowCurrent.Cells[colRCTrainStartDelay.Index].Value =
-                        double.Parse(rowCurrent.Cells[colRCTrainStart.Index].Value.ToString()) -
-                        double.Parse(rowPrev.Cells[colRCTrainStart.Index].Value.ToString());
-                    rowCurrent.Cells[colRCTrainMidPointDelay.Index].Value =
-                        double.Parse(rowCurrent.Cells[colRCTrainMidPoint.Index].Value.ToString()) -
-                        double.Parse(rowPrev.Cells[colRCTrainMidPoint.Index].Value.ToString());
-                    rowCurrent.Cells[colRCTrainCenterDelay.Index].Value =
-                        double.Parse(rowCurrent.Cells[colRCTrainCenter.Index].Value.ToString()) -
-                        double.Parse(rowPrev.Cells[colRCTrainCenter.Index].Value.ToString());
-                }
-            }
-            tabStats.SelectedTab = tRCTrains;
-            if (dgRCTrains.Rows.Count > 0)
-                dgRCTrains.FirstDisplayedScrollingRowIndex = scrollRow;
-            GenerateHistogramOfRCColumn(colRCTrainStartDelay.Index);
+            return (CellSpikes, CellPoolSpikes);
         }
-        */
     }
 }

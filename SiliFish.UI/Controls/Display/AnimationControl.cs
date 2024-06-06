@@ -40,7 +40,8 @@ namespace SiliFish.UI.Controls
         public AnimationControl()
         {
             InitializeComponent();
-            WebViewInitializations();
+            if (!DesignMode) 
+                WebViewInitializations();
         }
 
         public void SetRunningModel(Simulation simulation, RunningModel model)
@@ -70,7 +71,7 @@ namespace SiliFish.UI.Controls
         {
             InitAsync();
             Wait();
-            webViewAnimation.CoreWebView2.ContextMenuRequested += AmChartsCoreWebView2_ContextMenuRequested;
+            webViewAnimation.ShowsAmCharts = true;
         }
         private async void InitAsync()
         {
@@ -83,23 +84,7 @@ namespace SiliFish.UI.Controls
                 Application.DoEvents();
         }
 
-        private void AmChartsCoreWebView2_ContextMenuRequested(object sender, CoreWebView2ContextMenuRequestedEventArgs args)//TODO make it generic
-        {
-            IList<CoreWebView2ContextMenuItem> menuList = args.MenuItems;
-            CoreWebView2ContextMenuTargetKind context = args.ContextMenuTarget.Kind;
-            if (context == CoreWebView2ContextMenuTargetKind.Page)
-            {
-                for (int index = menuList.Count - 1; index >= 0; index--)
-                {
-                    if (menuList[index].Name == "saveImageAs" ||
-                        menuList[index].Name == "copyImage" ||
-                        menuList[index].Name == "inspectElement")
-                    {
-                        menuList.RemoveAt(index);
-                    }
-                }
-            }
-        }
+
 
         private void cmiAnimationClearCache_Click(object sender, EventArgs e)
         {

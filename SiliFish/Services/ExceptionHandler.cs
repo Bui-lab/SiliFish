@@ -36,7 +36,7 @@ namespace SiliFish.Services
             string stackTrace = "";
             try
             {
-                stackTrace = (new StackTrace(ex, true)).ToString();
+                stackTrace = new StackTrace(ex, true).ToString();
             }
             catch { }
             string logMsg = $"{DateTime.Now:g}:{name}/{ex.Message}\r\n{stackTrace}";

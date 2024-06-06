@@ -508,7 +508,6 @@ namespace SiliFish.UI
             modelOutputControl.Name = "modelOutputControl";
             modelOutputControl.Size = new Size(791, 669);
             modelOutputControl.TabIndex = 0;
-            modelOutputControl.PlottingSelection += modelOutputControl_PlottingSelection;
             // 
             // timerRun
             // 

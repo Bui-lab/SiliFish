@@ -264,7 +264,9 @@ namespace SiliFish.ModelUnits.Architecture
         public RunningModel CreateCopy()
         {
             string jsonstring = JsonSerializer.Serialize(this, JsonUtil.SerializerOptions);
-            RunningModel newModel =  (RunningModel)ModelFile.ReadFromJson(jsonstring, out List<string> issues);//TODO exception handling if there are issues
+            RunningModel newModel =  (RunningModel)ModelFile.ReadFromJson(jsonstring, out List<string> issues);
+            if (issues?.Count > 0)
+                ExceptionHandler.ExceptionHandling("Running Model copy creation unsuccessful", new Exception(string.Join(";", issues)));
             newModel.StimulusTemplates = StimulusTemplates;
             return newModel;
         }
@@ -321,7 +323,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
             else
             {
-                differences.Add(new Difference("Models not comparable."));//TODO error handling
+                differences.Add(new Difference("Models not comparable."));
             }
             if (differences.Count != 0)
                 return differences;
