@@ -59,7 +59,7 @@ namespace SiliFish.UI.Controls
 
         private void Wait()
         {
-            while (webViewRCTrains.Tag == null)
+            while (!webViewRCTrains.Initialized)
                 Application.DoEvents();
         }
 

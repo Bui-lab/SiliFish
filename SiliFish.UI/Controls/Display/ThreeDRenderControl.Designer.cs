@@ -233,7 +233,7 @@ namespace SiliFish.UI.Controls
             gr3DLegend.Controls.Add(legendOutgoing);
             gr3DLegend.Controls.Add(legendGap);
             gr3DLegend.Controls.Add(legendIncoming);
-            gr3DLegend.Location = new Point(573, 698);
+            gr3DLegend.Location = new Point(560, 680);
             gr3DLegend.Name = "gr3DLegend";
             gr3DLegend.Size = new Size(122, 94);
             gr3DLegend.TabIndex = 53;

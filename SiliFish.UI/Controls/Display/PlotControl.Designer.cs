@@ -240,7 +240,7 @@ namespace SiliFish.UI.Controls
             cellSelectionPlot.Location = new Point(212, 25);
             cellSelectionPlot.Name = "cellSelectionPlot";
             cellSelectionPlot.SelectedUnits = null;
-            cellSelectionPlot.Size = new Size(309, 111);
+            cellSelectionPlot.Size = new Size(316, 111);
             cellSelectionPlot.TabIndex = 66;
             // 
             // cbPlotHistory
@@ -260,7 +260,7 @@ namespace SiliFish.UI.Controls
             linkExportPlotData.AutoSize = true;
             linkExportPlotData.Enabled = false;
             linkExportPlotData.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportPlotData.Location = new Point(11, 116);
+            linkExportPlotData.Location = new Point(69, 75);
             linkExportPlotData.Name = "linkExportPlotData";
             linkExportPlotData.Size = new Size(44, 15);
             linkExportPlotData.TabIndex = 59;
@@ -283,7 +283,7 @@ namespace SiliFish.UI.Controls
             linkSaveHTMLPlots.AutoSize = true;
             linkSaveHTMLPlots.Enabled = false;
             linkSaveHTMLPlots.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveHTMLPlots.Location = new Point(11, 95);
+            linkSaveHTMLPlots.Location = new Point(11, 75);
             linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
             linkSaveHTMLPlots.Size = new Size(34, 15);
             linkSaveHTMLPlots.TabIndex = 53;

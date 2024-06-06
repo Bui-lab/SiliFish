@@ -299,15 +299,10 @@ namespace SiliFish.UI.Controls
 
         private void Wait()
         {
-            while (webViewPlots.Tag == null)
+            while (!webViewPlots.Initialized)
                 Application.DoEvents();
 
         }
-        private void webViewPlots_CoreWebView2InitializationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs e)
-        {
-            (sender as Control).Tag = true;
-        }
-
         private void ReadParameters()
         {
             parameters = pfParams.CreateDoubleDictionaryFromControls();

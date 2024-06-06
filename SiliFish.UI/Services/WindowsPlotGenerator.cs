@@ -19,7 +19,7 @@ namespace Services
             model.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Bottom,
-                Title = "Time",
+                Title = "Time (ms)",
                 Minimum = tStart,
                 Maximum = tEnd
             });
@@ -38,7 +38,7 @@ namespace Services
             if (chart.xData == null || (chart.yData == null && chart.yMultiData == null))
                 return null;
 
-            int seriesCount = chart.yData != null ? 1 : chart.yMultiData.Count;
+            int seriesCount = chart.yData != null ? 1 : chart.yMultiData[0].Length;
             double dMin = chart.yMin;
             double dMax = chart.yMax;
             Util.SetYRange(ref dMin, ref dMax);
@@ -58,21 +58,12 @@ namespace Services
                     MarkerSize = GlobalSettings.PlotPointSize
                 };
                 scatterSeries[i] = ls;
-            }
-            for (int i = 0; i < chart.xData.Length; i++)
-            {
-                ScatterSeries ls = scatterSeries[0];
-                if (chart.yData?.Length > i)
-                    ls.Points.Add(new ScatterPoint(chart.xData[i], chart.yData[i]));
-                else if (chart.yMultiData != null)
+                for (int j = 0; j < chart.xData.Length; j++)
                 {
-                    int seriesCounter = 0;
-                    foreach (double[] yData in chart.yMultiData)
-                    {
-                        ls = scatterSeries[seriesCounter++];
-                        if (yData.Length > i)
-                            ls.Points.Add(new ScatterPoint(chart.xData[i], yData[i]));
-                    }
+                    if (chart.yData != null)
+                        ls.Points.Add(new ScatterPoint(chart.xData[j], chart.yData[j]));
+                    else if (chart.yMultiData != null)
+                        ls.Points.Add(new ScatterPoint(chart.xData[j], chart.yMultiData[j][i]));
                 }
             }
             foreach (ScatterSeries ls in scatterSeries)

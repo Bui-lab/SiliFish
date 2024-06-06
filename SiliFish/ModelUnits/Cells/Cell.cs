@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Security.Policy;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Cells
@@ -128,7 +129,7 @@ namespace SiliFish.ModelUnits.Cells
 
         #region Simulation Values
         [JsonIgnore]
-        public ValueCapsule V; //Membrane potential array or link to db
+        public double[] V;//FeaturingDBMemory ValueCapsule V; //Membrane potential array or link to db
         #endregion
         [JsonIgnore]
         public virtual double RestingMembranePotential { get {
@@ -424,6 +425,8 @@ namespace SiliFish.ModelUnits.Cells
 
         public virtual void MemoryAllocation(RunParam runParam, DBLink dBLink)
         {
+            V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray(); 
+            /*//FeaturingDBMemory 
             if (dBLink == null)
             {
                 V = new ValueCapsule("Memb. Pot.", runParam.iMax, Core.Vr);
@@ -437,12 +440,12 @@ namespace SiliFish.ModelUnits.Cells
                 V = new ValueCapsule("Memb. Pot.", runParam.iMax, cellRecord.Id,
                     dBLink.RollingWindow, dBLink.WindowMultiplier,
                     Core.Vr, dBLink.DBName, dBLink.DatabaseDumper);
-            }
+            }*/
         }
 
         public virtual void MemoryFlush ()
         {
-            V.Flush();
+            //FeaturingDBMemory V.Flush();
         }
         public virtual void InitForSimulation(RunParam runParam, ref int uniqueID)
         {
@@ -457,7 +460,7 @@ namespace SiliFish.ModelUnits.Cells
         }
         public virtual void FinalizeSimulation(RunParam runParam, DBLink dbLink)
         {
-            V.FinalizeSimulation(runParam, dbLink);
+            //FeaturingDBMemory V.FinalizeSimulation(runParam, dbLink);
             foreach (GapJunction jnc in GapJunctions)
                 jnc.FinalizeSimulation(runParam, dbLink);
         }
@@ -472,7 +475,7 @@ namespace SiliFish.ModelUnits.Cells
                 v = minV;
             else if (v > maxV)
                 v = maxV;
-            V.SetValue(t, v);
+            V[t] = v;
         }
         
         public virtual void CalculateCellularOutputs(int t)
@@ -526,13 +529,13 @@ namespace SiliFish.ModelUnits.Cells
         {
             if (V == null)
                 return false;
-            return V.AsArray().HasSpike(Core.Vthreshold, iStart, iEnd);
+            return V.ToArray().HasSpike(Core.Vthreshold, iStart, iEnd);
         }
         public List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1, int buffer = 0)
         {
             if (V == null)
                 return null;
-            return V.AsArray().GetSpikeIndices(Core.VSpikeThreshold, iStart, iEnd, buffer);
+            return V.ToArray().GetSpikeIndices(Core.VSpikeThreshold, iStart, iEnd, buffer);
         }
 
         public int GetSpikeCount(int iStart = 0, int iEnd = -1, int buffer = 0)

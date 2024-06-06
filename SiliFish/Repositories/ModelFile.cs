@@ -416,6 +416,8 @@ namespace SiliFish.Repositories
 
         #region CSV Functions
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization", 
+            Justification = "ToArray exists to be ready for future DBMemory feature")]
         public static bool SaveDataToFile(RunningModel model, string filename)
         {
             try
@@ -430,7 +432,7 @@ namespace SiliFish.Repositories
                     //pool.GetCells().Select(c => Vdata_list.TryAdd(c.ID, c.V));
                     foreach (Cell c in pool.GetCells())
                     {
-                        Vdata_list.Add(c.ID, c.V.AsArray());
+                        Vdata_list.Add(c.ID, c.V.ToArray());
                         if (jncTracking)
                         {
                             c.GapJunctions.Where(jnc => jnc.Cell2 == c).ToList().ForEach(jnc => Gapdata_list.TryAdd(jnc.ID, jnc.InputCurrent));

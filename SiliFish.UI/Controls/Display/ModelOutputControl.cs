@@ -22,7 +22,6 @@ namespace SiliFish.UI.Controls
         public ModelOutputControl()
         {
             InitializeComponent();
-            WebViewInitializations();
         }
 
         private void ModelOutputControl_Load(object sender, EventArgs e)
@@ -55,29 +54,6 @@ namespace SiliFish.UI.Controls
             statOutputControl.CancelRun();
             plotControl.CancelRun();
         }
-        #region webViewPlot
-        private void WebViewInitializations()
-        {
-            //TODO InitAsync();
-            //TODO Wait();
-        }
-        private async void InitAsync()
-        {
-            //TODO await twodRenderControl1.InitAsync();
-            //TODO await webView2DRender.EnsureCoreWebView2Async();
-            //TODO await webView3DRender.EnsureCoreWebView2Async();
-            //TODO await plotControl.InitAsync();
-            //TODO await animationControl.InitAsync();
-            //TODO await statOutputControl.InitAsync();
-        }
-
-        private void Wait()
-        {
-            while (false)//TODO
-                Application.DoEvents();
-        }
-
-        #endregion
 
         internal void Plot(List<ModelUnitBase> unitsToPlot)
         {

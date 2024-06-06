@@ -185,7 +185,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         yMin = 0,
                         yMax = maxyValues.Max() + 1,
                         xData = xValues,
-                        yData = yValues
+                        yMultiData = [meanyValues, medianyValues, maxyValues]
                     };
                     if (!AddChart(chart3)) return;
                 }

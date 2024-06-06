@@ -34,11 +34,13 @@ namespace SiliFish.ModelUnits.Cells
         [JsonIgnore]
         public double[] RelativeTension { get { return (Core as ContractibleCellCore).CalculateRelativeTension(V); } }
         [JsonIgnore]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization",
+            Justification = "ToArray exists to be ready for future DBMemory feature")]
         public double[] Tension 
         { 
             get 
-            { 
-                tension ??= (Core as ContractibleCellCore).CalculateTension(V.AsArray());
+            {
+                tension ??= (Core as ContractibleCellCore).CalculateTension(V.ToArray());
                 return tension;
             } 
         }

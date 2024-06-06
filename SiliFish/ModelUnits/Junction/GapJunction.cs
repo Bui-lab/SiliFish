@@ -10,6 +10,7 @@ using SiliFish.Services;
 using System.Reflection;
 using System.Collections.Generic;
 using SiliFish.DynamicUnits.JncCore;
+using System.Linq;
 
 namespace SiliFish.ModelUnits.Junction
 {
@@ -30,7 +31,7 @@ namespace SiliFish.ModelUnits.Junction
         private double VoltageDiffFrom2To1 = 0; //momentary voltage difference that causes incoming current
         public Cell Cell1;
         public Cell Cell2;
-        protected override int nMax => Cell1?.V.AsArray().Length ?? 0;
+        protected override int nMax => Cell1?.V.ToArray().Length ?? 0;
         protected override double dt => Cell1?.Model.DeltaT ?? 0.1;
         public override int iDuration => Math.Max(duration1, duration2);
 
@@ -182,11 +183,11 @@ namespace SiliFish.ModelUnits.Junction
                     inputCurrent[tIndex] = 0;
                 return;
             }
-            double v1 = duration1 <= tIndex ? Cell1.V.GetValue(tIndex - duration1) : Cell1.RestingMembranePotential;
-            double v2 = Cell2.V.GetValue(tIndex - 1);
+            double v1 = duration1 <= tIndex ? Cell1.V[tIndex - duration1] : Cell1.RestingMembranePotential;
+            double v2 = Cell2.V[tIndex - 1];
             VoltageDiffFrom1To2 = v1 - v2;
-            v2 = duration2 <= tIndex ? Cell2.V.GetValue(tIndex - duration2) : Cell2.RestingMembranePotential;
-            v1 = Cell1.V.GetValue(tIndex - 1);
+            v2 = duration2 <= tIndex ? Cell2.V[tIndex - duration2] : Cell2.RestingMembranePotential;
+            v1 = Cell1.V[tIndex - 1];
             VoltageDiffFrom2To1 = v2 - v1;
             double IGap = (Core as ElecSynapseCore).GetNextVal(VoltageDiffFrom1To2, VoltageDiffFrom2To1);
             if (inputCurrent != null)

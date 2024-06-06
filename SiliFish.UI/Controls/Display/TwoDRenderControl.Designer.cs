@@ -64,7 +64,7 @@ namespace SiliFish.UI.Controls
             // 
             gr2DCellPoolLegend.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             gr2DCellPoolLegend.AutoSize = true;
-            gr2DCellPoolLegend.Location = new Point(573, 156);
+            gr2DCellPoolLegend.Location = new Point(560, 131);
             gr2DCellPoolLegend.Name = "gr2DCellPoolLegend";
             gr2DCellPoolLegend.Size = new Size(122, 210);
             gr2DCellPoolLegend.TabIndex = 55;
@@ -208,7 +208,7 @@ namespace SiliFish.UI.Controls
             gr2DLegend.Controls.Add(label2);
             gr2DLegend.Controls.Add(label3);
             gr2DLegend.Controls.Add(label4);
-            gr2DLegend.Location = new Point(573, 687);
+            gr2DLegend.Location = new Point(560, 680);
             gr2DLegend.Name = "gr2DLegend";
             gr2DLegend.Size = new Size(122, 94);
             gr2DLegend.TabIndex = 54;

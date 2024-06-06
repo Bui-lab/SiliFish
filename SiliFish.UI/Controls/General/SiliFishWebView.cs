@@ -7,6 +7,7 @@ namespace SiliFish.UI.Controls.Display
 {
     public partial class SiliFishWebView : WebView2
     {
+        public bool Initialized { get; private set; } = false;
         public SiliFishWebView()
         {
             InitializeComponent();
@@ -74,7 +75,7 @@ namespace SiliFish.UI.Controls.Display
 
         private void webView_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
         {
-            (sender as Control).Tag = true;
+            Initialized = true;
         }
 
         

@@ -21,7 +21,9 @@ namespace SiliFish.ModelUnits.Junction
         public Cell PostCell; //can be a neuron or a muscle cell
         private int duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
                               //calculated at InitForSimulation, and used only during simulation
-        protected override int nMax => PreNeuron?.V.AsArray().Length ?? 0;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization",
+            Justification = "V.ToArray() exists to be ready for future DBMemory feature")]
+        protected override int nMax => PreNeuron?.V.ToArray().Length ?? 0;
         protected override double dt => PreNeuron?.Model.DeltaT ?? 0.1;
         public override int iDuration => duration;
 
@@ -203,8 +205,8 @@ public override string SourcePool
                 return;
             }
             int tt = duration;
-            double vPreSynapse = tt <= tIndex ? PreNeuron.V.GetValue(tIndex - tt) : PreNeuron.RestingMembranePotential;
-            double vPost = tIndex > 0 ? PostCell.V.GetValue(tIndex - 1) : PostCell.RestingMembranePotential;
+            double vPreSynapse = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
+            double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
             bool excitatory = PreNeuron.CellPool.NTMode == NeuronClass.Glutamatergic || PreNeuron.CellPool.NTMode == NeuronClass.Cholinergic;
             double ISyn;
             DynamicsParam dynamics = PreNeuron.Model.DynamicsParam;

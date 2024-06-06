@@ -56,7 +56,7 @@ namespace SiliFish.UI.Controls
 
         private void Wait()
         {
-            while (webView3DRender.Tag == null)
+            while (!webView3DRender.Initialized)
                 Application.DoEvents();
         }
 

@@ -1,4 +1,6 @@
-﻿namespace SiliFish.UI.Controls
+﻿using SiliFish.UI.Controls.Display;
+
+namespace SiliFish.UI.Controls
 {
     partial class DynamicsTestControl
     {
@@ -87,7 +89,7 @@
             splitGAAndPlots = new SplitContainer();
             pOptimize = new Panel();
             gaControl = new GAControl();
-            webViewPlots = new Microsoft.Web.WebView2.WinForms.WebView2();
+            webViewPlots = new SiliFishWebView();
             pPlotsTop = new Panel();
             pPlotsMain = new Panel();
             grPlotSelection = new GroupBox();
@@ -836,7 +838,6 @@
             webViewPlots.Size = new Size(904, 260);
             webViewPlots.TabIndex = 0;
             webViewPlots.ZoomFactor = 1D;
-            webViewPlots.CoreWebView2InitializationCompleted += webViewPlots_CoreWebView2InitializationCompleted;
             // 
             // pPlotsTop
             // 
@@ -1090,7 +1091,7 @@
         private TextBox eRheobase;
         private Label lRheobase;
         private SplitContainer splitMain;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webViewPlots;
+        private SiliFishWebView webViewPlots;
         private NumericUpDown eRheobaseDuration;
         private Label lRheobaseDuration;
         private GroupBox grRheoSens;

@@ -19,7 +19,11 @@ namespace SiliFish.Database
         string dbName;
         double defValue;
         DatabaseDumper dumper;
-
+        public double this[int i]
+        {
+            get => GetValue(i);
+            set => SetValue(i, value);
+        }
         public ValueCapsule(string name, int iMax, double defaultValue) 
         { 
             Name = name;
@@ -39,7 +43,7 @@ namespace SiliFish.Database
             int size = Math.Min(rollingWindow * multiplier, iMax);
             Array = Enumerable.Repeat(defaultValue, size).ToArray();
         }
-        public double GetValue(int i)
+        private double GetValue(int i)
         {
             try
             {
@@ -68,7 +72,7 @@ namespace SiliFish.Database
             }
             dumper.Dump(list);
         }
-        public void SetValue(int i, double value)
+        private void SetValue(int i, double value)
         {
             try
             {

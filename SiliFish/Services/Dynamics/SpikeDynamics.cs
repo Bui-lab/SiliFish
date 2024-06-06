@@ -9,13 +9,15 @@ namespace SiliFish.Services.Dynamics
 {
     public class SpikeDynamics
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization",
+            Justification = "V.ToArray() exists to be ready for future DBMemory feature")]
         public static (DynamicsStats, (double AvgV, double AvgVPos, double AvgVNeg)) GenerateSpikeStats(DynamicsParam settings, double dt, Cell cell, int iStart, int iEnd)
         {
             List<int> spikes = cell.GetSpikeIndices(iStart, iEnd, (int)(settings.BurstBreak / dt));
             if (spikes.Count == 0) return (null, (0, 0, 0));
             if (spikes[^1] > iEnd)
                 iEnd = spikes[^1];
-            double[] V = cell.V.AsArray();
+            double[] V = cell.V.ToArray();
             if (iEnd >= V.Length)
                 iEnd = V.Length - 1;
             DynamicsStats dyn = new(settings, V[0..iEnd], dt, cell.Core.VSpikeThreshold, iStart, iEnd);

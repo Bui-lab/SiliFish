@@ -80,7 +80,7 @@ namespace SiliFish.UI.Controls
 
         private void Wait()
         {
-            while (webViewAnimation.Tag == null)
+            while (!webViewAnimation.Initialized)
                 Application.DoEvents();
         }
 

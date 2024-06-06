@@ -41,10 +41,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 {
                     columnTitles += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color);
-                    yMultiData.Add(cell.V.AsArray()[iStart..iEnd]);
+                    yMultiData.Add(cell.V.ToArray()[iStart..iEnd]);
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                     {
-                        data[i] += cell.V?.GetValue(iStart + i).ToString(GlobalSettings.PlotDataFormat) + ",";                        
+                        data[i] += cell.V?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";                        
                     }
                 }
                 if (!GlobalSettings.SameYAxis)

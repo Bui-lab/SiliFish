@@ -1,5 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
@@ -27,6 +28,9 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         {
             CreateCharts();
         }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization",
+            Justification = "V.ToArray() exists to be ready for future DBMemory feature")]
         protected override void CreateCharts()
         {
             if (cells == null || cells.Count == 0)
@@ -48,7 +52,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     bool chartExists = false;
                     foreach (Cell cell in cellGroup)
                     {
-                        DynamicsStats dynamics = new(dynamicsParam, cell.V.AsArray(), dt, cell.Core.VSpikeThreshold, iStart, iEnd);
+                        DynamicsStats dynamics = new(dynamicsParam, cell.V.ToArray(), dt, cell.Core.VSpikeThreshold, iStart, iEnd);
                         Dictionary<double, (double Freq, double End)> SpikeBurstFrequency =
                             (burst ? dynamics.BurstingFrequency_Grouped : dynamics.SpikeFrequency_Grouped)
                             .Where(fr => fr.Value.End >= iStart * dt && fr.Key <= iEnd * dt).ToDictionary(fr => fr.Key, fr => (fr.Value.Freq, fr.Value.End));
@@ -109,7 +113,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     Cell cell = cellGroup.First();
                     columnTitles += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color);
-                    DynamicsStats dynamics = new(dynamicsParam, cell.V.AsArray(), dt, cell.Core.VSpikeThreshold, iStart, iEnd);
+                    DynamicsStats dynamics = new(dynamicsParam, cell.V.ToArray(), dt, cell.Core.VSpikeThreshold, iStart, iEnd);
                     Dictionary<double, (double Freq, double End)> SpikeBurstFrequency =
                         (burst ? dynamics.BurstingFrequency_Grouped : dynamics.SpikeFrequency_Grouped)
                         .Where(fr => fr.Value.End >= iStart * dt && fr.Key <= iEnd * dt).ToDictionary(fr => fr.Key, fr => (fr.Value.Freq, fr.Value.End));

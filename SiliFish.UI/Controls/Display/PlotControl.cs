@@ -174,7 +174,7 @@ namespace SiliFish.UI.Controls
 
         private void Wait()
         {
-            while (webViewPlot.Tag == null)
+            while (!webViewPlot.Initialized)
                 Application.DoEvents();
         }
 
