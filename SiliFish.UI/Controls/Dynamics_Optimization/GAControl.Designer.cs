@@ -166,7 +166,6 @@
             dgMinMaxValues.Location = new Point(0, 29);
             dgMinMaxValues.Name = "dgMinMaxValues";
             dgMinMaxValues.RowHeadersVisible = false;
-            dgMinMaxValues.RowTemplate.Height = 25;
             dgMinMaxValues.Size = new Size(212, 445);
             dgMinMaxValues.TabIndex = 27;
             // 
@@ -221,7 +220,6 @@
             dgFitnessFunctions.Location = new Point(0, 29);
             dgFitnessFunctions.Name = "dgFitnessFunctions";
             dgFitnessFunctions.RowHeadersVisible = false;
-            dgFitnessFunctions.RowTemplate.Height = 25;
             dgFitnessFunctions.Size = new Size(477, 445);
             dgFitnessFunctions.TabIndex = 30;
             dgFitnessFunctions.CellContentClick += dgFitnessFunctions_CellContentClick;
@@ -313,7 +311,7 @@
             // lFitnessFunctions
             // 
             lFitnessFunctions.AutoSize = true;
-            lFitnessFunctions.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lFitnessFunctions.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lFitnessFunctions.Location = new Point(13, 6);
             lFitnessFunctions.Name = "lFitnessFunctions";
             lFitnessFunctions.Size = new Size(101, 15);

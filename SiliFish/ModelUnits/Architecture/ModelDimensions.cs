@@ -3,6 +3,7 @@ using SiliFish.Extensions;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Architecture
 {
@@ -38,9 +39,12 @@ namespace SiliFish.ModelUnits.Architecture
         [DisplayName("Dorsal-Ventral"), Category("Musculo-Skeletal")]
         public double BodyDorsalVentralDistance { get; set; }
 
+        [JsonIgnore, Browsable(false)]
+        public double SomiteLength => SpinalRostralCaudalDistance / NumberOfSomites;
+
         public ModelDimensions Clone()
         {
-            return (ModelDimensions) MemberwiseClone();
+            return (ModelDimensions)MemberwiseClone();
         }
         public Dictionary<string, object> BackwardCompatibility(Dictionary<string, object> paramExternal)
         {
@@ -75,25 +79,25 @@ namespace SiliFish.ModelUnits.Architecture
         public List<Difference> DiffersFrom(ModelDimensions other)
         {
             List<Difference> differences = [];
-            if (NumberOfSomites  != other.NumberOfSomites)
+            if (NumberOfSomites != other.NumberOfSomites)
                 differences.Add(new Difference("Number of somites", NumberOfSomites, other.NumberOfSomites));
-            if (SupraSpinalRostralCaudalDistance  != other.SupraSpinalRostralCaudalDistance)
+            if (SupraSpinalRostralCaudalDistance != other.SupraSpinalRostralCaudalDistance)
                 differences.Add(new Difference("Supra-spinal rostrocaudal distance", SupraSpinalRostralCaudalDistance, other.SupraSpinalRostralCaudalDistance));
-            if (SupraSpinalDorsalVentralDistance  != other.SupraSpinalDorsalVentralDistance)
+            if (SupraSpinalDorsalVentralDistance != other.SupraSpinalDorsalVentralDistance)
                 differences.Add(new Difference("Supra-spinal dorsoventral distance", SupraSpinalDorsalVentralDistance, other.SupraSpinalDorsalVentralDistance));
-            if (SupraSpinalMedialLateralDistance  != other.SupraSpinalMedialLateralDistance)
+            if (SupraSpinalMedialLateralDistance != other.SupraSpinalMedialLateralDistance)
                 differences.Add(new Difference("Supra-spinal mediolateral distance", SupraSpinalMedialLateralDistance, other.SupraSpinalMedialLateralDistance));
-            if (SpinalRostralCaudalDistance  != other.SpinalRostralCaudalDistance)
+            if (SpinalRostralCaudalDistance != other.SpinalRostralCaudalDistance)
                 differences.Add(new Difference("Spinal rostrocaudal distance", SpinalRostralCaudalDistance, other.SpinalRostralCaudalDistance));
-            if (SpinalDorsalVentralDistance  != other.SpinalDorsalVentralDistance)
+            if (SpinalDorsalVentralDistance != other.SpinalDorsalVentralDistance)
                 differences.Add(new Difference("Spinal dorsoventral distance", SpinalDorsalVentralDistance, other.SpinalDorsalVentralDistance));
-            if (SpinalMedialLateralDistance  != other.SpinalMedialLateralDistance)
+            if (SpinalMedialLateralDistance != other.SpinalMedialLateralDistance)
                 differences.Add(new Difference("Spinal mediolateral distance", SpinalMedialLateralDistance, other.SpinalMedialLateralDistance));
-            if (SpinalBodyPosition  != other.SpinalBodyPosition)
+            if (SpinalBodyPosition != other.SpinalBodyPosition)
                 differences.Add(new Difference("Spinal body position", SpinalBodyPosition, other.SpinalBodyPosition));
-            if (BodyMedialLateralDistance  != other.BodyMedialLateralDistance)
+            if (BodyMedialLateralDistance != other.BodyMedialLateralDistance)
                 differences.Add(new Difference("Body mediolateral distance", BodyMedialLateralDistance, other.BodyMedialLateralDistance));
-            if (BodyDorsalVentralDistance  != other.BodyDorsalVentralDistance)
+            if (BodyDorsalVentralDistance != other.BodyDorsalVentralDistance)
                 differences.Add(new Difference("Body dorsoventral distance", BodyDorsalVentralDistance, other.BodyDorsalVentralDistance));
             if (differences.Count != 0)
                 return differences;

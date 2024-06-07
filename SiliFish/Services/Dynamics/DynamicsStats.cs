@@ -3,6 +3,7 @@ using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace SiliFish.Services.Dynamics
@@ -13,7 +14,7 @@ namespace SiliFish.Services.Dynamics
     /// </summary>
     public class DynamicsStats
     {
-        private DynamicsParam dynamicsParams;
+        public static DynamicsParam DynamicsParams;
         private double chatteringIrregularity = 0.1;
         private double oneClusterMultiplier = 2;
         private double tonicPadding = 1;
@@ -37,8 +38,8 @@ namespace SiliFish.Services.Dynamics
         private bool increasingIntervals;
         public double Irregularity { get; set; }
 
-        public double Default_MaxBurstInterval_LowerRange { get; set; } //in ms, the maximum interval two spikes can have to be considered as part of a burst
-        public double Default_MaxBurstInterval_UpperRange { get; set; } //in ms, the maximum interval two spikes can have to be considered as part of a burst
+        public double MaxBurstInterval_LowerRange { get; set; } //in ms, the maximum interval two spikes can have to be considered as part of a burst
+        public double MaxBurstInterval_UpperRange { get; set; } //in ms, the maximum interval two spikes can have to be considered as part of a burst
         /// <summary>
         /// The list of tau values for each spike (by time)
         /// </summary>
@@ -102,7 +103,7 @@ namespace SiliFish.Services.Dynamics
                         int iEnd = 1;
                         while (iEnd <= SpikeList.Count - 1)
                         {
-                            while (dt * (SpikeList[iEnd] - SpikeList[iEnd - 1]) < dynamicsParams.SpikeBreak)
+                            while (dt * (SpikeList[iEnd] - SpikeList[iEnd - 1]) < DynamicsParams.SpikeBreak)
                             {
                                 iEnd++;
                                 if (iEnd == SpikeList.Count)
@@ -153,7 +154,7 @@ namespace SiliFish.Services.Dynamics
                         int iEnd = 1;
                         while (iEnd <= BurstsOrSpikes.Count - 1)
                         {
-                            while (BurstsOrSpikes[iEnd].Start - BurstsOrSpikes[iEnd - 1].End < dynamicsParams.BurstBreak)
+                            while (BurstsOrSpikes[iEnd].Start - BurstsOrSpikes[iEnd - 1].End < DynamicsParams.BurstBreak)
                             {
                                 iEnd++;
                                 if (iEnd == BurstsOrSpikes.Count)
@@ -261,12 +262,12 @@ namespace SiliFish.Services.Dynamics
         { }
         public DynamicsStats(DynamicsParam settings, double[] stimulus, double dt)
         {
-            dynamicsParams = settings ?? new DynamicsParam();//use default values
-            chatteringIrregularity = dynamicsParams.ChatteringIrregularity;
-            oneClusterMultiplier = dynamicsParams.OneClusterMultiplier;
-            tonicPadding = dynamicsParams.TonicPadding;
-            Default_MaxBurstInterval_LowerRange = dynamicsParams.MaxBurstInterval_DefaultLowerRange;
-            Default_MaxBurstInterval_UpperRange = dynamicsParams.MaxBurstInterval_DefaultUpperRange;
+            DynamicsParams ??= settings ?? new DynamicsParam();//use default values
+            chatteringIrregularity = DynamicsParams.ChatteringIrregularity;
+            oneClusterMultiplier = DynamicsParams.OneClusterMultiplier;
+            tonicPadding = DynamicsParams.TonicPadding;
+            MaxBurstInterval_LowerRange = DynamicsParams.MaxBurstInterval_DefaultLowerRange;
+            MaxBurstInterval_UpperRange = DynamicsParams.MaxBurstInterval_DefaultUpperRange;
 
             this.dt = dt;
             int iMax = stimulus.Length;
@@ -282,12 +283,12 @@ namespace SiliFish.Services.Dynamics
 
         public DynamicsStats(DynamicsParam settings, double[] V, double dt, double VSpikeThreshold, int analysisStart, int analysisEnd)
         {
-            dynamicsParams = settings != null ? settings.Clone() : new DynamicsParam();//if null use default values; cloned to prevent changes to the settings
-            chatteringIrregularity = dynamicsParams.ChatteringIrregularity;
-            oneClusterMultiplier = dynamicsParams.OneClusterMultiplier;
-            tonicPadding = dynamicsParams.TonicPadding;
-            Default_MaxBurstInterval_LowerRange = dynamicsParams.MaxBurstInterval_DefaultLowerRange;
-            Default_MaxBurstInterval_UpperRange = dynamicsParams.MaxBurstInterval_DefaultUpperRange;
+            DynamicsParams = settings != null ? settings.Clone() : new DynamicsParam();//if null use default values; cloned to prevent changes to the settings
+            chatteringIrregularity = DynamicsParams.ChatteringIrregularity;
+            oneClusterMultiplier = DynamicsParams.OneClusterMultiplier;
+            tonicPadding = DynamicsParams.TonicPadding;
+            MaxBurstInterval_LowerRange = DynamicsParams.MaxBurstInterval_DefaultLowerRange;
+            MaxBurstInterval_UpperRange = DynamicsParams.MaxBurstInterval_DefaultUpperRange;
 
             this.dt = dt;
             StimulusArray = null;
@@ -310,7 +311,7 @@ namespace SiliFish.Services.Dynamics
 
             double centroid1 = intervals.Min();
             double centroid2 = intervals.Max();
-            if (centroid1 > Default_MaxBurstInterval_LowerRange)// no bursts, only single spikes
+            if (centroid1 > MaxBurstInterval_LowerRange)// no bursts, only single spikes
             {
                 InterBurstCluster = new(centroid2);
                 return false;
@@ -334,14 +335,14 @@ namespace SiliFish.Services.Dynamics
                 center = (BurstCluster.centroid + InterBurstCluster.centroid) / 2;
             }
             if (InterBurstCluster.centroid < BurstCluster.centroid * oneClusterMultiplier 
-                /* TODO check the logic|| 
-                BurstCluster.clusterMax * BurstCluster.clusterMax / BurstCluster.clusterMin > InterBurstCluster.centroid*/)//single cluster
+                || 
+                BurstCluster.clusterMax * BurstCluster.clusterMax / BurstCluster.clusterMin > InterBurstCluster.centroid)//single cluster
             {
                 BurstCluster.MergeCluster(InterBurstCluster);
                 InterBurstCluster = null;
                 return false;
             }
-            Default_MaxBurstInterval_LowerRange = Default_MaxBurstInterval_UpperRange = BurstCluster.clusterMax;
+            MaxBurstInterval_LowerRange = MaxBurstInterval_UpperRange = BurstCluster.clusterMax;
             return true;
         }
         private void SetFiringPatternOfList()
@@ -521,16 +522,14 @@ namespace SiliFish.Services.Dynamics
                 return;
             }
             bool hasClusters = HasClusters();
-            dynamicsParams.MaxBurstInterval_DefaultLowerRange = Default_MaxBurstInterval_LowerRange;
-            dynamicsParams.MaxBurstInterval_DefaultUpperRange = Default_MaxBurstInterval_UpperRange;
             if (!hasClusters && !followedByQuiescence && BurstCluster != null)//consider all spikes individually
             {
-                dynamicsParams.MaxBurstInterval_DefaultLowerRange = 0;
-                dynamicsParams.MaxBurstInterval_DefaultUpperRange = 0;
+                MaxBurstInterval_LowerRange = 0;
+                MaxBurstInterval_UpperRange = 0;
             }
 
 
-            burstsOrSpikes = BurstOrSpike.SpikesToBursts(dynamicsParams, dt, SpikeList, out double lastInterval);
+            burstsOrSpikes = BurstOrSpike.SpikesToBursts(DynamicsParams, dt, SpikeList, out double lastInterval);
             if (double.IsNaN(lastInterval))
                 lastInterval = quiescence;
             followedByQuiescence = lastStimulusTime - lastSpikeTime >= lastInterval + tonicPadding;
@@ -541,4 +540,132 @@ namespace SiliFish.Services.Dynamics
 
 
     }
+
+    public class DynamicsStatsParams
+    {
+        #region Dynamics - Two Exp Syn
+        [Description("The number of spikes that would be considered in calculating the current conductance of a synapse. " +
+            "Smaller numbers will lower the sensitivity of the simulation, whicle larger numbers will lower the performance." +
+            "Enter 0 or a negative number to consider all of the spikes."),
+            DisplayName("Spike Train Spike Count"),
+            Category("Dynamics - Two Exp Syn")]
+        public int SpikeTrainSpikeCount 
+        { 
+            get { return DynamicsStats.DynamicsParams.SpikeTrainSpikeCount; } 
+            set { DynamicsStats.DynamicsParams.SpikeTrainSpikeCount = value; } 
+        }
+
+        [Description("To increase performance of the simulation, the spikes earlier than " +
+            "ThresholdMultiplier * (TauR + TauDFast + TauDSlow) will be ignored in calculating the current conductance of a synapse."),
+            DisplayName("Threshold multiplier"),
+            Category("Dynamics - Two Exp Syn")]
+
+        public double ThresholdMultiplier
+        {
+            get { return DynamicsStats.DynamicsParams.ThresholdMultiplier; }
+            set { DynamicsStats.DynamicsParams.ThresholdMultiplier = value; }
+        }
+
+        [Description("If set to 'false', the negative currents in excitatory synapses and positive currents in inhibitory synapses will be zeroed out."),
+            DisplayName("Allow Reverse Current"),
+            Category("Dynamics - Two Exp Syn")]
+        public bool AllowReverseCurrent
+        {
+            get { return DynamicsStats.DynamicsParams.AllowReverseCurrent; }
+            set { DynamicsStats.DynamicsParams.AllowReverseCurrent = value; }
+        }
+
+        #endregion
+
+        #region Firing Patterns
+        [Description("The 'SD/Avg Interval' ratio for a burst sequence to be considered chattering"),
+            DisplayName("Chattering Irregularity"),
+            Category("Firing Patterns")]
+        public double ChatteringIrregularity
+        {
+            get { return DynamicsStats.DynamicsParams.ChatteringIrregularity; }
+            set { DynamicsStats.DynamicsParams.ChatteringIrregularity = value; }
+        }
+
+        [Description("In ms, the maximum interval two spikes can have to be considered as part of a burst. " +
+            "Used if the intervals between spikes are not increasing with time."),
+            DisplayName("Max Burst Interval - no spread"),
+            Category("Firing Patterns")]
+        public double MaxBurstInterval_DefaultLowerRange
+        {
+            get { return DynamicsStats.DynamicsParams.MaxBurstInterval_DefaultLowerRange; }
+            set { DynamicsStats.DynamicsParams.MaxBurstInterval_DefaultLowerRange = value; }
+        }
+
+        [Description("In ms, the maximum interval two spikes can have to be considered as part of a burst. " +
+            "Used if the intervals between spikes are increasing with time."),
+            DisplayName("Max Burst Interval - spread"),
+            Category("Firing Patterns")]
+        public double MaxBurstInterval_DefaultUpperRange
+        {
+            get { return DynamicsStats.DynamicsParams.MaxBurstInterval_DefaultUpperRange; }
+            set { DynamicsStats.DynamicsParams.MaxBurstInterval_DefaultUpperRange = value; }
+        }
+
+
+        [Description("Centroid2 (average duration between bursts) < Centroid1 (average duration between spikes) * OneClusterMultiplier " +
+            "means there is only one cluster (all spikes are part of a burst)."),
+            DisplayName("One Cluster Multiplier"),
+            Category("Firing Patterns")]
+        public double OneClusterMultiplier
+        {
+            get { return DynamicsStats.DynamicsParams.OneClusterMultiplier; }
+            set { DynamicsStats.DynamicsParams.OneClusterMultiplier = value; }
+        }
+
+        [Description("In ms, the range between the last spike and the end of current to be considered as tonic firing."),
+            DisplayName("Tonic Padding"),
+            Category("Firing Patterns")]
+        public double TonicPadding
+        {
+            get { return DynamicsStats.DynamicsParams.TonicPadding; }
+            set { DynamicsStats.DynamicsParams.TonicPadding = value; }
+        }
+
+        [Description("In ms. The duration to be used as a break while calculating spiking frequency."),
+            DisplayName("Spike Break"),
+            Category("Firing Patterns")]
+        public double SpikeBreak
+        {
+            get { return DynamicsStats.DynamicsParams.SpikeBreak; }
+            set { DynamicsStats.DynamicsParams.SpikeBreak = value; }
+        }
+
+        [Description("In ms. The duration to be used as a break while calculating bursting frequency."),
+            DisplayName("Burst Break"),
+            Category("Firing Patterns")]
+        public int BurstBreak
+        {
+            get { return DynamicsStats.DynamicsParams.BurstBreak; }
+            set { DynamicsStats.DynamicsParams.BurstBreak = value; }
+        }
+
+        #endregion
+        #region RC Spike Trains
+        [Description("In ms. The max duration in between two bursts of successive somites to be considered the same train of bursts."),
+            DisplayName("RC Positive Delay"),
+            Category("RC Spike Trains")]
+        public double RCPositiveDelay
+        {
+            get { return DynamicsStats.DynamicsParams.RCPositiveDelay; }
+            set { DynamicsStats.DynamicsParams.RCPositiveDelay = value; }
+        }
+
+        [Description("In ms. The max negative duration in between two bursts of successive somites to be considered the same train of bursts."),
+            DisplayName("RC Negative Delay"),
+            Category("RC Spike Trains")]
+        public double RCNegativeDelay
+        {
+            get { return DynamicsStats.DynamicsParams.RCNegativeDelay; }
+            set { DynamicsStats.DynamicsParams.RCNegativeDelay = value; }
+        }
+        #endregion
+       
+    }
+
 }

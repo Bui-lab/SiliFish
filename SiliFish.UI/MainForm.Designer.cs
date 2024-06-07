@@ -93,6 +93,7 @@ namespace SiliFish.UI
             pDistinguisherBottom = new Panel();
             saveFileExcel = new SaveFileDialog();
             openFileExcel = new OpenFileDialog();
+            miToolsMemoryFlush = new ToolStripMenuItem();
             pTop.SuspendLayout();
             menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
@@ -208,7 +209,7 @@ namespace SiliFish.UI
             // 
             // mTools
             // 
-            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsSep2, miToolsGenerateStatsData, miToolsMultipleRun, miToolsRunTimeStats, miToolsSepStats, miToolsSettings });
+            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsSep2, miToolsGenerateStatsData, miToolsMultipleRun, miToolsRunTimeStats, miToolsSepStats, miToolsSettings, miToolsMemoryFlush });
             mTools.Name = "mTools";
             mTools.Size = new Size(46, 19);
             mTools.Text = "Tools";
@@ -582,6 +583,13 @@ namespace SiliFish.UI
             // 
             openFileExcel.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
             // 
+            // miToolsMemoryFlush
+            // 
+            miToolsMemoryFlush.Name = "miToolsMemoryFlush";
+            miToolsMemoryFlush.Size = new Size(207, 22);
+            miToolsMemoryFlush.Text = "Memory Flush";
+            miToolsMemoryFlush.Click += miToolsMemoryFlush_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -677,5 +685,6 @@ namespace SiliFish.UI
         private Controls.General.SimulationSettingsControl simulationSettings;
         private ToolStripMenuItem miToolsStatsSpikeCounts;
         private ToolStripMenuItem miToolsStatsEpisodes;
+        private ToolStripMenuItem miToolsMemoryFlush;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SiliFish.Definitions;
 using SiliFish.Helpers;
+using System;
 
 
 namespace SiliFish.Database;
@@ -20,13 +21,21 @@ public class SFDataContext: DbContext
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseSqlite($"Data Source={DbFileName}");
     }
+    public override void Dispose()
+    {
+        base.Database.CloseConnection();
+        base.Dispose();
+        GC.SuppressFinalize(this);
+    }
 
     public SFDataContext(bool temp = false)
     {
         if (temp)
         {
             DbFileName = $"{GlobalSettings.TempFolder}\\{FileUtil.GetUniqueFileName()}.sqlite";
-            GlobalSettings.TempFiles.Add(DbFileName);//to ensure deletion at the end
+            GlobalSettings.AddTempFile(DbFileName);//to ensure deletion at the end
+            GlobalSettings.AddTempFile(DbFileName + "-shm");
+            GlobalSettings.AddTempFile(DbFileName + "-wal");
         }
     }
 

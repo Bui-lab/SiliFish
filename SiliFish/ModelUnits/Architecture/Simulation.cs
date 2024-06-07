@@ -1,4 +1,5 @@
-﻿using SiliFish.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using SiliFish.Database;
 using SiliFish.Definitions;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Parameters;
@@ -13,14 +14,6 @@ using System.Threading.Tasks;
 
 namespace SiliFish.ModelUnits.Architecture
 {
-    public class DBLink(int simulationID, string dbName)
-    {
-        public readonly int SimulationID = simulationID;
-        public readonly string DBName = dbName;
-        public DatabaseDumper DatabaseDumper { get; set; } = new(dbName);
-        public int RollingWindow { get; internal set; }
-        public int WindowMultiplier { get; internal set; }
-    }
     public class Simulation(RunningModel runningModel, RunParam runParam)
     {
         [JsonIgnore]
@@ -45,7 +38,7 @@ namespace SiliFish.ModelUnits.Architecture
         public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
 
         [JsonIgnore]
-        public DBLink DBLink { get; set; }
+        public SimulationDBLink DBLink { get; set; }
 
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
@@ -53,7 +46,7 @@ namespace SiliFish.ModelUnits.Architecture
         public RunningModel Model { get; set; } = runningModel;
         public string Description => GlobalSettings.UseDBForMemory ? "DB Mode" : "Regular Mode";
 
-        public void InitializeSimulation()
+        public void InitializeSimulation(Simulator simulator)
         {
             try
             {
@@ -61,32 +54,21 @@ namespace SiliFish.ModelUnits.Architecture
                 Start = DateTime.Now;
                 if (GlobalSettings.UseDBForMemory)
                 {
-                    SFDataContext dataContext = new(temp: true);
+                    using SFDataContext dataContext = new(temp: true);
                     dataContext.Database.EnsureCreated();
-                    if (Model.DbId == 0)
-                    {
-                        string stats = $"{Model.GetNumberOfCells():n0} cells; {Model.GetNumberOfJunctions():n0} junctions/synapses";
-                        ModelRecord modelRecord = new(Model.ModelName, DateTime.Now, stats, "");//TODO ability to save the json file and include the filename
-                        dataContext.Add(modelRecord);
-                        dataContext.SaveChanges();
-                        Model.DbId = modelRecord.Id;
-                    }
-                    SimulationRecord sim = new(Model.DbId,
-                               DateTime.Now,
-                               DateTime.Now,
-                               Description,
-                               RunParam.Description);
-                    dataContext.Add(sim);
-                    dataContext.SaveChanges();
-                    DBLink = new DBLink(sim.Id, dataContext.DbFileName);
+                    SimulationDBWriter simulationDBWriter = new(dataContext.DbFileName, simulator, null);
+                    SimulationRecord simRecord = simulationDBWriter.AddSimulationRecord(dataContext, this);
+                    GlobalSettings.AddTempFile(dataContext.Models.Find(simRecord.ModelID)?.JsonFile);
+                    DBLink = new SimulationDBLink(simRecord.Id, dataContext.DbFileName);
+                    dataContext.Database.CloseConnection();
                 }
                 iProgress = 0;
                 randomNumGenerator ??= new Random(Model.Settings.Seed);
 
-                DBLink dB = DBLink;
+                SimulationDBLink dB = DBLink;
                 Model.InitForSimulation(RunParam, ref dB, randomNumGenerator);
-                if (dB == null)
-                    DBLink = null;
+                //if (dB == null) //dB is set to null if DB memory extension is not required based on the running parameters
+                //    DBLink = null; //commented out because DBLink is used later
             }
             catch (Exception ex)
             {
@@ -139,11 +121,11 @@ namespace SiliFish.ModelUnits.Architecture
                     cell.CalculateMembranePotential(timeIndex);
             }
         }
-        public virtual void RunSimulation()
+        public virtual void RunSimulation(Simulator simulator)
         {
             try
             {
-                InitializeSimulation();
+                InitializeSimulation(simulator);
                 state = SimulationState.Running;
                 if (SimulationCancelled)
                 {

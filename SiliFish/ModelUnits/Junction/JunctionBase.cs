@@ -1,4 +1,5 @@
-﻿using SiliFish.DataTypes;
+﻿using SiliFish.Database;
+using SiliFish.DataTypes;
 using SiliFish.DynamicUnits.JncCore;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
@@ -98,11 +99,11 @@ namespace SiliFish.ModelUnits.Junction
             }
         }
 
-        public virtual void FinalizeSimulation(RunParam runParam, DBLink dbLink)
+        public virtual void FinalizeSimulation(RunParam runParam, SimulationDBLink dbLink)
         {
 
         }
-        public virtual void MemoryAllocation(RunParam runParam, DBLink dbLink)
+        public virtual void MemoryAllocation(RunParam runParam, SimulationDBLink dbLink)
         {
 
         }

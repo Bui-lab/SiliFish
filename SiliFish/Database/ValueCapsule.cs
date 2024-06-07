@@ -165,7 +165,7 @@ namespace SiliFish.Database
         /// </summary>
         /// <param name="runParam"></param>
         /// <param name="dbLink"></param>
-        internal void FinalizeSimulation(RunParam runParam, DBLink dbLink)
+        internal void FinalizeSimulation(RunParam runParam, SimulationDBLink dbLink)
         {
             if (dbLink == null) return;
             int dumpEnd = Array.Length;

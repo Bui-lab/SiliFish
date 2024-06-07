@@ -78,7 +78,7 @@ namespace SiliFish.UI.Controls
             exhaustiveSearch = false;
             optimizationStartTime = DateTime.Now;
             optimizationCancelled = false;
-            solverOutput = solver.Optimize(single:true).Outputs[0];
+            solverOutput = solver.Optimize(single: true).Outputs[0];
             Invoke(CompleteOptimization);
         }
 
@@ -122,7 +122,7 @@ namespace SiliFish.UI.Controls
                 solver = iterSolver;
                 exhaustiveSolverIterator++;
                 List<CoreSolverOutput> currentOutputs = solver.Optimize(single: false).Outputs;
-                foreach(CoreSolverOutput output in currentOutputs)
+                foreach (CoreSolverOutput output in currentOutputs)
                     CheckResult(output);
                 if (exhaustiveBestParameters.Min(ebp => ebp.Fitness) >= iterSolver.Settings.TargetFitness - GlobalSettings.Epsilon
                     && exhaustiveBestParameters.Count == GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount)
@@ -649,5 +649,6 @@ namespace SiliFish.UI.Controls
             }
 
         }
+
     }
 }

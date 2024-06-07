@@ -73,8 +73,10 @@ namespace SiliFish.ModelUnits.Cells
         }
 
         public double ConductionVelocity { get; set; }
-        public double AscendingAxonLength { get; set; }
-        public double DescendingAxonLength { get; set; }
+        public double AscendingAxonLength { get; set; }//in somites
+        public double DescendingAxonLength { get; set; }//in somites
+        public double AscendingAxonTrueLength { get; set; }
+        public double DescendingAxonTrueLength { get; set; }
 
         [JsonPropertyOrder(3)]
         public Stimuli Stimuli { get; set; } = new();
@@ -423,7 +425,7 @@ namespace SiliFish.ModelUnits.Cells
 
         #region RunTime
 
-        public virtual void MemoryAllocation(RunParam runParam, DBLink dBLink)
+        public virtual void MemoryAllocation(RunParam runParam, SimulationDBLink dBLink)
         {
             V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray(); 
             /*//FeaturingDBMemory 
@@ -446,10 +448,14 @@ namespace SiliFish.ModelUnits.Cells
         public virtual void MemoryFlush ()
         {
             //FeaturingDBMemory V.Flush();
+            foreach (GapJunction jnc in GapJunctions)
+                jnc.MemoryFlush();
         }
         public virtual void InitForSimulation(RunParam runParam, ref int uniqueID)
         {
             InitForSimulation(runParam.DeltaT);
+            AscendingAxonTrueLength = AscendingAxonLength * Model.ModelDimensions.SomiteLength;
+            DescendingAxonTrueLength = DescendingAxonLength * Model.ModelDimensions.SomiteLength;
             if (ConductionVelocity < GlobalSettings.Epsilon)
                 ConductionVelocity = Model.Settings.cv;
             Core.Initialize(runParam.DeltaT, ref uniqueID);
@@ -458,7 +464,7 @@ namespace SiliFish.ModelUnits.Cells
             foreach (GapJunction jnc in GapJunctions)
                 jnc.InitForSimulation(runParam, ref uniqueID);
         }
-        public virtual void FinalizeSimulation(RunParam runParam, DBLink dbLink)
+        public virtual void FinalizeSimulation(RunParam runParam, SimulationDBLink dbLink)
         {
             //FeaturingDBMemory V.FinalizeSimulation(runParam, dbLink);
             foreach (GapJunction jnc in GapJunctions)

@@ -1,4 +1,5 @@
-﻿using SiliFish.DataTypes;
+﻿using SiliFish.Database;
+using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
@@ -21,8 +22,6 @@ namespace SiliFish.ModelUnits.Architecture
 {
     public class RunningModel : ModelBase
     {
-        [JsonIgnore]
-        public int DbId { get; set; }
         public double DeltaT { get; private set; }
         public int SkipDuration { get; private set; }
         public int MaxTime { get; private set; }
@@ -804,14 +803,18 @@ namespace SiliFish.ModelUnits.Architecture
             return (null, pools);
         }
 
-        private bool MemoryAllocation(RunParam runParam, DBLink dBLink)
+        private bool MemoryAllocation(RunParam runParam, SimulationDBLink dBLink)
         {
             foreach (Cell cell in GetCells())
                 cell.MemoryAllocation(runParam, dBLink);
             return true;
         }
 
-        private bool MemoryFlush()//TODO - either automatically during plotting, or enforced by the user
+        /// <summary>
+        /// Clears the allocated memory used for plotting purposes
+        /// </summary>
+        /// <returns></returns>
+        public bool MemoryFlush()//Currently only done by the user
         {
             foreach (Cell cell in GetCells())
                 cell.MemoryFlush();
@@ -819,7 +822,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
 
 
-        public virtual bool InitForSimulation(RunParam runParam, ref DBLink dbLink, Random random)
+        public virtual bool InitForSimulation(RunParam runParam, ref SimulationDBLink dbLink, Random random)
         {
             try
             {
@@ -860,11 +863,16 @@ namespace SiliFish.ModelUnits.Architecture
                 return false;
             }
         }
-        public virtual bool FinalizeSimulation(RunParam runParam, DBLink dBLink)
+        /// <summary>
+        /// Extra steps required after simulation if DB is used for memory
+        /// </summary>
+        /// <param name="runParam"></param>
+        /// <param name="dBLink"></param>
+        /// <returns></returns>
+        public virtual bool FinalizeSimulation(RunParam runParam, SimulationDBLink dBLink)
         {
             try
             {
-                DbId = 0;//to prevent using the same ID when saving to the actual database
                 foreach (CellPool neurons in neuronPools)
                     foreach (Neuron neuron in neurons.GetCells().Cast<Neuron>())
                         neuron.FinalizeSimulation(runParam, dBLink);

@@ -49,7 +49,12 @@ namespace SiliFish.Definitions
 
         [JsonIgnore, Browsable(false)]
         public static List<string> TempFiles = [];
-
+        public static void AddTempFile(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName) || TempFiles.Contains(fileName)) 
+                return;
+            TempFiles.Add(fileName);
+        }
         [JsonIgnore, Browsable(false)]
         public static Dictionary<string, string> LastPlotSettings = [];
         [JsonIgnore, Browsable(false)]

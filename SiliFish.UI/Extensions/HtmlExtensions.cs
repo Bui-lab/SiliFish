@@ -22,7 +22,7 @@ namespace SiliFish.UI.Extensions
                 {
                     tempFile = FileUtil.GetUniqueFileName() + ".html";
                     tempFile = FileUtil.SaveToTempFolder(tempFile, html);
-                    GlobalSettings.TempFiles.Add(tempFile);
+                    GlobalSettings.AddTempFile(tempFile);
                     htmlContainer.CoreWebView2.Navigate(tempFile);
                     navigated = true;
                 }

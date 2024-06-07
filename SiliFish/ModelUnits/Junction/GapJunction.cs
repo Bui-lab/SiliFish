@@ -16,7 +16,7 @@ namespace SiliFish.ModelUnits.Junction
 {
     public class GapJunction: JunctionBase
     {
-        //public bool Bidirectional = true;//TODO currently unidirectional or different conductance gap junctions are not handled
+        //public bool Bidirectional = true;//currently unidirectional or different conductance gap junctions are not handled
         /// <summary>
         /// The number of time units (dt) it will take for the current to travel from cell1 to cell2
         /// Calculated at the begining of simulation

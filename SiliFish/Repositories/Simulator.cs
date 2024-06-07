@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace SiliFish.Repositories
 {
-    public class ModelSimulator(RunningModel runningModel, RunParam runParam, int numSimulations, bool parallelRun, Action<List<Simulation>, int> completionAction)
+    public class Simulator(RunningModel runningModel, RunParam runParam, int numSimulations, bool parallelRun, Action<List<Simulation>, int> completionAction)
     {
         private RunningModel runningModel = runningModel;
         private RunParam runParam = runParam;
@@ -55,7 +55,7 @@ namespace SiliFish.Repositories
                 {
                     Simulation simulation = new(runningModel, runParam);
                     SimulationList.Add(simulation);
-                    simulation.RunSimulation();
+                    simulation.RunSimulation(this);
                 }
                 endTime = DateTime.Now;
             }
@@ -74,7 +74,7 @@ namespace SiliFish.Repositories
         {
             try
             {
-                simulation.RunSimulation();
+                simulation.RunSimulation(this);
             }
             catch (Exception ex)
             {

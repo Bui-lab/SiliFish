@@ -260,7 +260,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             if (Parameters==null) return 0.0; 
             Dictionary<string, double> dparams = Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
-            CellCore core = CellCore.CreateCore(CoreType, dparams, dt_run:0.1);//TODO fixed dt
+            CellCore core = CellCore.CreateCore(CoreType, dparams, dt_run:0.1);
             return core?.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1) ?? 0;
            
         }

@@ -50,6 +50,8 @@ namespace SiliFish.UI.Controls
             splitMain = new SplitContainer();
             splitLeft = new SplitContainer();
             pfParams = new FlowLayoutPanel();
+            pRheobase = new Panel();
+            label1 = new Label();
             pCoreType = new Panel();
             eDeltaT = new NumericUpDown();
             lDeltaT = new Label();
@@ -59,7 +61,6 @@ namespace SiliFish.UI.Controls
             pTop = new Panel();
             linkUseUpdatedParams = new LinkLabel();
             tabDynamics = new TabControl();
-            tRheobase = new TabPage();
             tDynamics = new TabPage();
             tabAnalysis = new TabControl();
             tStimulusTest = new TabPage();
@@ -82,6 +83,8 @@ namespace SiliFish.UI.Controls
             pSep1 = new Panel();
             lms = new Label();
             lms2 = new Label();
+            tSettings = new TabPage();
+            pgSettings = new PropertyGrid();
             pLoadSaveParams = new Panel();
             linkLoadCoreUnit = new LinkLabel();
             cbAutoDrawPlots = new CheckBox();
@@ -121,11 +124,11 @@ namespace SiliFish.UI.Controls
             splitLeft.Panel1.SuspendLayout();
             splitLeft.Panel2.SuspendLayout();
             splitLeft.SuspendLayout();
+            pRheobase.SuspendLayout();
             pCoreType.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)eDeltaT).BeginInit();
             pTop.SuspendLayout();
             tabDynamics.SuspendLayout();
-            tRheobase.SuspendLayout();
             tDynamics.SuspendLayout();
             tabAnalysis.SuspendLayout();
             tStimulusTest.SuspendLayout();
@@ -137,6 +140,7 @@ namespace SiliFish.UI.Controls
             grRheoSens.SuspendLayout();
             tSensitivityAnalysis.SuspendLayout();
             pFlow1.SuspendLayout();
+            tSettings.SuspendLayout();
             pLoadSaveParams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitGAAndPlots).BeginInit();
             splitGAAndPlots.Panel1.SuspendLayout();
@@ -151,7 +155,7 @@ namespace SiliFish.UI.Controls
             // eRheobaseLimit
             // 
             eRheobaseLimit.Increment = new decimal(new int[] { 10, 0, 0, 0 });
-            eRheobaseLimit.Location = new Point(73, 8);
+            eRheobaseLimit.Location = new Point(78, 6);
             eRheobaseLimit.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             eRheobaseLimit.Name = "eRheobaseLimit";
             eRheobaseLimit.Size = new Size(54, 23);
@@ -161,7 +165,7 @@ namespace SiliFish.UI.Controls
             // lRheobaseLimit
             // 
             lRheobaseLimit.AutoSize = true;
-            lRheobaseLimit.Location = new Point(6, 12);
+            lRheobaseLimit.Location = new Point(11, 10);
             lRheobaseLimit.Name = "lRheobaseLimit";
             lRheobaseLimit.Size = new Size(34, 15);
             lRheobaseLimit.TabIndex = 14;
@@ -173,7 +177,7 @@ namespace SiliFish.UI.Controls
             btnRheobase.FlatAppearance.BorderColor = Color.LightGray;
             btnRheobase.FlatStyle = FlatStyle.Flat;
             btnRheobase.ForeColor = Color.White;
-            btnRheobase.Location = new Point(131, 8);
+            btnRheobase.Location = new Point(136, 6);
             btnRheobase.Name = "btnRheobase";
             btnRheobase.Size = new Size(76, 25);
             btnRheobase.TabIndex = 13;
@@ -242,7 +246,7 @@ namespace SiliFish.UI.Controls
             // 
             lRheobaseWarning.AutoSize = true;
             lRheobaseWarning.ForeColor = Color.Red;
-            lRheobaseWarning.Location = new Point(137, 63);
+            lRheobaseWarning.Location = new Point(142, 61);
             lRheobaseWarning.Name = "lRheobaseWarning";
             lRheobaseWarning.Size = new Size(140, 15);
             lRheobaseWarning.TabIndex = 20;
@@ -252,7 +256,7 @@ namespace SiliFish.UI.Controls
             // eRheobaseDuration
             // 
             eRheobaseDuration.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            eRheobaseDuration.Location = new Point(73, 33);
+            eRheobaseDuration.Location = new Point(78, 31);
             eRheobaseDuration.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             eRheobaseDuration.Name = "eRheobaseDuration";
             eRheobaseDuration.Size = new Size(54, 23);
@@ -262,7 +266,7 @@ namespace SiliFish.UI.Controls
             // lRheobaseDuration
             // 
             lRheobaseDuration.AutoSize = true;
-            lRheobaseDuration.Location = new Point(6, 35);
+            lRheobaseDuration.Location = new Point(11, 33);
             lRheobaseDuration.Name = "lRheobaseDuration";
             lRheobaseDuration.Size = new Size(53, 15);
             lRheobaseDuration.TabIndex = 18;
@@ -270,7 +274,7 @@ namespace SiliFish.UI.Controls
             // 
             // eRheobase
             // 
-            eRheobase.Location = new Point(73, 59);
+            eRheobase.Location = new Point(78, 57);
             eRheobase.Name = "eRheobase";
             eRheobase.ReadOnly = true;
             eRheobase.Size = new Size(54, 23);
@@ -279,7 +283,7 @@ namespace SiliFish.UI.Controls
             // lRheobase
             // 
             lRheobase.AutoSize = true;
-            lRheobase.Location = new Point(6, 62);
+            lRheobase.Location = new Point(11, 60);
             lRheobase.Name = "lRheobase";
             lRheobase.Size = new Size(58, 15);
             lRheobase.TabIndex = 16;
@@ -347,6 +351,7 @@ namespace SiliFish.UI.Controls
             // 
             splitLeft.Panel1.BackColor = Color.White;
             splitLeft.Panel1.Controls.Add(pfParams);
+            splitLeft.Panel1.Controls.Add(pRheobase);
             splitLeft.Panel1.Controls.Add(pCoreType);
             splitLeft.Panel1.Controls.Add(pTop);
             // 
@@ -355,7 +360,7 @@ namespace SiliFish.UI.Controls
             splitLeft.Panel2.BackColor = Color.White;
             splitLeft.Panel2.Controls.Add(tabDynamics);
             splitLeft.Size = new Size(328, 636);
-            splitLeft.SplitterDistance = 190;
+            splitLeft.SplitterDistance = 323;
             splitLeft.TabIndex = 39;
             // 
             // pfParams
@@ -364,8 +369,35 @@ namespace SiliFish.UI.Controls
             pfParams.Dock = DockStyle.Fill;
             pfParams.Location = new Point(0, 91);
             pfParams.Name = "pfParams";
-            pfParams.Size = new Size(328, 99);
+            pfParams.Size = new Size(328, 138);
             pfParams.TabIndex = 23;
+            // 
+            // pRheobase
+            // 
+            pRheobase.BackColor = Color.FromArgb(236, 239, 241);
+            pRheobase.Controls.Add(label1);
+            pRheobase.Controls.Add(lRheobaseWarning);
+            pRheobase.Controls.Add(btnRheobase);
+            pRheobase.Controls.Add(lRheobaseLimit);
+            pRheobase.Controls.Add(lRheobaseDuration);
+            pRheobase.Controls.Add(eRheobaseLimit);
+            pRheobase.Controls.Add(eRheobase);
+            pRheobase.Controls.Add(lRheobase);
+            pRheobase.Controls.Add(eRheobaseDuration);
+            pRheobase.Dock = DockStyle.Bottom;
+            pRheobase.Location = new Point(0, 229);
+            pRheobase.Name = "pRheobase";
+            pRheobase.Size = new Size(328, 94);
+            pRheobase.TabIndex = 25;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(138, 36);
+            label1.Name = "label1";
+            label1.Size = new Size(31, 15);
+            label1.TabIndex = 38;
+            label1.Text = "(ms)";
             // 
             // pCoreType
             // 
@@ -457,32 +489,14 @@ namespace SiliFish.UI.Controls
             // 
             // tabDynamics
             // 
-            tabDynamics.Controls.Add(tRheobase);
             tabDynamics.Controls.Add(tDynamics);
+            tabDynamics.Controls.Add(tSettings);
             tabDynamics.Dock = DockStyle.Fill;
             tabDynamics.Location = new Point(0, 0);
             tabDynamics.Name = "tabDynamics";
             tabDynamics.SelectedIndex = 0;
-            tabDynamics.Size = new Size(328, 442);
+            tabDynamics.Size = new Size(328, 309);
             tabDynamics.TabIndex = 40;
-            // 
-            // tRheobase
-            // 
-            tRheobase.Controls.Add(lRheobaseWarning);
-            tRheobase.Controls.Add(lRheobaseLimit);
-            tRheobase.Controls.Add(eRheobaseLimit);
-            tRheobase.Controls.Add(lRheobase);
-            tRheobase.Controls.Add(eRheobaseDuration);
-            tRheobase.Controls.Add(eRheobase);
-            tRheobase.Controls.Add(btnRheobase);
-            tRheobase.Controls.Add(lRheobaseDuration);
-            tRheobase.Location = new Point(4, 24);
-            tRheobase.Name = "tRheobase";
-            tRheobase.Padding = new Padding(3);
-            tRheobase.Size = new Size(320, 414);
-            tRheobase.TabIndex = 0;
-            tRheobase.Text = "Rheobase";
-            tRheobase.UseVisualStyleBackColor = true;
             // 
             // tDynamics
             // 
@@ -491,7 +505,7 @@ namespace SiliFish.UI.Controls
             tDynamics.Location = new Point(4, 24);
             tDynamics.Name = "tDynamics";
             tDynamics.Padding = new Padding(3);
-            tDynamics.Size = new Size(320, 414);
+            tDynamics.Size = new Size(320, 281);
             tDynamics.TabIndex = 1;
             tDynamics.Text = "Dynamics";
             tDynamics.UseVisualStyleBackColor = true;
@@ -505,7 +519,7 @@ namespace SiliFish.UI.Controls
             tabAnalysis.Location = new Point(3, 172);
             tabAnalysis.Name = "tabAnalysis";
             tabAnalysis.SelectedIndex = 0;
-            tabAnalysis.Size = new Size(314, 239);
+            tabAnalysis.Size = new Size(314, 106);
             tabAnalysis.TabIndex = 39;
             // 
             // tStimulusTest
@@ -515,7 +529,7 @@ namespace SiliFish.UI.Controls
             tStimulusTest.Location = new Point(4, 24);
             tStimulusTest.Name = "tStimulusTest";
             tStimulusTest.Padding = new Padding(3);
-            tStimulusTest.Size = new Size(306, 211);
+            tStimulusTest.Size = new Size(306, 78);
             tStimulusTest.TabIndex = 0;
             tStimulusTest.Text = "Stimulus Test";
             tStimulusTest.UseVisualStyleBackColor = true;
@@ -528,7 +542,7 @@ namespace SiliFish.UI.Controls
             pFlow.FlowDirection = FlowDirection.TopDown;
             pFlow.Location = new Point(3, 3);
             pFlow.Name = "pFlow";
-            pFlow.Size = new Size(300, 175);
+            pFlow.Size = new Size(300, 42);
             pFlow.TabIndex = 38;
             pFlow.WrapContents = false;
             // 
@@ -582,7 +596,7 @@ namespace SiliFish.UI.Controls
             // 
             pFlow5.Controls.Add(btnDynamicsRun);
             pFlow5.Dock = DockStyle.Bottom;
-            pFlow5.Location = new Point(3, 178);
+            pFlow5.Location = new Point(3, 45);
             pFlow5.Name = "pFlow5";
             pFlow5.Size = new Size(300, 30);
             pFlow5.TabIndex = 40;
@@ -593,7 +607,7 @@ namespace SiliFish.UI.Controls
             btnDynamicsRun.BackColor = Color.FromArgb(96, 125, 139);
             btnDynamicsRun.FlatStyle = FlatStyle.Flat;
             btnDynamicsRun.ForeColor = Color.White;
-            btnDynamicsRun.Location = new Point(105, 2);
+            btnDynamicsRun.Location = new Point(3, 3);
             btnDynamicsRun.Name = "btnDynamicsRun";
             btnDynamicsRun.Size = new Size(76, 25);
             btnDynamicsRun.TabIndex = 35;
@@ -608,7 +622,7 @@ namespace SiliFish.UI.Controls
             tParameterAnalysis.Location = new Point(4, 24);
             tParameterAnalysis.Name = "tParameterAnalysis";
             tParameterAnalysis.Padding = new Padding(3);
-            tParameterAnalysis.Size = new Size(306, 211);
+            tParameterAnalysis.Size = new Size(306, 78);
             tParameterAnalysis.TabIndex = 1;
             tParameterAnalysis.Text = "Parameter Analysis";
             tParameterAnalysis.UseVisualStyleBackColor = true;
@@ -660,7 +674,7 @@ namespace SiliFish.UI.Controls
             tSensitivityAnalysis.Controls.Add(sensitivityAnalysisDeltaT);
             tSensitivityAnalysis.Location = new Point(4, 24);
             tSensitivityAnalysis.Name = "tSensitivityAnalysis";
-            tSensitivityAnalysis.Size = new Size(306, 211);
+            tSensitivityAnalysis.Size = new Size(306, 78);
             tSensitivityAnalysis.TabIndex = 2;
             tSensitivityAnalysis.Text = "Sensitivity Analysis";
             tSensitivityAnalysis.UseVisualStyleBackColor = true;
@@ -732,6 +746,25 @@ namespace SiliFish.UI.Controls
             lms2.Size = new Size(31, 15);
             lms2.TabIndex = 28;
             lms2.Text = "(ms)";
+            // 
+            // tSettings
+            // 
+            tSettings.Controls.Add(pgSettings);
+            tSettings.Location = new Point(4, 24);
+            tSettings.Name = "tSettings";
+            tSettings.Padding = new Padding(3);
+            tSettings.Size = new Size(320, 281);
+            tSettings.TabIndex = 2;
+            tSettings.Text = "Settings";
+            tSettings.UseVisualStyleBackColor = true;
+            // 
+            // pgSettings
+            // 
+            pgSettings.Dock = DockStyle.Fill;
+            pgSettings.Location = new Point(3, 3);
+            pgSettings.Name = "pgSettings";
+            pgSettings.Size = new Size(314, 275);
+            pgSettings.TabIndex = 0;
             // 
             // pLoadSaveParams
             // 
@@ -1038,14 +1071,14 @@ namespace SiliFish.UI.Controls
             splitLeft.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitLeft).EndInit();
             splitLeft.ResumeLayout(false);
+            pRheobase.ResumeLayout(false);
+            pRheobase.PerformLayout();
             pCoreType.ResumeLayout(false);
             pCoreType.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)eDeltaT).EndInit();
             pTop.ResumeLayout(false);
             pTop.PerformLayout();
             tabDynamics.ResumeLayout(false);
-            tRheobase.ResumeLayout(false);
-            tRheobase.PerformLayout();
             tDynamics.ResumeLayout(false);
             tDynamics.PerformLayout();
             tabAnalysis.ResumeLayout(false);
@@ -1063,6 +1096,7 @@ namespace SiliFish.UI.Controls
             tSensitivityAnalysis.PerformLayout();
             pFlow1.ResumeLayout(false);
             pFlow1.PerformLayout();
+            tSettings.ResumeLayout(false);
             pLoadSaveParams.ResumeLayout(false);
             pLoadSaveParams.PerformLayout();
             splitGAAndPlots.Panel1.ResumeLayout(false);
@@ -1149,12 +1183,15 @@ namespace SiliFish.UI.Controls
         private TabPage tSensitivityAnalysis;
         private NumericUpDown eDeltaT;
         private Label lDeltaT;
-        private TabPage tRheobase;
         private FlowLayoutPanel pfParams;
         private TabPage tDynamics;
         private SensitivityAnalysisControl sensitivityAnalysisFiring;
         private SensitivityAnalysisControl sensitivityAnalysisRheobase;
         private SensitivityAnalysisControl sensitivityAnalysisDeltaT;
         private StimulusSettingsControl stimulusSettingsControl1;
+        private TabPage tSettings;
+        private PropertyGrid pgSettings;
+        private Panel pRheobase;
+        private Label label1;
     }
 }

@@ -12,6 +12,7 @@ namespace Controls
             propSettings.SelectedObject = gs;
             eTemporaryFolder.Text = gs.TempFolder;
             eOutputFolder.Text = gs.OutputFolder;
+            eDatabaseFile.Text = gs.DatabaseName;
         }
 
         private void eOutputFolder_Click(object sender, EventArgs e)

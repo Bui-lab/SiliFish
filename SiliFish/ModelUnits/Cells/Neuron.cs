@@ -1,4 +1,5 @@
-﻿using SiliFish.DataTypes;
+﻿using SiliFish.Database;
+using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.DynamicUnits.JncCore;
@@ -234,7 +235,7 @@ namespace SiliFish.ModelUnits.Cells
 
         #region Runtime
 
-        public override void MemoryAllocation(RunParam runParam, DBLink dBLink)
+        public override void MemoryAllocation(RunParam runParam, SimulationDBLink dBLink)
         {
             base.MemoryAllocation(runParam, dBLink);
             foreach (ChemicalSynapse jnc in Synapses)
@@ -252,7 +253,7 @@ namespace SiliFish.ModelUnits.Cells
             foreach (ChemicalSynapse jnc in Synapses)
                 jnc.InitForSimulation(runParam, ref uniqueID);
         }
-        public override void FinalizeSimulation(RunParam runParam, DBLink dbLink)
+        public override void FinalizeSimulation(RunParam runParam, SimulationDBLink dbLink)
         {
             base.FinalizeSimulation(runParam, dbLink);
             foreach (ChemicalSynapse jnc in Synapses)

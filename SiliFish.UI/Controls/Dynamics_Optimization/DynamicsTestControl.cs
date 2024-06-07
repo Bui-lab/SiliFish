@@ -183,6 +183,7 @@ namespace SiliFish.UI.Controls
             if (string.IsNullOrEmpty(outputFolder))
                 outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
             SetControlDeltaTs(DeltaT);
+            pgSettings.SelectedObject = new DynamicsStatsParams();
         }
 
         private void PlotCharts(List<Chart> charts, string title, bool synchronized = true)
@@ -585,14 +586,12 @@ namespace SiliFish.UI.Controls
             {
                 string sRheo = d.ToString(GlobalSettings.PlotDataFormat);
                 eRheobase.Text = sRheo;
-                tRheobase.Text = $"Rheobase: {sRheo}";
                 lRheobaseWarning.Visible = false;
                 rbRheobaseBasedStimulus.ForeColor = Color.Black;
             }
             else
             {
                 eRheobase.Text = "N/A";
-                tRheobase.Text = $"Rheobase: N/A";
                 lRheobaseWarning.Visible = true;
                 rbRheobaseBasedStimulus.ForeColor = Color.Red;
             }

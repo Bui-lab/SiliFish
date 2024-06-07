@@ -98,6 +98,8 @@ namespace SiliFish.UI.Controls
             splitMain = new SplitContainer();
             colorDialog = new ColorDialog();
             openFileJson = new OpenFileDialog();
+            lAscendingAxonSomites = new Label();
+            lDescendingAxonSomites = new Label();
             ((System.ComponentModel.ISupportInitialize)eNumOfCells).BeginInit();
             ((System.ComponentModel.ISupportInitialize)e2DColumn).BeginInit();
             pZAxis.SuspendLayout();
@@ -662,6 +664,7 @@ namespace SiliFish.UI.Controls
             // pProjectionAscending
             // 
             pProjectionAscending.Controls.Add(cbAscendingAxon);
+            pProjectionAscending.Controls.Add(lAscendingAxonSomites);
             pProjectionAscending.Dock = DockStyle.Top;
             pProjectionAscending.Location = new Point(0, 0);
             pProjectionAscending.Margin = new Padding(0);
@@ -700,6 +703,7 @@ namespace SiliFish.UI.Controls
             // 
             // pProjectionDescending
             // 
+            pProjectionDescending.Controls.Add(lDescendingAxonSomites);
             pProjectionDescending.Controls.Add(cbDescendingAxon);
             pProjectionDescending.Dock = DockStyle.Top;
             pProjectionDescending.Location = new Point(0, 151);
@@ -899,6 +903,24 @@ namespace SiliFish.UI.Controls
             // 
             openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
+            // lAscendingAxonSomites
+            // 
+            lAscendingAxonSomites.AutoSize = true;
+            lAscendingAxonSomites.Location = new Point(122, 4);
+            lAscendingAxonSomites.Name = "lAscendingAxonSomites";
+            lAscendingAxonSomites.Size = new Size(70, 15);
+            lAscendingAxonSomites.TabIndex = 25;
+            lAscendingAxonSomites.Text = "(as somites)";
+            // 
+            // lDescendingAxonSomites
+            // 
+            lDescendingAxonSomites.AutoSize = true;
+            lDescendingAxonSomites.Location = new Point(122, 4);
+            lDescendingAxonSomites.Name = "lDescendingAxonSomites";
+            lDescendingAxonSomites.Size = new Size(70, 15);
+            lDescendingAxonSomites.TabIndex = 26;
+            lDescendingAxonSomites.Text = "(as somites)";
+            // 
             // CellPoolControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1021,5 +1043,7 @@ namespace SiliFish.UI.Controls
         private TextBox eRheobase;
         private Label lRheobase;
         private Label lRheobaseDescription;
+        private Label lAscendingAxonSomites;
+        private Label lDescendingAxonSomites;
     }
 }

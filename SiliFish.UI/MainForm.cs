@@ -15,6 +15,8 @@ using SiliFish.ModelUnits.Parameters;
 using SiliFish.Database;
 using SiliFish.DataTypes;
 using static SiliFish.UI.Controls.ModelOutputControl;
+using Microsoft.EntityFrameworkCore;
+using Windows.Perception.Spatial.Preview;
 
 namespace SiliFish.UI
 {
@@ -29,7 +31,7 @@ namespace SiliFish.UI
         private ModelTemplate modelTemplate = null;
         private RunningModel runningModel = null;
         private RunParam runParam = new();
-        private ModelSimulator modelSimulator;
+        private Simulator modelSimulator;
         private SimulationDBWriter simulationDBWriter;
         public ModelBase Model
         {
@@ -69,6 +71,9 @@ namespace SiliFish.UI
                 runParam = model.Settings.GetRunParam();
                 FillRunParams();
                 SetCurrentMode(RunMode.RunningModel, null);
+                miToolsMemoryFlush.ToolTipText = 
+                    "If the current information is plotted, flushing clears the memory allocated to generate those lists.";
+
             }
             catch (Exception ex)
             {
@@ -268,6 +273,17 @@ namespace SiliFish.UI
             }
             runParam = simulationSettings.GetValues();
             runParam.TrackJunctionCurrent = runningModel.Settings.JunctionLevelTracking;
+            if (modelSimulator?.SimulationList.Count > 0)
+            {
+                foreach (Simulation oldSim in modelSimulator?.SimulationList)
+                {
+                    if (oldSim.DBLink != null)
+                    {
+                        string dbname = oldSim.DBLink.DatabaseName;
+                        FileUtil.DeleteFile(dbname, allExtensions: true);
+                    }
+                }
+            }
 
             btnRun.Text = "Stop Run";
             return true;
@@ -340,7 +356,9 @@ namespace SiliFish.UI
         {
             bool prevCollapsed = splitMain.Panel2Collapsed;
             miFileSaveSimulationResults.Visible =
-            miToolsGenerateStatsData.Visible = mode == RunMode.RunningModel;
+            miToolsGenerateStatsData.Visible =
+            miToolsMemoryFlush.Visible =
+                mode == RunMode.RunningModel;
             splitMain.Panel2Collapsed = mode == RunMode.Template;
             pSimulation.Visible = mode == RunMode.RunningModel;
             pGenerateModel.Visible = mode == RunMode.Template;
@@ -596,7 +614,8 @@ namespace SiliFish.UI
 
         private void SaveSimulationResultsToDBStart()
         {
-            simulationDBWriter = new(modelSimulator, completeSaveSimulationAction);
+            using SFDataContext dataContext = new();
+            simulationDBWriter = new(dataContext.DbFileName, modelSimulator, completeSaveSimulationAction);
             btnRun.Enabled = false;
             UseWaitCursor = true;
             progressBarRun.Value = 0;
@@ -615,8 +634,11 @@ namespace SiliFish.UI
             progressBarRun.Value = progressBarRun.Maximum;
             SetProgressVisibility(false);
             btnRun.Enabled = true;
-            MessageBox.Show($"Simulation summary results are saved to {new SFDataContext().DbFileName} - " +
-                $"simulation id(s): {string.Join(',', simulationDBWriter.SimulationIds)}");
+            string savedSimulations = $"\r\nSimulation id(s): {string.Join(',', simulationDBWriter.SimulationIds)}";
+            string savedModels = string.Join(',', simulationDBWriter.ModelJsons);
+            if (!string.IsNullOrEmpty(savedModels))
+                savedModels = $"\r\nRelated models saved as {savedModels}";
+            MessageBox.Show($"Simulation summary results are saved to {new SFDataContext().DbFileName}{savedSimulations}{savedModels}");
             simulationDBWriter = null;
             miFileSaveSimulationResults.Text = $"Save Simulation Results (last saved at {DateTime.Now:ddd} {DateTime.Now:t})";
         }
@@ -898,6 +920,13 @@ namespace SiliFish.UI
             else
                 _ = GlobalSettingsProperties.Load();//reload from global.settings
         }
+
+        private void miToolsMemoryFlush_Click(object sender, EventArgs e)
+        {
+            if (Model is RunningModel runningModel)
+                runningModel.MemoryFlush();
+        }
+
 
         private void miViewOutputFolder_Click(object sender, EventArgs e)
         {

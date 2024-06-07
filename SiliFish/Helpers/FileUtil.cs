@@ -35,7 +35,7 @@ namespace SiliFish.Helpers
         public static void SaveToFile(string path, string content)
         {
             string filename = Path.GetFileName(path);
-            string newfilename= string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
+            string newfilename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
             if (!filename.Equals(newfilename))
                 path = path.Replace(filename, newfilename);
             path = string.Join("_", path.Split(Path.GetInvalidPathChars()));
@@ -74,7 +74,7 @@ namespace SiliFish.Helpers
                 }
             }
             string path = $"{GlobalSettings.TempFolder}\\{filename}";
-            GlobalSettings.TempFiles.Add(path);
+            GlobalSettings.AddTempFile(path);
             File.WriteAllText(path, content);
             return path;
         }
@@ -82,9 +82,9 @@ namespace SiliFish.Helpers
         public static string AppendToFileName(string filename, string postfix)
         {
             string ext = Path.GetExtension(filename);
-            string path=Path.GetDirectoryName(filename);    
+            string path = Path.GetDirectoryName(filename);
             string prefix = Path.GetFileNameWithoutExtension(filename);
-            filename = Path.Combine(path, prefix + postfix+ext);
+            filename = Path.Combine(path, prefix + postfix + ext);
             return filename;
         }
         private static string GetUniqueFileName(string filename, string path)
@@ -133,6 +133,44 @@ namespace SiliFish.Helpers
             string filename = Guid.NewGuid().ToString();
             filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
             return filename;
+        }
+
+        public static void DeleteFile(string mainFile, bool allExtensions)
+        {
+            try
+            {
+                if (allExtensions)
+                {
+                    string directory = Path.GetDirectoryName(mainFile);
+                    string fileName = Path.GetFileNameWithoutExtension(mainFile);
+                    foreach (string similarFile in Directory.GetFiles(directory, $"{fileName}.*"))
+                    {
+                        try
+                        {
+                            File.Delete(similarFile);
+                        }
+                        catch
+                        {
+                            GlobalSettings.AddTempFile(similarFile);
+                        }
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        File.Delete(mainFile);
+                    }
+                    catch
+                    {
+                        GlobalSettings.AddTempFile(mainFile);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
         }
     }
 }

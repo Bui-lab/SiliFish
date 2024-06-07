@@ -1,88 +1,107 @@
 ﻿using SiliFish.Database;
 using SiliFish.DataTypes;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.Services;
 using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace SiliFish.Repositories
 {
-    public class SimulationDBWriter(ModelSimulator modelSimulator, Action completionAction)
+    public class SimulationDBWriter(string dbName, Simulator modelSimulator, Action completionAction)
     {
-        private readonly ModelSimulator modelSimulator = modelSimulator;
+        private readonly string databaseName = dbName;
+        private readonly Simulator modelSimulator = modelSimulator;
         public Action saveCompletionAction = completionAction;
         private double individualProgress = 0;
         private int simulationCount = 0;
         public List<int> SimulationIds { get; set; } = [];
+        public List<string> ModelJsons { get; set; } = [];
         public double GetProgress() => Math.Max(0, (SimulationIds.Count - 1 + individualProgress) / simulationCount);
-        private void AddSimulationRecord(SFDataContext sFDataContext, ModelSimulator modelSimulator, Simulation simulation)
+        internal SimulationRecord AddSimulationRecord(SFDataContext dataContext, Simulation simulation)
         {
             try
             {
                 RunningModel model = simulation.Model;
-                if (model.DbId == 0)
-                {
-                    string stats = $"{simulation.Model.GetNumberOfCells():n0} cells; {simulation.Model.GetNumberOfJunctions():n0} junctions/synapses";
-                    ModelRecord modelRecord = new(simulation.Model.ModelName, DateTime.Now, stats, "");//TODO ability to save the json file and include the filename
-                    sFDataContext.Add(modelRecord);
-                    sFDataContext.SaveChanges();
-                    model.DbId = modelRecord.Id;
-                }
-                SimulationRecord sim = new(simulation.Model.DbId,
+                string now = DateTime.Now.ToString("yyMMddHHmmss");
+                string modelJson = Path.Combine(Path.GetDirectoryName(dataContext.DbFileName), $"Model{now}") + ".json";
+                ModelFile.SaveToJson(modelJson, model);
+                string stats = $"{simulation.Model.GetNumberOfCells():n0} cells; {simulation.Model.GetNumberOfJunctions():n0} junctions/synapses";
+                ModelRecord modelRecord = new(simulation.Model.ModelName, DateTime.Now, stats, modelJson);
+                dataContext.Add(modelRecord);
+                dataContext.SaveChanges();
+                SimulationRecord sim = new(modelRecord.Id,
                                            simulation.Start,
                                            simulation.End,
                                            $"{simulation.Description} {modelSimulator.Description}",
                                            modelSimulator.RunParamDescription);
-                sFDataContext.Add(sim);
-                sFDataContext.SaveChanges();
+                dataContext.Add(sim);
+                dataContext.SaveChanges();
                 SimulationIds.Add(sim.Id);
+                ModelJsons.Add(modelJson);
+                return sim;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                return null;
+            }
+        }
+
+        internal void AddEpisodeAndSpikeRecords(SFDataContext dataContext, Simulation simulation, int simRecordId)
+        {
+            try
+            {
+                RunningModel model = simulation.Model;
 
                 SwimmingEpisodes episodes = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(simulation);
                 int episodeCounter = 1;
-                foreach(SwimmingEpisode episode in episodes.Episodes)
+                foreach (SwimmingEpisode episode in episodes.Episodes)
                 {
-                    EpisodeRecord episodeRecord = new(episodeCounter++, sim.Id, episode);
-                    sFDataContext.Add(episodeRecord);
+                    EpisodeRecord episodeRecord = new(episodeCounter++, simRecordId, episode);
+                    dataContext.Add(episodeRecord);
                 }
-                sFDataContext.SaveChanges();
-
+                dataContext.SaveChanges(); 
+                
                 int cellCounter = 0;
                 int cellCount = simulation.Model.GetCells().Count;
                 foreach (Cell cell in simulation.Model.GetCells())
                 {
-                    CellRecord unitRecord = new(sim.Id, cell);
-                    sFDataContext.Add(unitRecord);
-                    sFDataContext.SaveChanges();
+                    CellRecord unitRecord = new(simRecordId, cell);
+                    dataContext.Add(unitRecord);
+                    dataContext.SaveChanges();
                     cell.DbId = unitRecord.Id;
                     foreach (int spikeIndex in cell.GetSpikeIndices())
                     {
-                        SpikeRecord spikeRecord = new(sim.Id, cell.DbId, simulation.RunParam.GetTimeOfIndex(spikeIndex));
-                        sFDataContext.Add(spikeRecord);
+                        SpikeRecord spikeRecord = new(simRecordId, cell.DbId, simulation.RunParam.GetTimeOfIndex(spikeIndex));
+                        dataContext.Add(spikeRecord);
                     }
-                    sFDataContext.SaveChanges();
+                    dataContext.SaveChanges();
                     individualProgress = (double)++cellCounter / cellCount;
                 }
-            }            
+            }
             catch (Exception ex)
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
-
         private void SaveToDB()
         {
             SimulationIds = [];
+            ModelJsons = [];
             simulationCount = modelSimulator.SimulationList.Count;
-            using SFDataContext sFDataContext = new();
-            sFDataContext.ChangeTracker.AutoDetectChangesEnabled = false;
+            using SFDataContext dataContext = new(databaseName);
+            dataContext.ChangeTracker.AutoDetectChangesEnabled = false;
             foreach (Simulation simulation in modelSimulator.SimulationList)
             {
-                AddSimulationRecord(sFDataContext, modelSimulator, simulation);
+                SimulationRecord simRecord = AddSimulationRecord(dataContext, simulation);
+                AddEpisodeAndSpikeRecords(dataContext, simulation, simRecord.Id);
             }
-            sFDataContext.SaveChanges();
+            dataContext.SaveChanges();
             saveCompletionAction?.Invoke();
         }
         public void Run()
