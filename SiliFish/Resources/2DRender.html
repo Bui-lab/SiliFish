@@ -24,7 +24,7 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+
             const gapChemGraph = ForceGraph()
                 (document.getElementById("2D-graph"));
 
@@ -171,7 +171,6 @@
             }
             gapChemData.nodes.forEach(node => { node.fx = node.x; node.fy = node.y; }); // fix nodes
 
-        });
     </script>
 
 </body>

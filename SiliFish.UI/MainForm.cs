@@ -737,7 +737,10 @@ namespace SiliFish.UI
                         if (diffs == null || diffs.Count == 0)
                             MessageBox.Show("Models are identical", "");
                         else
+                        {
+                            diffs.Insert(0, new Difference("Model name", "Current", "Compared to"));
                             TextDisplayer.Display($"Comparing {currentModel.ModelName} to {mb.ModelName}", diffs, saveFileText);
+                        }
                     }
                     catch (Exception exc)
                     {
