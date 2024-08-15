@@ -4,6 +4,7 @@ using SiliFish.ModelUnits.Junction;
 using SiliFish.Services.Plotting.PlotSelection;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
@@ -58,10 +59,24 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 foreach (InterPool interpool in InterPools)
                 {
                     CellPool source = Pools.FirstOrDefault(c => c.ID == interpool.SourcePool);
-                    List<JunctionBase> junctions = source.GetJunctionsTo(interpool.TargetPool);
-                    List<GapJunction> gjlist = junctions.Where(j => j is GapJunction).Select(j => j as GapJunction).ToList();
-                    List<ChemicalSynapse> synlist = junctions.Where(j => j is ChemicalSynapse).Select(j => j as ChemicalSynapse).ToList();
+                    CellPool target = Pools.FirstOrDefault(c => c.ID == interpool.TargetPool);
+                    List<Cell> targetCells = null;
+                    if (plotSelection is PlotSelectionMultiCells ps)
+                        targetCells = target.GetCells(ps, iStart, iEnd).ToList();//to limit the plot to a select set of target cells
 
+                    List<GapJunction> gjlist = null;
+                    List<ChemicalSynapse> synlist = null;
+                    if (targetCells != null && targetCells.Count != 0)
+                    {
+                        gjlist = source.GetGapJunctionsTo(targetCells);
+                        synlist = source.GetChemicalSynapsesTo(targetCells);
+                    }
+                    else
+                    {
+                        List<JunctionBase> junctions = source.GetJunctionsTo(interpool.TargetPool);
+                        gjlist = junctions.Where(j => j is GapJunction).Select(j => j as GapJunction).ToList();
+                        synlist = junctions.Where(j => j is ChemicalSynapse).Select(j => j as ChemicalSynapse).ToList();
+                    }
                     if (gjlist.Count > 0)
                     {
                         gapJunctions.AddRange(gjlist);

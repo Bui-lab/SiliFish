@@ -559,6 +559,21 @@ namespace SiliFish.ModelUnits.Cells
         {
             return Cells?.SelectMany(c => c.Junctions.Where(gj => gj.SourcePool == targetPool || gj.TargetPool == targetPool)).Cast<JunctionBase>().ToList();
         }
+        public List<GapJunction> GetGapJunctionsTo(List<Cell> targetCells)
+        {
+            List<string> targetIDList = targetCells.Select(c => c.ID).ToList();
+            return Cells?.SelectMany(c => c.Junctions.Where(j => j is GapJunction)
+                        .Select(j => j as GapJunction)
+                        .Where(j => targetIDList.Contains(j.Cell1.ID) || targetIDList.Contains(j.Cell2.ID))).ToList();
+        }
+
+        public List<ChemicalSynapse> GetChemicalSynapsesTo(List<Cell> targetCells)
+        {
+            List<string> targetIDList = targetCells.Select(c => c.ID).ToList();
+            return Cells?.SelectMany(c => c.Junctions.Where(j => j is ChemicalSynapse)
+                        .Select(j => j as ChemicalSynapse)
+                        .Where(j => targetIDList.Contains(j.PostCell.ID))).ToList();
+        }
 
         #endregion
 
