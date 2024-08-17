@@ -90,7 +90,8 @@ namespace SiliFish.UI.Controls
             if (string.IsNullOrEmpty(html))
                 return;
             gr2DCellPoolLegend.Controls.Clear();
-
+            int padding = 0;
+            int bottom = 0;
             foreach (var cellPool in cellPools.GroupBy(cp => cp.CellGroup))
             {
                 Color color = cellPool.First().Color;
@@ -107,7 +108,11 @@ namespace SiliFish.UI.Controls
                 if (grayValue < 50)
                     label.ForeColor = Color.White;
                 gr2DCellPoolLegend.Controls.Add(label);
+                if (padding == 0)
+                    padding = gr2DCellPoolLegend.Top - label.Top;
+                bottom = label.Bottom;
             }
+            gr2DCellPoolLegend.Height = bottom + padding - gr2DCellPoolLegend.Top;
             bool navigated = false;
             webView2DRender.NavigateTo(html, "2DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
             if (!navigated)

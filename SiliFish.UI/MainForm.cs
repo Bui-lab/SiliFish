@@ -1,22 +1,18 @@
 using Controls;
-using System.Diagnostics;
-
+using SiliFish.Database;
+using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Parameters;
 using SiliFish.Repositories;
 using SiliFish.Services;
 using SiliFish.UI.Controls;
 using SiliFish.UI.Definitions;
+using SiliFish.UI.Dialogs;
 using SiliFish.UI.EventArguments;
 using SiliFish.UI.Services;
-using SiliFish.UI.Dialogs;
-using SiliFish.ModelUnits.Parameters;
-using SiliFish.Database;
-using SiliFish.DataTypes;
-using static SiliFish.UI.Controls.ModelOutputControl;
-using Microsoft.EntityFrameworkCore;
-using Windows.Perception.Spatial.Preview;
+using System.Diagnostics;
 
 namespace SiliFish.UI
 {
