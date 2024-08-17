@@ -108,9 +108,11 @@ namespace SiliFish.ModelUnits.Junction
 
         }
 
-        public virtual void MemoryFlush()
+        public virtual double MemoryFlush()
         {
+            double cleared = (inputCurrent?.Length ?? 0) * sizeof(double);
             inputCurrent = null;
+            return cleared;            
         }
 
         public virtual void InitForSimulation(RunParam runParam, ref int _)

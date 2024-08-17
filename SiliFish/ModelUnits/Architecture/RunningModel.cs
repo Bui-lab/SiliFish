@@ -814,11 +814,12 @@ namespace SiliFish.ModelUnits.Architecture
         /// Clears the allocated memory used for plotting purposes
         /// </summary>
         /// <returns></returns>
-        public bool MemoryFlush()//Currently only done by the user
+        public double MemoryFlush()//Currently only done by the user
         {
+            double cleared = 0;
             foreach (Cell cell in GetCells())
-                cell.MemoryFlush();
-            return true;
+                cleared += cell.MemoryFlush();
+            return cleared;
         }
 
 

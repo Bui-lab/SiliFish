@@ -186,11 +186,12 @@ namespace SiliFish.ModelUnits.Cells
             foreach (ChemicalSynapse jnc in EndPlates)
                 jnc.MemoryAllocation(runParam, dBLink);
         }
-        public override void MemoryFlush()
+        public override double MemoryFlush()
         {
-            base.MemoryFlush();
+            double cleared = base.MemoryFlush();
             foreach (ChemicalSynapse jnc in EndPlates)
-                jnc.MemoryFlush();
+                cleared += jnc.MemoryFlush();
+            return cleared;
         }
         public override void InitForSimulation(RunParam runParam, ref int uniqueID)
         {

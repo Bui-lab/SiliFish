@@ -445,11 +445,13 @@ namespace SiliFish.ModelUnits.Cells
             }*/
         }
 
-        public virtual void MemoryFlush ()
+        public virtual double MemoryFlush ()
         {
             //FeaturingDBMemory V.Flush();
+            double cleared = 0;
             foreach (GapJunction jnc in GapJunctions)
-                jnc.MemoryFlush();
+                cleared += jnc.MemoryFlush();
+            return cleared;
         }
         public virtual void InitForSimulation(RunParam runParam, ref int uniqueID)
         {

@@ -923,7 +923,14 @@ namespace SiliFish.UI
         private void miToolsMemoryFlush_Click(object sender, EventArgs e)
         {
             if (Model is RunningModel runningModel)
-                runningModel.MemoryFlush();
+            {
+                double cleared = runningModel.MemoryFlush();
+                if (cleared > 0)
+                    MessageBox.Show($"{cleared/(1024*1024) : #.##} megabytes are cleared from memory.", "Info");                
+                else
+                    MessageBox.Show("There are no structures created for plotting purposes to clear from memory.", "Info");
+
+            }
         }
 
 
