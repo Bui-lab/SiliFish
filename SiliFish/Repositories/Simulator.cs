@@ -160,5 +160,11 @@ namespace SiliFish.Repositories
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
+
+        public void UpdateNameAndDecription(string modelName, string modelDescription)
+        {
+            runningModel.ModelName = modelName;
+            runningModel.ModelDescription = modelDescription;
+        }
     }
 }
