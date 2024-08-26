@@ -98,6 +98,8 @@ namespace SiliFish.UI.Controls
             ud2DNodeSize.Size = new Size(18, 23);
             ud2DNodeSize.TabIndex = 77;
             ud2DNodeSize.Text = "ud2DNodeSize";
+            ud2DNodeSize.DownClicked += ud2DNodeSize_DownClicked;
+            ud2DNodeSize.UpClicked += ud2DNodeSize_UpClicked;
             // 
             // ud2DLinkSize
             // 
@@ -106,6 +108,8 @@ namespace SiliFish.UI.Controls
             ud2DLinkSize.Size = new Size(18, 23);
             ud2DLinkSize.TabIndex = 76;
             ud2DLinkSize.Text = "ud2DLinkSize";
+            ud2DLinkSize.DownClicked += ud2DLinkSize_DownClicked;
+            ud2DLinkSize.UpClicked += ud2DLinkSize_UpClicked;
             // 
             // cb2DOffline
             // 
@@ -140,8 +144,9 @@ namespace SiliFish.UI.Controls
             cb2DHideNonspiking.Size = new Size(120, 19);
             cb2DHideNonspiking.TabIndex = 73;
             cb2DHideNonspiking.Text = "Hide Non-spiking";
+            cb2DHideNonspiking.ThreeState = true;
             cb2DHideNonspiking.UseVisualStyleBackColor = true;
-            cb2DHideNonspiking.CheckedChanged += cb2DHideNonspiking_CheckedChanged;
+            cb2DHideNonspiking.CheckStateChanged += cb2DHideNonspiking_CheckStateChanged;
             // 
             // cb2DLegend
             // 

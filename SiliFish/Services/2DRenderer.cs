@@ -9,6 +9,7 @@ using System.Text;
 using System.Web;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.Definitions;
+using System.Drawing;
 
 namespace SiliFish.Services
 {
@@ -248,17 +249,13 @@ namespace SiliFish.Services
             return nodes;
         }
 
-        public string Create2DRendering(RunningModel model, List<CellPool> pools, bool refresh, int width, int height, bool showGap, bool showChem, bool offline)
+        private StringBuilder InitializeHTML(RunningModel model, bool offline)
         {
-            if (pools == null || pools.Count == 0)
-                return null;
             string title = model.ModelName + " 2D Rendering";
 
             StringBuilder html = new(ReadEmbeddedText(Resource));
 
             html.Replace("__STYLE_SHEET__", ReadEmbeddedText("SiliFish.Resources.StyleSheet.css"));
-            html.Replace("__SHOW_GAP__", showGap.ToString().ToLower());
-            html.Replace("__SHOW_CHEM__", showChem.ToString().ToLower());
 
             if (!offline && Util.CheckOnlineStatus())
             {
@@ -275,12 +272,46 @@ namespace SiliFish.Services
 
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title));
+            return html;
+        }
 
+        private void SetColorsAndShapes(List<CellPool> pools, StringBuilder html)
+        {
+            List<string> colors = [];
+            pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
+            colors.Add($"\"GrayedOut\": {Color.LightGray.ToRGBQuoted()}");
+            html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !string.IsNullOrEmpty(s))));
+
+            List<string> shapes = [];
+            pools.ForEach(pool => shapes.Add($"\"{pool.CellGroup}\": new THREE.SphereGeometry(5)"));
+            html.Replace("__SHAPE_SET__", string.Join(",", shapes.Distinct().Where(s => !string.IsNullOrEmpty(s))));
+        }
+
+        private void AddSpine(RunningModel model, StringBuilder html)
+        {
+            ModelDimensions MD = model.ModelDimensions;
+            (double newX, double newY) = (/*origX * XMult + */XOffset, /*origY * -1 * YMult + */YOffset);
+            html.Replace("__SPINE_X__", newX.ToString());
+            html.Replace("__SPINE_Y__", newY.ToString());
+            html.Replace("__SPINE_LENGTH__", newY.ToString());
+        }
+
+        private void FillData(StringBuilder html, RunningModel model, List<CellPool> pools, List<CellPool> grayedOutPools,
+            bool refresh, int width, int height, bool showGap, bool showChem, bool offline)
+        {
+            html.Replace("__SHOW_GAP__", showGap.ToString().ToLower());
+            html.Replace("__SHOW_CHEM__", showChem.ToString().ToLower());
             List<string> nodes = CreatePoolNodes(pools, refresh, width, height);
             (string head, string tail, string spine) = CreateSpine();
             nodes.Add(head);
             nodes.Add(tail);
             html.Replace("__POOLS__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
+            if (grayedOutPools != null && grayedOutPools.Any())
+            {
+                html.Replace("__GRAYED_OUT_POOLS__", string.Join(",", grayedOutPools.Select(p => '"'+p.CellGroup+'"').Distinct().ToList()) ?? null);
+            }
+            else
+                html.Replace("__GRAYED_OUT_POOLS__", "");
             html.Replace("__NODE_SIZE__", "10");
 
             List<InterPool> gapInterPools = model.GapPoolJunctions.Where(gpc => pools.Any(p => p.ID == gpc.SourcePool) && pools.Any(p => p.ID == gpc.TargetPool)).ToList();
@@ -300,23 +331,26 @@ namespace SiliFish.Services
             gapChemLinks.Add(spine);
             html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !string.IsNullOrEmpty(s))));
 
-            List<string> colors = [];
-            pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
-            html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !string.IsNullOrEmpty(s))));
-
-            List<string> shapes = [];
-            pools.ForEach(pool => shapes.Add($"\"{pool.CellGroup}\": new THREE.SphereGeometry(5)"));
-            html.Replace("__SHAPE_SET__", string.Join(",", shapes.Distinct().Where(s => !string.IsNullOrEmpty(s))));
-
-            //Add spine
-            ModelDimensions MD = model.ModelDimensions;
-            double spinalposX = MD.SupraSpinalRostralCaudalDistance;
-            double spinalposY = MD.SpinalBodyPosition + MD.SpinalDorsalVentralDistance / 2;
-            double spinallength = MD.SpinalRostralCaudalDistance;
-            (double newX, double newY) = (/*origX * XMult + */XOffset, /*origY * -1 * YMult + */YOffset);
-            html.Replace("__SPINE_X__", newX.ToString());
-            html.Replace("__SPINE_Y__", newY.ToString());
-            html.Replace("__SPINE_LENGTH__", newY.ToString());
+        }
+        public string Create2DRendering(RunningModel model, List<CellPool> grayedOutPools, List<CellPool> pools,
+            bool refresh, int width, int height, bool showGap, bool showChem, bool offline)
+        {
+            if (pools == null || pools.Count == 0)
+                return null;
+            StringBuilder html = InitializeHTML(model, offline);
+            FillData(html, model, pools, grayedOutPools, refresh, width, height, showGap, showChem, offline);
+            SetColorsAndShapes(pools, html);
+            AddSpine(model, html);
+            return html.ToString();
+        }
+        public string Create2DRendering(RunningModel model, List<CellPool> pools, bool refresh, int width, int height, bool showGap, bool showChem, bool offline)
+        {
+            if (pools == null || pools.Count == 0)
+                return null;
+            StringBuilder html = InitializeHTML(model, offline);
+            FillData(html,model, pools, null, refresh, width, height, showGap, showChem, offline);
+            SetColorsAndShapes(pools, html);
+            AddSpine(model, html);
             return html.ToString();
         }
 

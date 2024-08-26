@@ -83,10 +83,17 @@ namespace SiliFish.UI.Controls
             if (refresh && !cb2DHideNonspiking.Checked && !rendered2DFull)
                 refresh = false;
             List<CellPool> cellPools = model.CellPools;
-            if (cb2DHideNonspiking.Checked && simulation != null && simulation.SimulationRun)
-                cellPools = model.CellPools.Where(cp => cp.Cells.Any(c => c.IsActivelySpiking(GlobalSettings.ActivityThresholdSpikeCount))).ToList();
-            string html = TwoDRenderer.Create2DRendering(model, cellPools, refresh, webView2DRender.Width, webView2DRender.Height,
-                showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked, offline: cb2DOffline.Checked);
+            List<CellPool> activePools = model.CellPools.Where(cp => cp.Cells.Any(c => c.IsActivelySpiking(GlobalSettings.ActivityThresholdSpikeCount))).ToList();
+            List<CellPool> inactivePools = cellPools.Except(activePools).ToList();
+            string html;
+            if (cb2DHideNonspiking.CheckState == CheckState.Checked && simulation != null && simulation.SimulationRun)
+                cellPools = activePools;
+            if (cb2DHideNonspiking.CheckState == CheckState.Indeterminate)
+                html = TwoDRenderer.Create2DRendering(model, inactivePools, cellPools, refresh, webView2DRender.Width, webView2DRender.Height,
+                    showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked, offline: cb2DOffline.Checked);
+            else
+                html = TwoDRenderer.Create2DRendering(model, cellPools, refresh, webView2DRender.Width, webView2DRender.Height,
+                    showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked, offline: cb2DOffline.Checked);
             if (string.IsNullOrEmpty(html))
                 return;
             gr2DCellPoolLegend.Controls.Clear();
@@ -170,32 +177,36 @@ namespace SiliFish.UI.Controls
         {
             gr2DLegend.Visible = gr2DCellPoolLegend.Visible = cb2DLegend.Checked;
         }
-        private async void ud2DNodeSize_SelectedItemChanged(object sender, EventArgs e)
-        {
-            if (ud2DNodeSize.UpClick)
-                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
-            if (ud2DNodeSize.DownClick)
-                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
-        }
 
-        private async void ud2DLinkSize_SelectedItemChanged(object sender, EventArgs e)
-        {
-            if (ud2DLinkSize.UpClick)
-                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(1.1);");
-            if (ud2DLinkSize.DownClick)
-                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(0.9);");
-        }
         private void cb2DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
         {
             p2DRenderOptions.Visible = cb2DRenderShowOptions.Checked;
             gr2DCellPoolLegend.Top = p2DRenderOptions.Visible ? p2DRenderOptions.Bottom + 4 : p2DRender.Bottom + 4;
         }
 
+        private async void ud2DNodeSize_DownClicked(object sender, EventArgs e)
+        {
+            await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+        }
 
-        private void cb2DHideNonspiking_CheckedChanged(object sender, EventArgs e)
+        private async void ud2DNodeSize_UpClicked(object sender, EventArgs e)
+        {
+            await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
+        }
+
+        private async void ud2DLinkSize_DownClicked(object sender, EventArgs e)
+        {
+            await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(0.9);");
+        }
+
+        private async void ud2DLinkSize_UpClicked(object sender, EventArgs e)
+        {
+            await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(1.1);");
+        }
+
+        private void cb2DHideNonspiking_CheckStateChanged(object sender, EventArgs e)
         {
             RenderIn2D(true);
         }
-
     }
 }
