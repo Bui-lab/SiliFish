@@ -1,0 +1,11 @@
+Name,TargetPool,TargetSomite,TargetCell,LeftRight,DelayPerSomite,DelaySagittal,Active,Mode,Value1,Value2,Frequency,Periods
+Slow V0v,V0v-D,'1-5,All cells,Both,0.13,20,True,Step,23,0,0,100 - 600
+Slow V2a,V2a-VB,'1-5,All cells,Both,0.13,20,True,Step,35,0,0,100 - 600
+Int DL - 1,V2a-Type-I-DL,All somites,All cells,Both,0.07,15,True,Step,50,0,0,900 - 1400
+Int DM - 1,V2a-Type-I-DM,All somites,All cells,Both,0.07,15,True,Step,50,0,0,900 - 1400
+Int DL - 2,V2a-Type-I-DL,All somites,All cells,Both,0.07,15,True,Step,100,0,0,1700 - 2200
+Int DM - 2,V2a-Type-I-DM,All somites,All cells,Both,0.07,15,True,Step,100,0,0,1700 - 2200
+Int DL - 3,V2a-Type-I-DL,All somites,All cells,Both,0.07,15,True,Step,150,0,0,2500 - 3000
+Int DM - 3,V2a-Type-I-DM,All somites,All cells,Both,0.07,15,True,Step,450,0,0,2500 - 3000
+Fast,V2a-Type-I-DH,All somites,All cells,Both,0.03,10,True,Step,2000,0,0,3300 - 3800
+Fast,V2a-Type-I-DM,All somites,All cells,Both,0.03,10,True,Step,2000,0,0,3300 - 3800
