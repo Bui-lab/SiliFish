@@ -82,8 +82,21 @@ namespace SiliFish.UI.Controls
             //If the full rendering has never been done, a brand new 2D rendering need to be created rather than refreshing the old one
             if (refresh && !cb2DHideNonspiking.Checked && !rendered2DFull)
                 refresh = false;
-            List<CellPool> cellPools = model.CellPools;
-            List<CellPool> activePools = model.CellPools.Where(cp => cp.Cells.Any(c => c.IsActivelySpiking(GlobalSettings.ActivityThresholdSpikeCount))).ToList();
+            List<CellPool> cellPools;//FUTURE - there can be more options, like sensory, supraspinal, etc
+            if (cb2DInterneuron.Checked && cb2DMotoneuron.Checked && cb2DMuscleCells.Checked)
+            {
+                cellPools = model.CellPools;
+            }
+            else
+            {
+                cellPools = (cb2DMotoneuron.Checked ? model.MotoNeuronPools : []).Concat(
+                    (cb2DInterneuron.Checked ? model.InterNeuronPools : []).Concat(
+                        cb2DMuscleCells.Checked ? model.MusclePools : []
+                        )
+                    ).ToList();
+            }
+
+            List<CellPool> activePools = cellPools.Where(cp => cp.Cells.Any(c => c.IsActivelySpiking(GlobalSettings.ActivityThresholdSpikeCount))).ToList();
             List<CellPool> inactivePools = cellPools.Except(activePools).ToList();
             string html;
             if (cb2DHideNonspiking.CheckState == CheckState.Checked && simulation != null && simulation.SimulationRun)
@@ -205,6 +218,11 @@ namespace SiliFish.UI.Controls
         }
 
         private void cb2DHideNonspiking_CheckStateChanged(object sender, EventArgs e)
+        {
+            RenderIn2D(true);
+        }
+
+        private void cb2DCellSelection_CheckedChanged(object sender, EventArgs e)
         {
             RenderIn2D(true);
         }
