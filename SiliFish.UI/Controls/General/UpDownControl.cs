@@ -2,28 +2,9 @@
 {
     public partial class UpDownControl : DomainUpDown
     {
-        private bool upClick;
-        private bool downClick;
+        public event EventHandler DownClicked;
+        public event EventHandler UpClicked;
 
-        public bool UpClick
-        {
-            get
-            {
-                bool b = upClick;
-                upClick = false;
-                return b;
-            }
-        }
-
-        public bool DownClick
-        {
-            get
-            {
-                bool b = downClick;
-                downClick = false;
-                return b;
-            }
-        }
         public UpDownControl()
         {
             InitializeComponent();
@@ -32,15 +13,13 @@
         public override void UpButton()
         {
             base.UpButton();
-            upClick = true;
-            downClick = false;
+            UpClicked?.Invoke(this, EventArgs.Empty);
         }
 
         public override void DownButton()
         {
             base.DownButton();
-            downClick = true;
-            upClick = false;
+            DownClicked?.Invoke(this, EventArgs.Empty);
         }
     }
 }

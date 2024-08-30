@@ -32,6 +32,9 @@ namespace SiliFish.UI.Controls
         {
             gr2DCellPoolLegend = new GroupBox();
             p2DRenderOptions = new Panel();
+            cb2DMuscleCells = new CheckBox();
+            cb2DInterneuron = new CheckBox();
+            cb2DMotoneuron = new CheckBox();
             ud2DNodeSize = new General.UpDownControl();
             ud2DLinkSize = new General.UpDownControl();
             cb2DOffline = new CheckBox();
@@ -74,6 +77,9 @@ namespace SiliFish.UI.Controls
             // p2DRenderOptions
             // 
             p2DRenderOptions.BackColor = Color.FromArgb(236, 239, 241);
+            p2DRenderOptions.Controls.Add(cb2DMuscleCells);
+            p2DRenderOptions.Controls.Add(cb2DInterneuron);
+            p2DRenderOptions.Controls.Add(cb2DMotoneuron);
             p2DRenderOptions.Controls.Add(ud2DNodeSize);
             p2DRenderOptions.Controls.Add(ud2DLinkSize);
             p2DRenderOptions.Controls.Add(cb2DOffline);
@@ -91,21 +97,61 @@ namespace SiliFish.UI.Controls
             p2DRenderOptions.TabIndex = 55;
             p2DRenderOptions.Visible = false;
             // 
+            // cb2DMuscleCells
+            // 
+            cb2DMuscleCells.Checked = true;
+            cb2DMuscleCells.CheckState = CheckState.Checked;
+            cb2DMuscleCells.Location = new Point(134, 56);
+            cb2DMuscleCells.Name = "cb2DMuscleCells";
+            cb2DMuscleCells.Size = new Size(115, 20);
+            cb2DMuscleCells.TabIndex = 80;
+            cb2DMuscleCells.Text = "Muscle Cells";
+            cb2DMuscleCells.UseVisualStyleBackColor = true;
+            cb2DMuscleCells.CheckedChanged += cb2DCellSelection_CheckedChanged;
+            // 
+            // cb2DInterneuron
+            // 
+            cb2DInterneuron.Checked = true;
+            cb2DInterneuron.CheckState = CheckState.Checked;
+            cb2DInterneuron.Location = new Point(134, 4);
+            cb2DInterneuron.Name = "cb2DInterneuron";
+            cb2DInterneuron.Size = new Size(103, 20);
+            cb2DInterneuron.TabIndex = 78;
+            cb2DInterneuron.Text = "Interneurons";
+            cb2DInterneuron.UseVisualStyleBackColor = true;
+            cb2DInterneuron.CheckedChanged += cb2DCellSelection_CheckedChanged;
+            // 
+            // cb2DMotoneuron
+            // 
+            cb2DMotoneuron.Checked = true;
+            cb2DMotoneuron.CheckState = CheckState.Checked;
+            cb2DMotoneuron.Location = new Point(134, 30);
+            cb2DMotoneuron.Name = "cb2DMotoneuron";
+            cb2DMotoneuron.Size = new Size(115, 20);
+            cb2DMotoneuron.TabIndex = 79;
+            cb2DMotoneuron.Text = "Motoneurons";
+            cb2DMotoneuron.UseVisualStyleBackColor = true;
+            cb2DMotoneuron.CheckedChanged += cb2DCellSelection_CheckedChanged;
+            // 
             // ud2DNodeSize
             // 
-            ud2DNodeSize.Location = new Point(319, 2);
+            ud2DNodeSize.Location = new Point(423, 2);
             ud2DNodeSize.Name = "ud2DNodeSize";
             ud2DNodeSize.Size = new Size(18, 23);
             ud2DNodeSize.TabIndex = 77;
             ud2DNodeSize.Text = "ud2DNodeSize";
+            ud2DNodeSize.DownClicked += ud2DNodeSize_DownClicked;
+            ud2DNodeSize.UpClicked += ud2DNodeSize_UpClicked;
             // 
             // ud2DLinkSize
             // 
-            ud2DLinkSize.Location = new Point(319, 28);
+            ud2DLinkSize.Location = new Point(423, 28);
             ud2DLinkSize.Name = "ud2DLinkSize";
             ud2DLinkSize.Size = new Size(18, 23);
             ud2DLinkSize.TabIndex = 76;
             ud2DLinkSize.Text = "ud2DLinkSize";
+            ud2DLinkSize.DownClicked += ud2DLinkSize_DownClicked;
+            ud2DLinkSize.UpClicked += ud2DLinkSize_UpClicked;
             // 
             // cb2DOffline
             // 
@@ -124,7 +170,7 @@ namespace SiliFish.UI.Controls
             // 
             cb2DShowUnselectedNodes.Checked = true;
             cb2DShowUnselectedNodes.CheckState = CheckState.Checked;
-            cb2DShowUnselectedNodes.Location = new Point(145, 58);
+            cb2DShowUnselectedNodes.Location = new Point(262, 56);
             cb2DShowUnselectedNodes.Name = "cb2DShowUnselectedNodes";
             cb2DShowUnselectedNodes.Size = new Size(180, 20);
             cb2DShowUnselectedNodes.TabIndex = 74;
@@ -135,13 +181,14 @@ namespace SiliFish.UI.Controls
             // cb2DHideNonspiking
             // 
             cb2DHideNonspiking.AutoSize = true;
-            cb2DHideNonspiking.Location = new Point(8, 6);
+            cb2DHideNonspiking.Location = new Point(8, 4);
             cb2DHideNonspiking.Name = "cb2DHideNonspiking";
             cb2DHideNonspiking.Size = new Size(120, 19);
             cb2DHideNonspiking.TabIndex = 73;
             cb2DHideNonspiking.Text = "Hide Non-spiking";
+            cb2DHideNonspiking.ThreeState = true;
             cb2DHideNonspiking.UseVisualStyleBackColor = true;
-            cb2DHideNonspiking.CheckedChanged += cb2DHideNonspiking_CheckedChanged;
+            cb2DHideNonspiking.CheckStateChanged += cb2DHideNonspiking_CheckStateChanged;
             // 
             // cb2DLegend
             // 
@@ -160,7 +207,7 @@ namespace SiliFish.UI.Controls
             // l2DLinkSize
             // 
             l2DLinkSize.AutoSize = true;
-            l2DLinkSize.Location = new Point(249, 32);
+            l2DLinkSize.Location = new Point(353, 32);
             l2DLinkSize.Name = "l2DLinkSize";
             l2DLinkSize.Size = new Size(64, 15);
             l2DLinkSize.TabIndex = 71;
@@ -171,7 +218,7 @@ namespace SiliFish.UI.Controls
             // 
             cb2DChemJunc.Checked = true;
             cb2DChemJunc.CheckState = CheckState.Checked;
-            cb2DChemJunc.Location = new Point(145, 6);
+            cb2DChemJunc.Location = new Point(262, 4);
             cb2DChemJunc.Name = "cb2DChemJunc";
             cb2DChemJunc.Size = new Size(85, 20);
             cb2DChemJunc.TabIndex = 58;
@@ -183,7 +230,7 @@ namespace SiliFish.UI.Controls
             // 
             cb2DGapJunc.Checked = true;
             cb2DGapJunc.CheckState = CheckState.Checked;
-            cb2DGapJunc.Location = new Point(145, 32);
+            cb2DGapJunc.Location = new Point(262, 30);
             cb2DGapJunc.Name = "cb2DGapJunc";
             cb2DGapJunc.Size = new Size(80, 20);
             cb2DGapJunc.TabIndex = 59;
@@ -194,7 +241,7 @@ namespace SiliFish.UI.Controls
             // l2DNodeSize
             // 
             l2DNodeSize.AutoSize = true;
-            l2DNodeSize.Location = new Point(249, 6);
+            l2DNodeSize.Location = new Point(353, 6);
             l2DNodeSize.Name = "l2DNodeSize";
             l2DNodeSize.Size = new Size(59, 15);
             l2DNodeSize.TabIndex = 69;
@@ -378,5 +425,8 @@ namespace SiliFish.UI.Controls
         private SiliFishWebView webView2DRender;
         private General.UpDownControl ud2DNodeSize;
         private General.UpDownControl ud2DLinkSize;
+        private CheckBox cb2DMuscleCells;
+        private CheckBox cb2DInterneuron;
+        private CheckBox cb2DMotoneuron;
     }
 }

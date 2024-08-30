@@ -114,6 +114,8 @@ namespace SiliFish.UI.Controls
             ud3DNodeSize.Size = new Size(19, 23);
             ud3DNodeSize.TabIndex = 77;
             ud3DNodeSize.Text = "ud3DNodeSize";
+            ud3DNodeSize.DownClicked += ud3DNodeSize_DownClicked;
+            ud3DNodeSize.UpClicked += ud3DNodeSize_UpClicked;
             // 
             // cb3DShowUnselectedNodes
             // 

@@ -22,7 +22,7 @@ namespace SiliFish.UI.Controls
         public ThreeDRenderControl()
         {
             InitializeComponent();
-            if (!DesignMode) 
+            if (!DesignMode)
                 WebViewInitializations();
             dd3DViewpoint.SelectedIndex = 0;
         }
@@ -206,18 +206,20 @@ namespace SiliFish.UI.Controls
         {
             await webView3DRender.ExecuteScriptAsync(s);
         }
-        private async void ud3DNodeSize_SelectedItemChanged(object sender, EventArgs e)
-        {
-            if (ud3DNodeSize.UpClick)
-                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
-            if (ud3DNodeSize.DownClick)
-                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
-        }
         private void cb3DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
         {
             p3DRenderOptions.Visible = cb3DRenderShowOptions.Checked;
         }
 
+        private async void ud3DNodeSize_DownClicked(object sender, EventArgs e)
+        {
+            await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+        }
+
+        private async void ud3DNodeSize_UpClicked(object sender, EventArgs e)
+        {
+            await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
+        }
     }
 
 }

@@ -33,6 +33,7 @@
 
             const gapChemData = {
                 "nodes": [__POOLS__],
+                "grayedOutNodes": [__GRAYED_OUT_POOLS__],
                 "links": [__GAP_CHEM_LINKS__]
             };
 
@@ -62,17 +63,22 @@
             function nodePaint(node, color, ctx) {
                 if (node.id == '_h_' || node.id == "_t_")
                     return;
-                if (selectedNode != null && !isNodeActive(node))
+                if (gapChemData.grayedOutNodes.includes(node.g))
+                    color = colorSet["GrayedOut"];
+                else if (selectedNode != null && !isNodeActive(node))
                     color = '#EEE';
                 ctx.fillStyle = color;
                 ctx.beginPath();
-                ctx.arc(node.x, node.y, nodeSize, 0, 2 * Math.PI, false); //circle
+                curSize = nodeSize;
+                if (gapChemData.grayedOutNodes.includes(node.g))
+                    curSize = curSize * 0.75;
+                ctx.arc(node.x, node.y, curSize, 0, 2 * Math.PI, false); //circle
                 ctx.fillStyle = color;
                 ctx.fill();
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.textSize = nodeSize;
-                ctx.font = (nodeSize * 1.6) + 'px sans-serif';
+                ctx.textSize = curSize;
+                ctx.font = (curSize * 1.6) + 'px sans-serif';
                 //ctx.fillStyle = 'white';
                 //ctx.fillText(node.id, node.x + 0.5, node.y + 0.5);
                 ctx.fillStyle = 'black';
@@ -102,11 +108,11 @@
                     l.type == 'gap' ?
                         `${l.source.id} &harr; ${l.target.id} [ ${l.conductance}]` : //gap junction
                         `${l.source.id} &rarr; ${l.target.id} [ ${l.conductance}]`) //chem junction
-                .linkWidth(l => Math.max(l.value * linkSizeMultiplier, 0.5))
+                .linkWidth(l => Math.max(l.value * linkSizeMultiplier, 0.1))
                 .linkDirectionalArrowLength(l => l.type == "gap" || l.type == "spine" ? 0 : 10 * arrowSizeMultiplier)
                 .linkDirectionalArrowRelPos(0.95)
                 .linkCurvature('curv')
-                .linkVisibility(l => (l.type != 'gap' && showChemJnc || l.type == 'gap' && showGapJnc) && showLink(l))
+                .linkVisibility(l => (l.type == 'spine' || l.type != 'gap' && showChemJnc || l.type == 'gap' && showGapJnc) && showLink(l))
                 .onNodeClick(node => {
                     selectedNode = node;
                     updateHighlight();

@@ -67,7 +67,7 @@ namespace SiliFish.UI
                 runParam = model.Settings.GetRunParam();
                 FillRunParams();
                 SetCurrentMode(RunMode.RunningModel, null);
-                miToolsMemoryFlush.ToolTipText = 
+                miToolsMemoryFlush.ToolTipText =
                     "If the current information is plotted, flushing clears the memory allocated to generate those lists.";
 
             }
@@ -647,6 +647,9 @@ namespace SiliFish.UI
                     MessageBox.Show("There is no simulation to be saved.");
                     return;
                 }
+                //get the latest name and description, as can be updated while the simulation is run
+                ModelBase updatedModel = modelControl.GetModel();
+                modelSimulator.UpdateNameAndDecription(updatedModel.ModelName, updatedModel.ModelDescription);
                 SaveSimulationResultsToDBStart();
                 simulationDBWriter.Run();
             }
@@ -926,7 +929,7 @@ namespace SiliFish.UI
             {
                 double cleared = runningModel.MemoryFlush();
                 if (cleared > 0)
-                    MessageBox.Show($"{cleared/(1024*1024) : #.##} megabytes are cleared from memory.", "Info");                
+                    MessageBox.Show($"{cleared / (1024 * 1024): #.##} megabytes are cleared from memory.", "Info");
                 else
                     MessageBox.Show("There are no structures created for plotting purposes to clear from memory.", "Info");
 
@@ -958,5 +961,9 @@ namespace SiliFish.UI
             about.ShowDialog();
         }
 
+        private void miFileExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
