@@ -1,4 +1,4 @@
-# SiliFish v2.0
+# SiliFish v3.0
 
 Developed by Emine Topcu @ Bui Lab, University of Ottawa, 2023
 
