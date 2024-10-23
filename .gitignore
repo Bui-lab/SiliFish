@@ -379,3 +379,14 @@ FodyWeavers.xsd
 /SiliFish/Migrations
 /DB Integration/DB Integration.dtproj
 /DB Integration
+/SiliFish/DataTypes/Distribution.cd
+/SiliFish/DynamicUnits/CellCore/CellCore.cd
+/SiliFish/ModelUnits/Architecture/ArchitectureRunning.cd
+/SiliFish/ModelUnits/Architecture/ArchitectureTemplate.cd
+/SiliFish/ModelUnits/Cells/CellWithCore.cd
+/SiliFish/ModelUnits/Cells/CellWithJncCore.cd
+/SiliFish/ModelUnits/Cells/ClassDiagramCell.cd
+/SiliFish/ModelUnits/Cells/ClassDiagramFull.cd
+/SiliFish/ModelUnits/Junction/ClassDiagramJunction.cd
+/SiliFish/ModelUnits/Stim/ClassDiagramStimulus.cd
+/SiliFish/Services/Optimization/ClassDiagramGA.cd
