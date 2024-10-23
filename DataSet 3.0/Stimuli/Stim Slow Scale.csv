@@ -1,0 +1,11 @@
+Name,TargetPool,TargetSomite,TargetCell,LeftRight,DelayPerSomite,DelaySagittal,Active,Mode,Value1,Value2,Frequency,Periods
+Slow V0v - 1,V0v-D,'1-5,All cells,Both,0.13,20,TRUE,Gaussian,13,0.1,0,100 - 600
+Slow V2a - 1,V2a-VB,'1-5,All cells,Both,0.13,20,TRUE,Gaussian,22,0.1,0,100 - 600
+Slow V0v - 2,V0v-D,'1-5,All cells,Both,0.13,20,TRUE,Gaussian,20,0.1,0,900 - 1400
+Slow V2a - 2,V2a-VB,'1-5,All cells,Both,0.13,20,TRUE,Gaussian,33,0.1,0,900 - 1400
+Slow V0v - 3,V0v-D,'1-5,All cells,Both,0.13,20,TRUE,Gaussian,22,0.1,0,1700 - 2200
+Slow V2a - 3,V2a-VB,'1-5,All cells,Both,0.13,20,TRUE,Gaussian,35,0.1,0,1700 - 2200
+Slow V0v - 4,V0v-D,'1-5,All cells,Both,0.13,20,TRUE,Gaussian,30,0.1,0,2500 - 3000
+Slow V2a - 4,V2a-VB,'1-5,All cells,Both,0.13,20,TRUE,Gaussian,50,0.1,0,2500 - 3000
+Slow V0v - 5,V0v-D,'1-5,All cells,Both,0.13,20,TRUE,Gaussian,40,0.1,0,3300 - 3800
+Slow V2a - 5,V2a-VB,'1-5,All cells,Both,0.13,20,TRUE,Gaussian,80,0.1,0,3300 - 3800
