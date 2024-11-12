@@ -274,7 +274,7 @@ namespace SiliFish.UI.Controls
             // 
             // legendIncoming
             // 
-            legendIncoming.BackColor = Color.FromArgb(204, 0, 0);
+            legendIncoming.BackColor = Color.Magenta;
             legendIncoming.ForeColor = SystemColors.ControlLightLight;
             legendIncoming.Location = new Point(6, 53);
             legendIncoming.Name = "legendIncoming";

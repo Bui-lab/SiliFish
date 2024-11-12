@@ -925,6 +925,7 @@
             pbDrawing.BackColor = Color.White;
             pbDrawing.Dock = DockStyle.Fill;
             pbDrawing.Image = (Image)resources.GetObject("pbDrawing.Image");
+            pbDrawing.InitialImage = null;
             pbDrawing.Location = new Point(0, 0);
             pbDrawing.Name = "pbDrawing";
             pbDrawing.Size = new Size(420, 447);

@@ -294,7 +294,7 @@ namespace SiliFish.UI.Controls
             // 
             // label4
             // 
-            label4.BackColor = Color.FromArgb(204, 0, 0);
+            label4.BackColor = Color.Magenta;
             label4.ForeColor = SystemColors.ControlLightLight;
             label4.Location = new Point(6, 53);
             label4.Name = "label4";

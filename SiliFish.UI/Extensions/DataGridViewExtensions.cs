@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Update.Internal;
+using SiliFish.Helpers;
 using SiliFish.Services;
 using System.Text;
 
@@ -14,7 +15,9 @@ namespace SiliFish.UI.Extensions
                 sb.AppendLine(string.Join(',', dataGrid.Columns.OfType<DataGridViewColumn>().Select(c => c.HeaderText)));
                 foreach (DataGridViewRow row in dataGrid.Rows)
                 {
-                    sb.AppendLine(string.Join(',', row.Cells.OfType<DataGridViewCell>().Select(c => c.Value)));
+                    List<string> values = row.Cells.OfType<DataGridViewCell>().Select(c => c.Value).Cast<string>().ToList();
+                    string csvLine = CSVUtil.WriteCSVLine(values);
+                    sb.AppendLine(csvLine);
                 }
                 return sb;
             }

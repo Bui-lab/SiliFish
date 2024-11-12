@@ -97,16 +97,14 @@
         function linkColor(l) {
             if (selectedNode == null)
                 return '#808080';//medium gray
-            if (!showLink(l))
-                return '#DDD'; //light gray
             if (l.type == 'gap')
-                return '#333'; //dark gray
+                return '#515151'; //dark gray
             if (showSingleNodeLinks && l.source == selectedNode
                 || !showSingleNodeLinks && l.source.g == selectedNode.g)
                 return '#0C0';//green - outgoing
             if (showSingleNodeLinks && l.target== selectedNode
                 || !showSingleNodeLinks && l.target.g == selectedNode.g)
-                return '#C00';//red - incoming
+                return '#F0F';//magenta - incoming
             return '#808080';
         }
         function isNodeActive(n) {

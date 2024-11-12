@@ -379,7 +379,10 @@ namespace SiliFish.ModelUnits.Cells
                         new MuscleCell(Model, this, actualSomite, i + 1, cellParams, cv[i], ascendingAxonLength[i], descendingAxonLength[i]);
                     cell.PositionLeftRight = PositionLeftRight;
                     cell.Coordinate = coordinates[i];
-                    
+                    cell.AscendingAxonTrueLength = cell.AscendingAxonLength * Model.ModelDimensions.SomiteLength;
+                    cell.DescendingAxonTrueLength = cell.DescendingAxonLength * Model.ModelDimensions.SomiteLength;
+
+
                     AddCell(cell);
                 }
             }
