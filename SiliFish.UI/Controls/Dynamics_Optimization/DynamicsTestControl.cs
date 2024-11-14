@@ -191,9 +191,8 @@ namespace SiliFish.UI.Controls
             int height = (webViewPlots.ClientSize.Height - 150) / charts.Count;
             if (height < 200) height = 200;
             string html = DyChartGenerator.PlotLineCharts(charts,
-                title, synchronized: synchronized, showZeroValues: GlobalSettings.ShowZeroValues,
-                webViewPlots.ClientSize.Width,
-                height);
+                title, webViewPlots.ClientSize.Width, height, 
+                synchronized: synchronized, showZeroValues: GlobalSettings.ShowZeroValues);
             string tempFile = "";
             bool navigated = false;
             webViewPlots.NavigateTo(html, title, tempFolder, ref tempFile, ref navigated);
@@ -433,9 +432,9 @@ namespace SiliFish.UI.Controls
             int numCharts = charts.Count != 0 ? charts.Count : 1;
             string mainTitle = "Dynamics Test Results";
             string html = DyChartGenerator.PlotLineCharts(charts,
-                mainTitle, synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues,
-                webViewPlots.ClientSize.Width,
-                (webViewPlots.ClientSize.Height - 150) / numCharts);
+                mainTitle, webViewPlots.ClientSize.Width,
+                (webViewPlots.ClientSize.Height - 150) / numCharts,
+                synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues);
             string tempFile = "";
             bool navigated = false;
             webViewPlots.NavigateTo(html, mainTitle, tempFolder, ref tempFile, ref navigated);
@@ -471,9 +470,10 @@ namespace SiliFish.UI.Controls
             int numCharts = charts.Count != 0 ? charts.Count : 1;
             string mainTitle = "Dynamics Test Results";
             string html = DyChartGenerator.PlotLineCharts(charts,
-                mainTitle, synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues,
+                mainTitle,
                 webViewPlots.ClientSize.Width,
-                (webViewPlots.ClientSize.Height - 150) / numCharts);
+                (webViewPlots.ClientSize.Height - 150) / numCharts,
+                synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues);
             string tempFile = "";
             bool navigated = false;
             webViewPlots.NavigateTo(html, mainTitle, tempFolder, ref tempFile, ref navigated);

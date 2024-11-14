@@ -12,7 +12,9 @@ namespace SiliFish.Services.Plotting
 {
     public class DyChartGenerator : EmbeddedResourceReader
     {
-        public static string PlotCharts(string title, List<Chart> charts, bool synchronized, bool showZeroValues, int width, int height)
+        public static string PlotCharts(string title, List<Chart> charts,
+            int width, int height,
+            bool synchronized = true, bool showZeroValues = false, bool optimizedForPrinting = false)
         {
             try
             {
@@ -25,6 +27,29 @@ namespace SiliFish.Services.Plotting
                 string eventListener = ReadEmbeddedText("SiliFish.Resources.DyChartEvent.html");
 
                 html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
+                string singleXLabel = "";
+                string singleYLabel = "";
+
+                if (optimizedForPrinting) //check whether all charts have the same labels
+                {
+                    html.Replace("__EXTRA_STYLES__", ".dygraph-axis-label-x {\r\n    " +
+                        "font-size: 24px;\r\n" +
+                        "}\r\n\r\n" +
+                        ".dygraph-axis-label-y {\r\n" +
+                        "font-size: 24px;\r\n" +
+                        "}");
+                    if (charts.Select(c => c.xLabel).Distinct().Count() == 1)
+                        singleXLabel = HttpUtility.HtmlEncode(charts.First().xLabel);
+                    if (charts.Select(c => c.yLabel).Distinct().Count() == 1)
+                        singleYLabel = HttpUtility.HtmlEncode(charts.First().yLabel);
+                }
+                else
+                    html.Replace("__STYLESHEET__", "");
+
+
+                html.Replace("__MERGED_X_AXIS_LABEL__", singleXLabel);
+                html.Replace("__MERGED_Y_AXIS_LABEL__", singleYLabel);
+
 
                 if (Util.CheckOnlineStatus())
                 {
@@ -76,8 +101,17 @@ namespace SiliFish.Services.Plotting
                         sbChart.Replace("__X_MAX__", charts[chartIndex].xMax.ToString(GlobalSettings.PlotDataFormat));
                         sbChart.Replace("__Y_MIN__", yMin.ToString(GlobalSettings.PlotDataFormat));
                         sbChart.Replace("__Y_MAX__", yMax.ToString(GlobalSettings.PlotDataFormat));
-                        sbChart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
-                        sbChart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
+
+                        if (string.IsNullOrEmpty(singleXLabel))
+                            sbChart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
+                        else
+                            sbChart.Replace("__X_LABEL__", Util.JavaScriptEncode(" "));
+
+                        if (string.IsNullOrEmpty(singleYLabel))
+                            sbChart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
+                        else
+                            sbChart.Replace("__Y_LABEL__", Util.JavaScriptEncode(" "));
+
                         sbChart.Replace("__DRAW_POINTS__", charts[chartIndex].ScatterPlot || charts[chartIndex].drawPoints ? "true" : "false");
                         sbChart.Replace("__POINT_SIZE__", GlobalSettings.PlotPointSize.ToString());
                         sbChart.Replace("__SHOW_ZERO__", showZeroValues.ToString().ToLower());
@@ -100,19 +134,21 @@ namespace SiliFish.Services.Plotting
         }
 
 
-        public static string Plot(string Title, List<Chart> charts, bool showZeroValues, int width = 480, int height = 240)
+        public static string Plot(string Title, List<Chart> charts, int width = 480, int height = 240, 
+            bool showZeroValues = false, bool optimizedForPrinting = false)
         {
-            string PlotHTML = PlotCharts(Title, charts, synchronized: true, showZeroValues, width, height);
+            string PlotHTML = PlotCharts(Title, charts, width, height, 
+                synchronized: true, showZeroValues, optimizedForPrinting: optimizedForPrinting);
             return PlotHTML;
         }
 
 
         public static string PlotLineCharts(List<Chart> chartsData,
-            string mainTitle, bool synchronized, bool showZeroValues,
-            int width = 480, int height = 240)
+            string mainTitle, int width = 480, int height = 240,
+            bool synchronized=true, bool showZeroValues=false)
         {
             List<Chart> charts = [.. chartsData];
-            string PlotHTML = PlotCharts(title: mainTitle, charts, synchronized, showZeroValues, width, height);
+            string PlotHTML = PlotCharts(title: mainTitle, charts, width, height, synchronized, showZeroValues);
             return PlotHTML;
         }
 

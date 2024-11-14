@@ -373,9 +373,9 @@ namespace SiliFish.UI.Controls
         }
         private void listPlotHistory_ItemSelect(object sender, EventArgs e)
         {
-            if (sender is not PlotDefinition plot) 
+            if (sender is not PlotDefinition plot)
                 return;
-            if (!simulation.SimulationRun) 
+            if (!simulation.SimulationRun)
                 return;
             ddPlot.Text = plot.PlotType.GetDisplayName();
             plotSelection = plot.Selection;
@@ -388,7 +388,7 @@ namespace SiliFish.UI.Controls
             if (plot.Selection is PlotSelectionUnits selectedUnits)
             {
                 SetEnablesBasedOnPlot();
-                SelectedUnitArgs args = new (){  unitsSelected = selectedUnits.Units };
+                SelectedUnitArgs args = new() { unitsSelected = selectedUnits.Units };
                 PlottingSelection?.Invoke(this, args);
             }
             Task.Run(PlotHTML);
@@ -533,10 +533,16 @@ namespace SiliFish.UI.Controls
         {
             htmlPlot = "";
             (string Title, Charts) = GenerateCharts();
-            htmlPlot = DyChartGenerator.Plot(Title, Charts, GlobalSettings.ShowZeroValues,
-                GlobalSettings.PlotWidth, GlobalSettings.PlotHeight);
+            htmlPlot = DyChartGenerator.Plot(Title, Charts,
+                GlobalSettings.PlotWidth, GlobalSettings.PlotHeight,
+                GlobalSettings.ShowZeroValues, GlobalSettings.OptimizedForPrinting);
             Invoke(CompletePlotHTML);
         }
+        private void cmiOptimizedForPrint_Click(object sender, EventArgs e)
+        {
+            try { }
+            catch { }
+        }        
         private void btnPlotHTML_Click(object sender, EventArgs e)
         {
             if (!PrePlotCheck())
@@ -716,6 +722,7 @@ namespace SiliFish.UI.Controls
         }
 
         #endregion
+
 
 
     }

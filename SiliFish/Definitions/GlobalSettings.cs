@@ -32,6 +32,7 @@ namespace SiliFish.Definitions
         public static int PlotWidth = 800;
         public static int PlotHeight = 200;
         public static int PlotPointSize = 3;
+        public static bool OptimizedForPrinting = false;
 
         public static int MaxNumberOfUnitsToList = 100;
         public static int MaxNumberOfUnitsToRender = 50_000;
@@ -185,6 +186,13 @@ namespace SiliFish.Definitions
             DisplayName("Size of the points on the scatterplots"),
             Category("Plotting")]
         public int PlotPointSize { get { return GlobalSettings.PlotPointSize; } set { GlobalSettings.PlotPointSize = value; } }
+
+        [Description("Displays single and larger x and y axis labels."),
+            DisplayName("Optimized for printing"),
+            Category("Plotting")]
+        public bool OptimizedForPrinting { get { return GlobalSettings.OptimizedForPrinting; } set { GlobalSettings.OptimizedForPrinting = value; } }
+
+
         #endregion
 
         #region Dynamics
