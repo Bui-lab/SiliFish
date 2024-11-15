@@ -89,11 +89,14 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                cellPools = (cb2DMotoneuron.Checked ? model.MotoNeuronPools : []).Concat(
-                    (cb2DInterneuron.Checked ? model.InterNeuronPools : []).Concat(
+                cellPools =
+                [
+                    .. (cb2DMotoneuron.Checked ? model.MotoNeuronPools : []),
+                    .. (cb2DInterneuron.Checked ? model.InterNeuronPools : []).Concat(
                         cb2DMuscleCells.Checked ? model.MusclePools : []
                         )
-                    ).ToList();
+,
+                ];
             }
 
             List<CellPool> activePools = cellPools.Where(cp => cp.Cells.Any(c => c.IsActivelySpiking(GlobalSettings.ActivityThresholdSpikeCount))).ToList();
@@ -112,18 +115,24 @@ namespace SiliFish.UI.Controls
             gr2DCellPoolLegend.Controls.Clear();
             int padding = 0;
             int bottom = 0;
+            int height = GlobalSettings.OptimizedForPrinting ? 30 : 20;
+            int fontSize = GlobalSettings.OptimizedForPrinting ? 16 : 10;
+            double right = gr2DCellPoolLegend.Right;
+            gr2DCellPoolLegend.Width = GlobalSettings.OptimizedForPrinting ? 160 : 120;
+            gr2DCellPoolLegend.Left = (int)(right - gr2DCellPoolLegend.Width);
             foreach (var cellPool in cellPools.GroupBy(cp => cp.CellGroup))
             {
                 Color color = cellPool.First().Color;
                 Label label = new()
                 {
                     Text = cellPool.Key,
-                    Height = 20,
+                    Height = height,
                     Padding = new Padding(2, 2, 0, 0),
                     AutoSize = false,
                     Dock = DockStyle.Top,
                     BackColor = color
                 };
+                label.Font = new Font(label.Font.Name, height/2); ;
                 int grayValue = (int)(color.R * 0.3 + color.G * 0.59 + color.B * 0.11);
                 if (grayValue < 50)
                     label.ForeColor = Color.White;

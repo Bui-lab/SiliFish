@@ -176,12 +176,15 @@ namespace SiliFish.Services.Plotting
                     SwimmingEpisodes episodes2 = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(simulation);
                     PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, episodes2);
                     plotGeneratorEpisodesTail2.CreateCharts(charts, Plot.PlotType);
-                    List<int> somites = simulation.Model.MotoNeuronPools[0].GetSomites((PlotSelectionMultiCells)Plot.Selection).ToList();
-                    foreach (int s in somites)
+                    if (Plot.PlotType != PlotType.TailMovementFreq) //skip the somite based plots
                     {
-                        (double[] mnMaxPotentials2, SwimmingEpisodes episodesMN2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(simulation, s);
-                        PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 1, mnMaxPotentials2, episodesMN2, s);
-                        plotGeneratorEpisodesMN2.CreateCharts(charts, Plot.PlotType);
+                        List<int> somites = simulation.Model.MotoNeuronPools[0].GetSomites((PlotSelectionMultiCells)Plot.Selection).ToList();
+                        foreach (int s in somites)
+                        {
+                            (double[] mnMaxPotentials2, SwimmingEpisodes episodesMN2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(simulation, s);
+                            PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 1, mnMaxPotentials2, episodesMN2, s);
+                            plotGeneratorEpisodesMN2.CreateCharts(charts, Plot.PlotType);
+                        }
                     }
                     break;
                 default:

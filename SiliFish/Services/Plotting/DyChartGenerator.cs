@@ -32,7 +32,14 @@ namespace SiliFish.Services.Plotting
 
                 if (optimizedForPrinting) //check whether all charts have the same labels
                 {
-                    html.Replace("__EXTRA_STYLES__", ".dygraph-axis-label-x {\r\n    " +
+                    html.Replace("__EXTRA_STYLES__",
+                        ".dygraph-xlabel {\r\n    " +
+                        "font-size: 24px;\r\n" +
+                        "}\r\n\r\n" +
+                        ".dygraph-ylabel {\r\n    " +
+                        "font-size: 24px;\r\n" +
+                        "}\r\n\r\n" +
+                        ".dygraph-axis-label-x {\r\n    " +
                         "font-size: 24px;\r\n" +
                         "}\r\n\r\n" +
                         ".dygraph-axis-label-y {\r\n" +

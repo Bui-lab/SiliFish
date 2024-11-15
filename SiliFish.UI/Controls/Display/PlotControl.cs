@@ -542,7 +542,7 @@ namespace SiliFish.UI.Controls
         {
             try { }
             catch { }
-        }        
+        }
         private void btnPlotHTML_Click(object sender, EventArgs e)
         {
             if (!PrePlotCheck())
@@ -725,6 +725,15 @@ namespace SiliFish.UI.Controls
 
 
 
+        private void cmiMaximizePlotWindow_Click(object sender, EventArgs e)
+        {
+            if (webViewPlot.CoreWebView2 == null || string.IsNullOrWhiteSpace(webViewPlot.CoreWebView2.DocumentTitle))
+                return;
+            WebViewMaximizedForm webView = new();
+            bool navigated = false;
+            webView.NavigateTo(htmlPlot, PlotType.GetDisplayName(), GlobalSettings.TempFolder, ref tempFile, ref navigated);
+            webView.ShowDialog();
+        }
     }
 
 }

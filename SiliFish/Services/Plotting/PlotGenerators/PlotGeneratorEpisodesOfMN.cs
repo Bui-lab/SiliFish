@@ -30,7 +30,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             string[] data;
 
             //Tail Movement
-            if (plotType is PlotType.EpisodesMN or PlotType.TailMovement or PlotType.TailMovementFreq)
+            if (plotType is PlotType.EpisodesMN or PlotType.TailMovement)
             {
                 title = "Time,Y-Axis";
                 data = new string[iEnd - iStart + 2];
