@@ -27,6 +27,10 @@ namespace SiliFish.Services.Plotting
                 string eventListener = ReadEmbeddedText("SiliFish.Resources.DyChartEvent.html");
 
                 html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
+
+                StringBuilder styleSheet = new(ReadEmbeddedText("SiliFish.Resources.DyChartStyleSheet.css"));
+                html.Replace("__STYLE_SHEET__", styleSheet.ToString());
+
                 string singleXLabel = "";
                 string singleYLabel = "";
 
@@ -34,10 +38,10 @@ namespace SiliFish.Services.Plotting
                 {
                     html.Replace("__EXTRA_STYLES__",
                         ".dygraph-xlabel {\r\n    " +
-                        "font-size: 24px;\r\n" +
+                        "font-size: 36px;\r\n" +
                         "}\r\n\r\n" +
                         ".dygraph-ylabel {\r\n    " +
-                        "font-size: 24px;\r\n" +
+                        "font-size: 36px;\r\n" +
                         "}\r\n\r\n" +
                         ".dygraph-axis-label-x {\r\n    " +
                         "font-size: 24px;\r\n" +

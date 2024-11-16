@@ -44,6 +44,7 @@
     <None Remove="Resources\DyChart.js" />
     <None Remove="Resources\DyChartDiv.html" />
     <None Remove="Resources\DyChartEvent.html" />
+    <None Remove="Resources\DyChartStyleSheet.css" />
     <None Remove="Resources\DyChartSync.html" />
     <None Remove="Resources\DyChartUnsync.html" />
     <None Remove="Resources\dygraph.js" />
@@ -68,6 +69,7 @@
     <EmbeddedResource Include="Resources\d3-dsv.min.js" />
     <EmbeddedResource Include="Resources\DorsalHead.png" />
     <EmbeddedResource Include="Resources\DyChartEvent.html" />
+    <EmbeddedResource Include="Resources\DyChartStyleSheet.css" />
     <EmbeddedResource Include="Resources\DyChartUnsync.html" />
     <EmbeddedResource Include="Resources\DyChart.js" />
     <EmbeddedResource Include="Resources\DyChartSync.html" />
