@@ -65,6 +65,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     Colors = colorPerChart,
                     Title = $"{cellGroup.Key} Membrane Potential",
                     yLabel = "Memb. Pot. (mV)",
+                    yLabelLong = "Membrane Potential (mV)",
                     yMin = yMin,
                     yMax = yMax,
                     xMin = timeArray[iStart],

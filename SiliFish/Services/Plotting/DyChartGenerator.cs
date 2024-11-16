@@ -7,6 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using SiliFish.Extensions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using OfficeOpenXml.Drawing.Chart;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.Drawing.Printing;
 
 namespace SiliFish.Services.Plotting
 {
@@ -37,10 +41,12 @@ namespace SiliFish.Services.Plotting
                 if (optimizedForPrinting) //check whether all charts have the same labels
                 {
                     html.Replace("__EXTRA_STYLES__",
-                        ".dygraph-xlabel {\r\n    " +
+                        ".chart {max - width: 100 %;margin - left: 20px;}\r\n"+
+                    ".dygraph-xlabel {\r\n    " +
                         "font-size: 36px;\r\n" +
                         "}\r\n\r\n" +
                         ".dygraph-ylabel {\r\n    " +
+                        "margin-top: -20px;\r\n"+
                         "font-size: 36px;\r\n" +
                         "}\r\n\r\n" +
                         ".dygraph-axis-label-x {\r\n    " +
@@ -52,7 +58,11 @@ namespace SiliFish.Services.Plotting
                     if (charts.Select(c => c.xLabel).Distinct().Count() == 1)
                         singleXLabel = HttpUtility.HtmlEncode(charts.First().xLabel);
                     if (charts.Select(c => c.yLabel).Distinct().Count() == 1)
-                        singleYLabel = HttpUtility.HtmlEncode(charts.First().yLabel);
+                    {
+                        singleYLabel = HttpUtility.HtmlEncode(charts.First().yLabelLong);
+                        if (string.IsNullOrEmpty(singleYLabel))
+                            singleYLabel = HttpUtility.HtmlEncode(charts.First().yLabel);
+                    }
                 }
                 else
                     html.Replace("__STYLESHEET__", "");

@@ -41,7 +41,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 {
                     CsvData = csvData,
                     Title = $"Tail Movement",
-                    yLabel = "Y-Coordinate",
+                    yLabel = "Y-Coor.",
                     Colors = [ Color.Red ],
                     xMin = Time[0],
                     xMax = Time[^1] + 1,
@@ -80,6 +80,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         Colors = colorPerChart,
                         Title = $"Tail Beat Frequency",
                         yLabel = "Freq (Hz)",
+                        yLabelLong = "Frequency (Hz)",
                         ScatterPlot = true,
                         xData = xData,
                         yData = null,

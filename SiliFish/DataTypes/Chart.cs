@@ -30,7 +30,7 @@ namespace SiliFish.DataTypes
         }
         public readonly long NumOfDataPoints => numOfPoints;
 
-        public string Title = "", xLabel = "Time (ms)", yLabel = "";
+        public string Title = "", xLabel = "Time (ms)", yLabel = "", yLabelLong = "";
         public List<Color> Colors = [];
         public readonly string csvColors => string.Join(',', Colors.Select(c => c.ToRGBQuoted()).ToList());
         public int GroupSeq;

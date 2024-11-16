@@ -94,6 +94,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             Colors = colorPerChart,
                             Title = $"{cellGroup.Key} {title} Frequency",
                             yLabel = "Burst Freq. (Hz)",
+                            yLabelLong = "Burst Frequency (Hz)",
                             yMin = yMin,
                             yMax = yMax,
                             xMin = timeArray[iStart],
@@ -142,6 +143,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             yData = yData,
                             yMultiData = null,
                             yLabel = "Freq (Hz)",
+                            yLabelLong = "Frequency (Hz)",
                             drawPoints = true
                         };
                         if (!AddChart(burstFreqChart, chartSeq++))
