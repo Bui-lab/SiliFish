@@ -1,4 +1,8 @@
 using Controls;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using SiliFish.Database;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
@@ -13,6 +17,7 @@ using SiliFish.UI.Dialogs;
 using SiliFish.UI.EventArguments;
 using SiliFish.UI.Services;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace SiliFish.UI
 {
@@ -608,20 +613,43 @@ namespace SiliFish.UI
             SaveModelAsJSON();
         }
 
-        private void SaveSimulationResultsToDBStart()
+        private bool SaveSimulationResultsToDBStart()
         {
-            using SFDataContext dataContext = new();
-            simulationDBWriter = new(dataContext.DbFileName, modelSimulator, completeSaveSimulationAction);
-            btnRun.Enabled = false;
-            UseWaitCursor = true;
-            progressBarRun.Value = 0;
-            SetProgressVisibility(true);
-            timerRun.Enabled = true;
+            try
+            {
+                using SFDataContext dataContext = new();
+                //check whether the database is blank - by checking the presence of Models table
+                using var connection = new SqliteConnection(dataContext.Database.GetDbConnection().ConnectionString);
+                connection.Open();
+                using var command = connection.CreateCommand();
+                command.CommandText = "PRAGMA table_info(Models);";
+                using var reader = command.ExecuteReader();
+                bool tableExists = reader.HasRows;
+
+                if (!tableExists) return false;
+                simulationDBWriter = new(dataContext.DbFileName, modelSimulator, completeSaveSimulationAction, abortSaveSimulationAction);
+                btnRun.Enabled = false;
+                UseWaitCursor = true;
+                progressBarRun.Value = 0;
+                SetProgressVisibility(true);
+                timerRun.Enabled = true;
+                return true;
+            }
+            catch (Exception exc) 
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+                return false;
+            }
         }
 
         private void completeSaveSimulationAction()
         {
             Invoke(SaveSimulationResultsToDBEnd);
+        }
+
+        private void abortSaveSimulationAction() 
+        {
+            Invoke(SaveSimulationResultsToDBAborted);
         }
         private void SaveSimulationResultsToDBEnd()
         {
@@ -638,6 +666,17 @@ namespace SiliFish.UI
             simulationDBWriter = null;
             miFileSaveSimulationResults.Text = $"Save Simulation Results (last saved at {DateTime.Now:ddd} {DateTime.Now:t})";
         }
+
+        private void SaveSimulationResultsToDBAborted()
+        {
+            UseWaitCursor = false;
+            timerRun.Enabled = false;
+            progressBarRun.Value = progressBarRun.Maximum;
+            SetProgressVisibility(false);
+            btnRun.Enabled = true;
+            MessageBox.Show($"There was a problem in saving the simulation to {new SFDataContext().DbFileName}");
+            simulationDBWriter = null;
+        }
         private void miFileSaveSimulationResults_Click(object sender, EventArgs e)
         {
             try
@@ -650,7 +689,11 @@ namespace SiliFish.UI
                 //get the latest name and description, as can be updated while the simulation is run
                 ModelBase updatedModel = modelControl.GetModel();
                 modelSimulator.UpdateNameAndDecription(updatedModel.ModelName, updatedModel.ModelDescription);
-                SaveSimulationResultsToDBStart();
+                if (!SaveSimulationResultsToDBStart())
+                {
+                    MessageBox.Show("There is a problem with connecting to the database or the database is corrupt.");
+                    return;
+                }
                 simulationDBWriter.Run();
             }
             catch (Exception exc)

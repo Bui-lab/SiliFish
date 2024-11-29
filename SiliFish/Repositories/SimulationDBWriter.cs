@@ -12,11 +12,12 @@ using System.Threading;
 
 namespace SiliFish.Repositories
 {
-    public class SimulationDBWriter(string dbName, Simulator modelSimulator, Action completionAction)
+    public class SimulationDBWriter(string dbName, Simulator modelSimulator, Action completionAction, Action abortAction)
     {
         private readonly string databaseName = dbName;
         private readonly Simulator modelSimulator = modelSimulator;
         public Action saveCompletionAction = completionAction;
+        public Action saveAbortAction = abortAction;
         private double individualProgress = 0;
         private int simulationCount = 0;
         public List<int> SimulationIds { get; set; } = [];
@@ -91,18 +92,26 @@ namespace SiliFish.Repositories
         }
         private void SaveToDB()
         {
-            SimulationIds = [];
-            ModelJsons = [];
-            simulationCount = modelSimulator.SimulationList.Count;
-            using SFDataContext dataContext = new(databaseName);
-            dataContext.ChangeTracker.AutoDetectChangesEnabled = false;
-            foreach (Simulation simulation in modelSimulator.SimulationList)
+            try
             {
-                SimulationRecord simRecord = AddSimulationRecord(dataContext, simulation);
-                AddEpisodeAndSpikeRecords(dataContext, simulation, simRecord.Id);
+                SimulationIds = [];
+                ModelJsons = [];
+                simulationCount = modelSimulator.SimulationList.Count;
+                using SFDataContext dataContext = new(databaseName);
+                dataContext.ChangeTracker.AutoDetectChangesEnabled = false;
+                foreach (Simulation simulation in modelSimulator.SimulationList)
+                {
+                    SimulationRecord simRecord = AddSimulationRecord(dataContext, simulation);
+                    AddEpisodeAndSpikeRecords(dataContext, simulation, simRecord.Id);
+                }
+                dataContext.SaveChanges();
+                saveCompletionAction?.Invoke();
             }
-            dataContext.SaveChanges();
-            saveCompletionAction?.Invoke();
+            catch (Exception exc)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+                saveAbortAction?.Invoke();
+            }
         }
         public void Run()
         {

@@ -56,7 +56,7 @@ namespace SiliFish.ModelUnits.Architecture
                 {
                     using SFDataContext dataContext = new(temp: true);
                     dataContext.Database.EnsureCreated();
-                    SimulationDBWriter simulationDBWriter = new(dataContext.DbFileName, simulator, null);
+                    SimulationDBWriter simulationDBWriter = new(dataContext.DbFileName, simulator, null, null);
                     SimulationRecord simRecord = simulationDBWriter.AddSimulationRecord(dataContext, this);
                     GlobalSettings.AddTempFile(dataContext.Models.Find(simRecord.ModelID)?.JsonFile);
                     DBLink = new SimulationDBLink(simRecord.Id, dataContext.DbFileName);
