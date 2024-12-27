@@ -33,6 +33,11 @@ namespace SiliFish.Definitions
         public static int PlotHeight = 200;
         public static int PlotPointSize = 3;
         public static bool OptimizedForPrinting = false;
+        public static int PlotMergedFontSize = 36;
+        public static bool FullDynamicsGapCurrent = true;//not added to the UI
+        public static bool FullDynamicsChemInCurrent = true;
+        public static bool FullDynamicsChemOutCurrent = true;
+        public static bool FullDynamicsStimulus = true;
 
         public static int MaxNumberOfUnitsToList = 100;
         public static int MaxNumberOfUnitsToRender = 50_000;
@@ -192,6 +197,10 @@ namespace SiliFish.Definitions
             Category("Plotting")]
         public bool OptimizedForPrinting { get { return GlobalSettings.OptimizedForPrinting; } set { GlobalSettings.OptimizedForPrinting = value; } }
 
+        [Description("The font size of the x and y axis labels on the plots."),
+            DisplayName("Label font size"),
+            Category("Plotting")]
+        public int PlotMergedFontSize { get { return GlobalSettings.PlotMergedFontSize; } set { GlobalSettings.PlotMergedFontSize = value; } }
 
         #endregion
 

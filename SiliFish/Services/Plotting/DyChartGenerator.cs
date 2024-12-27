@@ -43,11 +43,11 @@ namespace SiliFish.Services.Plotting
                     html.Replace("__EXTRA_STYLES__",
                         ".chart {max - width: 100 %;margin - left: 20px;}\r\n"+
                     ".dygraph-xlabel {\r\n    " +
-                        "font-size: 36px;\r\n" +
+                        "font-size: 24px;\r\n" +
                         "}\r\n\r\n" +
                         ".dygraph-ylabel {\r\n    " +
                         "margin-top: -20px;\r\n"+
-                        "font-size: 36px;\r\n" +
+                        "font-size: 24px;\r\n" +
                         "}\r\n\r\n" +
                         ".dygraph-axis-label-x {\r\n    " +
                         "font-size: 24px;\r\n" +
@@ -70,7 +70,8 @@ namespace SiliFish.Services.Plotting
 
                 html.Replace("__MERGED_X_AXIS_LABEL__", singleXLabel);
                 html.Replace("__MERGED_Y_AXIS_LABEL__", singleYLabel);
-
+                html.Replace("__LABEL_FONT_SIZE__", GlobalSettings.PlotMergedFontSize.ToString());
+                
 
                 if (Util.CheckOnlineStatus())
                 {

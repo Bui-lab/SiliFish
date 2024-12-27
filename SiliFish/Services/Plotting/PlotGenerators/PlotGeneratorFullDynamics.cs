@@ -24,12 +24,18 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             plotGeneratorMP.CreateCharts(charts);
 
             PlotGeneratorCurrentsOfCells plotGeneratorCurrent = new(plotGenerator, timeArray, iStart, iEnd, 1,
-                 cells, plotSelection);
+                 cells, plotSelection,
+                 includeGap: GlobalSettings.FullDynamicsGapCurrent, 
+                 includeChemIn: GlobalSettings.FullDynamicsChemInCurrent,
+                 includeChemOut: GlobalSettings.FullDynamicsChemOutCurrent);
             plotGeneratorCurrent.CreateCharts(charts);
 
-            PlotGeneratorStimuli plotGeneratorStimuli = new(plotGenerator, timeArray, iStart, iEnd, 4,
-                cells, plotSelection);
-            plotGeneratorStimuli.CreateCharts(charts);
+            if (GlobalSettings.FullDynamicsStimulus)
+            {
+                PlotGeneratorStimuli plotGeneratorStimuli = new(plotGenerator, timeArray, iStart, iEnd, 4,
+                    cells, plotSelection);
+                plotGeneratorStimuli.CreateCharts(charts);
+            }
 
             List<Cell> muscleCells = cells?.Where(c => c is MuscleCell).ToList();
             if (muscleCells != null && muscleCells.Count != 0)
