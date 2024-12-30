@@ -80,7 +80,8 @@ namespace Extensions
                     flowPanel.SetFlowBreak(numBox, true);
                 }
             }
-            catch { }
+            catch (Exception exc)
+            { }
         }
 
         public static Dictionary<string, double> CreateDoubleDictionaryFromControls(this FlowLayoutPanel flowPanel)

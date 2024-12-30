@@ -4,6 +4,7 @@ using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Repositories;
 using SiliFish.Services;
@@ -23,6 +24,9 @@ namespace SiliFish.UI.Controls
         private string tempFolder;
         private string outputFolder;
         private event EventHandler contentChanged;
+        private List<Dictionary<string, double>> coreParamValues = null;
+        private int coreParamCounter = 0;
+
         public double DeltaT
         {
             get => (double)eDeltaT.Value;
@@ -191,7 +195,7 @@ namespace SiliFish.UI.Controls
             int height = (webViewPlots.ClientSize.Height - 150) / charts.Count;
             if (height < 200) height = 200;
             string html = DyChartGenerator.PlotLineCharts(charts,
-                title, webViewPlots.ClientSize.Width, height, 
+                title, webViewPlots.ClientSize.Width, height,
                 synchronized: synchronized, showZeroValues: GlobalSettings.ShowZeroValues);
             string tempFile = "";
             bool navigated = false;
@@ -712,6 +716,51 @@ namespace SiliFish.UI.Controls
         {
             if (eDeltaT.Focused)
                 SetControlDeltaTs(DeltaT);
+        }
+
+        private void upDownParams_UpClicked(object sender, EventArgs e)
+        {
+            if (coreParamValues != null && coreParamCounter < coreParamValues.Count - 1)
+            {
+                coreParamCounter++;
+                CellCore core = CellCore.CreateCore(coreType, null, DeltaT);
+                core.SetParameters(coreParamValues[coreParamCounter]);
+                Parameters = core.GetParameters();
+            }
+        }
+
+        private void upDownParams_DownClicked(object sender, EventArgs e)
+        {
+            if (coreParamValues != null && coreParamCounter > 0)
+            {
+                coreParamCounter--;
+                CellCore core = CellCore.CreateCore(coreType, null, DeltaT);
+                core.SetParameters(coreParamValues[coreParamCounter]);
+                Parameters = core.GetParameters();
+            }
+        }
+
+        private void linkImportParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            openFileCSV.Title = "Parameter Import";
+            if (openFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                List<Dictionary<string, string>> paramStrings = CSVUtil.ReadCSVFileAsDictionary(openFileCSV.FileName);
+                coreParamValues = paramStrings.Select(dict => dict
+                    .Where(kvp => double.TryParse(kvp.Value, out _)) // Filter out entries that cannot be parsed to double
+                    .ToDictionary(kvp => kvp.Key, kvp => double.Parse(kvp.Value)))
+                    .ToList();
+                if (coreParamValues.Count == 0)
+                {
+                    upDownParams.Visible = false;
+                    return;
+                }
+                upDownParams.Visible = true;
+                coreParamCounter = 0;
+                CellCore core = CellCore.CreateCore(coreType, null, DeltaT);
+                core.SetParameters(coreParamValues[coreParamCounter]);
+                Parameters = core.GetParameters();
+            }
         }
     }
 }

@@ -647,8 +647,6 @@ namespace SiliFish.UI.Controls
                     MessageBox.Show($"File {filename} is saved.", "Information");
 
             }
-
         }
-
     }
 }

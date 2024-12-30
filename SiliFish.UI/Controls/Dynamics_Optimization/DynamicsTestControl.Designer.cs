@@ -53,6 +53,8 @@ namespace SiliFish.UI.Controls
             pRheobase = new Panel();
             label1 = new Label();
             pCoreType = new Panel();
+            upDownParams = new General.UpDownControl();
+            linkImportParams = new LinkLabel();
             eDeltaT = new NumericUpDown();
             lDeltaT = new Label();
             pLineCoreType = new Panel();
@@ -111,6 +113,7 @@ namespace SiliFish.UI.Controls
             pDistinguisherTop = new Panel();
             pDistinguisherBottom = new Panel();
             pDistinguisherRight = new Panel();
+            openFileCSV = new OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)eRheobaseLimit).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotEndTime).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eStepEndTime).BeginInit();
@@ -307,7 +310,7 @@ namespace SiliFish.UI.Controls
             rbRheobaseBasedStimulus.AutoSize = true;
             rbRheobaseBasedStimulus.Location = new Point(7, 3);
             rbRheobaseBasedStimulus.Name = "rbRheobaseBasedStimulus";
-            rbRheobaseBasedStimulus.Size = new Size(187, 19);
+            rbRheobaseBasedStimulus.Size = new Size(184, 19);
             rbRheobaseBasedStimulus.TabIndex = 13;
             rbRheobaseBasedStimulus.Text = "Rheobase based (x1, x1.1, x1.5)";
             toolTip1.SetToolTip(rbRheobaseBasedStimulus, "Step stimulus with 0 noise");
@@ -402,6 +405,8 @@ namespace SiliFish.UI.Controls
             // pCoreType
             // 
             pCoreType.BackColor = Color.FromArgb(236, 239, 241);
+            pCoreType.Controls.Add(upDownParams);
+            pCoreType.Controls.Add(linkImportParams);
             pCoreType.Controls.Add(eDeltaT);
             pCoreType.Controls.Add(lDeltaT);
             pCoreType.Controls.Add(pLineCoreType);
@@ -412,6 +417,28 @@ namespace SiliFish.UI.Controls
             pCoreType.Name = "pCoreType";
             pCoreType.Size = new Size(328, 68);
             pCoreType.TabIndex = 21;
+            // 
+            // upDownParams
+            // 
+            upDownParams.Location = new Point(279, 41);
+            upDownParams.Name = "upDownParams";
+            upDownParams.Size = new Size(18, 23);
+            upDownParams.TabIndex = 28;
+            upDownParams.Text = "upDownControl1";
+            upDownParams.Visible = false;
+            upDownParams.DownClicked += upDownParams_DownClicked;
+            upDownParams.UpClicked += upDownParams_UpClicked;
+            // 
+            // linkImportParams
+            // 
+            linkImportParams.AutoSize = true;
+            linkImportParams.Location = new Point(152, 43);
+            linkImportParams.Name = "linkImportParams";
+            linkImportParams.Size = new Size(121, 15);
+            linkImportParams.TabIndex = 27;
+            linkImportParams.TabStop = true;
+            linkImportParams.Text = "Import Parameter List";
+            linkImportParams.LinkClicked += linkImportParams_LinkClicked;
             // 
             // eDeltaT
             // 
@@ -461,7 +488,7 @@ namespace SiliFish.UI.Controls
             lCoreType.AutoSize = true;
             lCoreType.Location = new Point(6, 12);
             lCoreType.Name = "lCoreType";
-            lCoreType.Size = new Size(59, 15);
+            lCoreType.Size = new Size(60, 15);
             lCoreType.TabIndex = 22;
             lCoreType.Text = "Core Type";
             // 
@@ -961,7 +988,7 @@ namespace SiliFish.UI.Controls
             cbTauRise.AutoSize = true;
             cbTauRise.Location = new Point(177, 14);
             cbTauRise.Name = "cbTauRise";
-            cbTauRise.Size = new Size(68, 19);
+            cbTauRise.Size = new Size(69, 19);
             cbTauRise.TabIndex = 2;
             cbTauRise.Text = "Tau Rise";
             cbTauRise.UseVisualStyleBackColor = true;
@@ -983,7 +1010,7 @@ namespace SiliFish.UI.Controls
             cbTauDecay.AutoSize = true;
             cbTauDecay.Location = new Point(177, 34);
             cbTauDecay.Name = "cbTauDecay";
-            cbTauDecay.Size = new Size(79, 19);
+            cbTauDecay.Size = new Size(80, 19);
             cbTauDecay.TabIndex = 3;
             cbTauDecay.Text = "Tau Decay";
             cbTauDecay.UseVisualStyleBackColor = true;
@@ -1044,6 +1071,10 @@ namespace SiliFish.UI.Controls
             pDistinguisherRight.Name = "pDistinguisherRight";
             pDistinguisherRight.Size = new Size(4, 675);
             pDistinguisherRight.TabIndex = 21;
+            // 
+            // openFileCSV
+            // 
+            openFileCSV.Filter = "CSV files(*.csv)|*.csv";
             // 
             // DynamicsTestControl
             // 
@@ -1193,5 +1224,8 @@ namespace SiliFish.UI.Controls
         private PropertyGrid pgSettings;
         private Panel pRheobase;
         private Label label1;
+        private LinkLabel linkImportParams;
+        private General.UpDownControl upDownParams;
+        private OpenFileDialog openFileCSV;
     }
 }

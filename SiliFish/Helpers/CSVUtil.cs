@@ -57,5 +57,32 @@ namespace SiliFish.Helpers
             return sb.ToString()[..^1];
         }
 
+        public static List<Dictionary<string, string>> ReadCSVFileAsDictionary(string path)
+        {
+            string[] csvLines = FileUtil.ReadLinesFromFile(path);
+            var result = new List<Dictionary<string, string>>();
+
+            if (csvLines.Length == 0)
+                return result;
+
+            // Assuming the first line contains the column names
+            var columnNames = csvLines[0].Split(',');
+
+            for (int i = 1; i < csvLines.Length; i++)
+            {
+                var values = csvLines[i].Split(',');
+                var rowDict = new Dictionary<string, string>();
+
+                for (int j = 0; j < columnNames.Length; j++)
+                {
+                    rowDict[columnNames[j]] = values[j];
+                }
+
+                result.Add(rowDict);
+            }
+
+            return result;
+        }
+
     }
 }
