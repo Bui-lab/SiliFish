@@ -19,11 +19,10 @@ namespace SiliFish.UI.Controls
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private ControlContainer frmDynamicControl;
 
-        private bool SomiteBased = false;
-
         public event EventHandler SavePool;
         public event EventHandler LoadPool;
 
+        private bool SomiteBased = true;
         public CellPoolTemplate PoolBase
         {
             get
@@ -343,6 +342,7 @@ namespace SiliFish.UI.Controls
             ddCoreType.Items.AddRange([.. CellCore.GetCoreTypes()]);// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
+            ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
             ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
             distConductionVelocity.SetDistribution(new Constant_NoDistribution(settings.cv));
             if (SomiteBased)
@@ -375,6 +375,14 @@ namespace SiliFish.UI.Controls
                 checkValuesArgs.Errors.Add("Number of cells is 0. To disable a cell pool, use the Active field instead.");
         }
 
-
+        private void ddBodyPosition_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            bool supraSpinal = (BodyLocation)Enum.Parse(typeof(BodyLocation), ddBodyPosition.Text) == BodyLocation.SupraSpinal;
+            SomiteBased = !supraSpinal;
+            cbAllSomites.Visible = eSomiteRange.Visible = !supraSpinal;
+            ddSelection.Enabled = !supraSpinal;
+            if (supraSpinal)
+                ddSelection.SelectedItem = CountingMode.Total.ToString();
+        }
     }
 }

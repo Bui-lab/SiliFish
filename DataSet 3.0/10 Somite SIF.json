@@ -1,6 +1,6 @@
 {
   "$type": "modeltemplate",
-  "Version": "3.0.0.0",
+  "Version": "3.0.2.0",
   "ClassType": "ModelTemplate",
   "ModelName": "10 somite - SIF",
   "ModelDescription": "",
@@ -189,308 +189,6 @@
           "Absolute": true,
           "RangeStart": -37,
           "RangeEnd": -37
-        }
-      }
-    },
-    {
-      "CellGroup": "Muscle Fast AP",
-      "CellType": 1,
-      "Description": null,
-      "CoreType": "LeakyIntegrateAndFire",
-      "Rheobase": 259.2601776123047,
-      "BodyLocation": 1,
-      "Color": "#FFCCcc",
-      "PositionLeftRight": 2,
-      "NTMode": 0,
-      "NumOfCells": 1,
-      "PerSomiteOrTotal": 0,
-      "SomiteRange": "",
-      "ConductionVelocity": null,
-      "AscendingAxonLength": {
-        "$type": "Constant",
-        "UniqueValue": 0,
-        "NoiseStdDev": 0,
-        "Angular": false,
-        "Absolute": true,
-        "RangeStart": 0,
-        "RangeEnd": 0
-      },
-      "DescendingAxonLength": {
-        "$type": "Constant",
-        "UniqueValue": 0,
-        "NoiseStdDev": 0,
-        "Angular": false,
-        "Absolute": true,
-        "RangeStart": 0,
-        "RangeEnd": 0
-      },
-      "XDistribution": {
-        "$type": "Uniform",
-        "Discriminator": "Uniform",
-        "UniqueValue": 50,
-        "Angular": false,
-        "Absolute": false,
-        "RangeStart": 0,
-        "RangeEnd": 100
-      },
-      "Y_AngleDistribution": {
-        "$type": "Uniform",
-        "Discriminator": "Uniform",
-        "UniqueValue": 90,
-        "Angular": true,
-        "Absolute": true,
-        "RangeStart": 45,
-        "RangeEnd": 135
-      },
-      "Z_RadiusDistribution": {
-        "$type": "Uniform",
-        "Discriminator": "Uniform",
-        "UniqueValue": 50,
-        "Angular": false,
-        "Absolute": false,
-        "RangeStart": 40,
-        "RangeEnd": 60
-      },
-      "ColumnIndex2D": 10,
-      "Name": null,
-      "Active": true,
-      "TimeLine_ms": {
-        "PeriodsJSON": ""
-      },
-      "Parameters": {
-        "C": {
-          "$type": "Gaussian",
-          "Mean": 78,
-          "Stddev": 2,
-          "UniqueValue": 78,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": 68,
-          "RangeEnd": 88
-        },
-        "ka": {
-          "$type": "Constant",
-          "UniqueValue": 6.2,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": 6.2,
-          "RangeEnd": 6.2
-        },
-        "R": {
-          "$type": "Gaussian",
-          "Mean": 0.108,
-          "Stddev": 0.005,
-          "UniqueValue": 0.108,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": 0.08,
-          "RangeEnd": 0.14
-        },
-        "Tmax": {
-          "$type": "Constant",
-          "UniqueValue": 5,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": 5,
-          "RangeEnd": 5
-        },
-        "Va": {
-          "$type": "Constant",
-          "UniqueValue": -13,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": -13,
-          "RangeEnd": -13
-        },
-        "Vcontraction": {
-          "$type": "Constant",
-          "UniqueValue": -42,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": -42,
-          "RangeEnd": -42
-        },
-        "Vmax": {
-          "$type": "Constant",
-          "UniqueValue": 30,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": 30,
-          "RangeEnd": 30
-        },
-        "Vr": {
-          "$type": "Constant",
-          "UniqueValue": -70,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": -70,
-          "RangeEnd": -70
-        },
-        "Vreset": {
-          "$type": "Constant",
-          "UniqueValue": -70,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": -70,
-          "RangeEnd": -70
-        },
-        "Vt": {
-          "$type": "Constant",
-          "UniqueValue": -42,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": -42,
-          "RangeEnd": -42
-        }
-      }
-    },
-    {
-      "CellGroup": "Muscle Slow",
-      "CellType": 1,
-      "Description": null,
-      "CoreType": "Leaky_Integrator",
-      "Rheobase": 116.66679382324219,
-      "BodyLocation": 1,
-      "Color": "#FF6666",
-      "PositionLeftRight": 2,
-      "NTMode": 0,
-      "NumOfCells": 1,
-      "PerSomiteOrTotal": 0,
-      "SomiteRange": "",
-      "ConductionVelocity": null,
-      "AscendingAxonLength": {
-        "$type": "Constant",
-        "UniqueValue": 0.999999999,
-        "NoiseStdDev": 0,
-        "Angular": false,
-        "Absolute": true,
-        "RangeStart": 0.999999999,
-        "RangeEnd": 0.999999999
-      },
-      "DescendingAxonLength": {
-        "$type": "Constant",
-        "UniqueValue": 0.999999999,
-        "NoiseStdDev": 0,
-        "Angular": false,
-        "Absolute": true,
-        "RangeStart": 0.999999999,
-        "RangeEnd": 0.999999999
-      },
-      "XDistribution": {
-        "$type": "Uniform",
-        "Discriminator": "Uniform",
-        "UniqueValue": 50,
-        "Angular": false,
-        "Absolute": false,
-        "RangeStart": 0,
-        "RangeEnd": 100
-      },
-      "Y_AngleDistribution": {
-        "$type": "Uniform",
-        "Discriminator": "Uniform",
-        "UniqueValue": 85,
-        "Angular": true,
-        "Absolute": true,
-        "RangeStart": 10,
-        "RangeEnd": 160
-      },
-      "Z_RadiusDistribution": {
-        "$type": "Constant",
-        "UniqueValue": 95,
-        "NoiseStdDev": 0,
-        "Angular": false,
-        "Absolute": false,
-        "RangeStart": 95,
-        "RangeEnd": 95
-      },
-      "ColumnIndex2D": 10,
-      "Name": null,
-      "Active": true,
-      "TimeLine_ms": {
-        "PeriodsJSON": ""
-      },
-      "Parameters": {
-        "C": {
-          "$type": "Gaussian",
-          "Mean": 54,
-          "Stddev": 3,
-          "UniqueValue": 54,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": 45,
-          "RangeEnd": 63
-        },
-        "ka": {
-          "$type": "Constant",
-          "UniqueValue": 6,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": 6,
-          "RangeEnd": 6
-        },
-        "R": {
-          "$type": "Gaussian",
-          "Mean": 0.12,
-          "Stddev": 0.01,
-          "UniqueValue": 0.12,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": 0.08,
-          "RangeEnd": 0.16
-        },
-        "Tmax": {
-          "$type": "Constant",
-          "UniqueValue": 0.5,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": 0.5,
-          "RangeEnd": 0.5
-        },
-        "Va": {
-          "$type": "Constant",
-          "UniqueValue": -24,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": -24,
-          "RangeEnd": -24
-        },
-        "Vcontraction": {
-          "$type": "Constant",
-          "UniqueValue": -42,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": -42,
-          "RangeEnd": -42
-        },
-        "Vmax": {
-          "$type": "Constant",
-          "UniqueValue": 30,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": 30,
-          "RangeEnd": 30
-        },
-        "Vr": {
-          "$type": "Constant",
-          "UniqueValue": -56,
-          "NoiseStdDev": 0,
-          "Angular": false,
-          "Absolute": true,
-          "RangeStart": -56,
-          "RangeEnd": -56
         }
       }
     },
@@ -1288,7 +986,7 @@
       "CoreType": "Izhikevich_9P",
       "Rheobase": 23.654937744140625,
       "BodyLocation": 0,
-      "Color": "#FFD6a5",
+      "Color": "#FFB07c",
       "PositionLeftRight": 2,
       "NTMode": 3,
       "NumOfCells": 1,
@@ -1445,7 +1143,7 @@
       "CoreType": "Izhikevich_9P",
       "Rheobase": 14.850616455078125,
       "BodyLocation": 0,
-      "Color": "#FFB366",
+      "Color": "#FF9B4f",
       "PositionLeftRight": 2,
       "NTMode": 3,
       "NumOfCells": 1,
@@ -3032,7 +2730,7 @@
       "CoreType": "Izhikevich_9P",
       "Rheobase": 64.00299072265625,
       "BodyLocation": 0,
-      "Color": "#D9B3ff",
+      "Color": "#C08Cff",
       "PositionLeftRight": 2,
       "NTMode": 1,
       "NumOfCells": 1,
@@ -3190,7 +2888,7 @@
       "CoreType": "Izhikevich_9P",
       "Rheobase": 43.40362548828125,
       "BodyLocation": 0,
-      "Color": "#8957e5",
+      "Color": "#7346d6",
       "PositionLeftRight": 2,
       "NTMode": 2,
       "NumOfCells": 1,
@@ -3338,6 +3036,308 @@
           "Absolute": true,
           "RangeStart": -57,
           "RangeEnd": -57
+        }
+      }
+    },
+    {
+      "CellGroup": "Muscle Slow",
+      "CellType": 1,
+      "Description": "",
+      "CoreType": "Leaky_Integrator",
+      "Rheobase": 116.66679382324219,
+      "BodyLocation": 1,
+      "Color": "#FF1C1c",
+      "PositionLeftRight": 2,
+      "NTMode": 0,
+      "NumOfCells": 1,
+      "PerSomiteOrTotal": 0,
+      "SomiteRange": "",
+      "ConductionVelocity": null,
+      "AscendingAxonLength": {
+        "$type": "Constant",
+        "UniqueValue": 0.999999999,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0.999999999,
+        "RangeEnd": 0.999999999
+      },
+      "DescendingAxonLength": {
+        "$type": "Constant",
+        "UniqueValue": 0.999999999,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0.999999999,
+        "RangeEnd": 0.999999999
+      },
+      "XDistribution": {
+        "$type": "Uniform",
+        "Discriminator": "Uniform",
+        "UniqueValue": 50,
+        "Angular": false,
+        "Absolute": false,
+        "RangeStart": 0,
+        "RangeEnd": 100
+      },
+      "Y_AngleDistribution": {
+        "$type": "Uniform",
+        "Discriminator": "Uniform",
+        "UniqueValue": 85,
+        "Angular": true,
+        "Absolute": true,
+        "RangeStart": 10,
+        "RangeEnd": 160
+      },
+      "Z_RadiusDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 95,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": false,
+        "RangeStart": 95,
+        "RangeEnd": 95
+      },
+      "ColumnIndex2D": 10,
+      "Name": null,
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "Parameters": {
+        "C": {
+          "$type": "Gaussian",
+          "Mean": 54,
+          "Stddev": 3,
+          "UniqueValue": 54,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 45,
+          "RangeEnd": 63
+        },
+        "ka": {
+          "$type": "Constant",
+          "UniqueValue": 6,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 6,
+          "RangeEnd": 6
+        },
+        "R": {
+          "$type": "Gaussian",
+          "Mean": 0.12,
+          "Stddev": 0.01,
+          "UniqueValue": 0.12,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.08,
+          "RangeEnd": 0.16
+        },
+        "Tmax": {
+          "$type": "Constant",
+          "UniqueValue": 0.5,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.5,
+          "RangeEnd": 0.5
+        },
+        "Va": {
+          "$type": "Constant",
+          "UniqueValue": -24,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -24,
+          "RangeEnd": -24
+        },
+        "Vcontraction": {
+          "$type": "Constant",
+          "UniqueValue": -42,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -42,
+          "RangeEnd": -42
+        },
+        "Vmax": {
+          "$type": "Constant",
+          "UniqueValue": 30,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 30,
+          "RangeEnd": 30
+        },
+        "Vr": {
+          "$type": "Constant",
+          "UniqueValue": -56,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -56,
+          "RangeEnd": -56
+        }
+      }
+    },
+    {
+      "CellGroup": "Muscle Fast",
+      "CellType": 1,
+      "Description": "",
+      "CoreType": "LeakyIntegrateAndFire",
+      "Rheobase": 259.2601776123047,
+      "BodyLocation": 1,
+      "Color": "#C0C0c0",
+      "PositionLeftRight": 2,
+      "NTMode": 0,
+      "NumOfCells": 1,
+      "PerSomiteOrTotal": 0,
+      "SomiteRange": "",
+      "ConductionVelocity": null,
+      "AscendingAxonLength": {
+        "$type": "Constant",
+        "UniqueValue": 0,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0,
+        "RangeEnd": 0
+      },
+      "DescendingAxonLength": {
+        "$type": "Constant",
+        "UniqueValue": 0,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0,
+        "RangeEnd": 0
+      },
+      "XDistribution": {
+        "$type": "Uniform",
+        "Discriminator": "Uniform",
+        "UniqueValue": 50,
+        "Angular": false,
+        "Absolute": false,
+        "RangeStart": 0,
+        "RangeEnd": 100
+      },
+      "Y_AngleDistribution": {
+        "$type": "Uniform",
+        "Discriminator": "Uniform",
+        "UniqueValue": 90,
+        "Angular": true,
+        "Absolute": true,
+        "RangeStart": 45,
+        "RangeEnd": 135
+      },
+      "Z_RadiusDistribution": {
+        "$type": "Uniform",
+        "Discriminator": "Uniform",
+        "UniqueValue": 50,
+        "Angular": false,
+        "Absolute": false,
+        "RangeStart": 40,
+        "RangeEnd": 60
+      },
+      "ColumnIndex2D": 10,
+      "Name": null,
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "Parameters": {
+        "C": {
+          "$type": "Gaussian",
+          "Mean": 78,
+          "Stddev": 2,
+          "UniqueValue": 78,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 68,
+          "RangeEnd": 88
+        },
+        "ka": {
+          "$type": "Constant",
+          "UniqueValue": 6.2,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 6.2,
+          "RangeEnd": 6.2
+        },
+        "R": {
+          "$type": "Gaussian",
+          "Mean": 0.108,
+          "Stddev": 0.005,
+          "UniqueValue": 0.108,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.08,
+          "RangeEnd": 0.14
+        },
+        "Tmax": {
+          "$type": "Constant",
+          "UniqueValue": 5,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 5,
+          "RangeEnd": 5
+        },
+        "Va": {
+          "$type": "Constant",
+          "UniqueValue": -13,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -13,
+          "RangeEnd": -13
+        },
+        "Vcontraction": {
+          "$type": "Constant",
+          "UniqueValue": -42,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -42,
+          "RangeEnd": -42
+        },
+        "Vmax": {
+          "$type": "Constant",
+          "UniqueValue": 30,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 30,
+          "RangeEnd": 30
+        },
+        "Vr": {
+          "$type": "Constant",
+          "UniqueValue": -70,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -70,
+          "RangeEnd": -70
+        },
+        "Vreset": {
+          "$type": "Constant",
+          "UniqueValue": -70,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -70,
+          "RangeEnd": -70
+        },
+        "Vt": {
+          "$type": "Constant",
+          "UniqueValue": -42,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -42,
+          "RangeEnd": -42
         }
       }
     }
@@ -7605,7 +7605,7 @@
       "Probability": 1,
       "JncActive": true,
       "SourcePool": "pMN",
-      "TargetPool": "Muscle Fast AP",
+      "TargetPool": "Muscle Fast",
       "CoreType": "SimpleSyn",
       "AxonReachMode": 1,
       "JunctionType": 3,
@@ -7615,7 +7615,7 @@
       "Delay_ms": 0.69,
       "Source": null,
       "Target": null,
-      "Name": "pMN--\u003EMuscle Fast AP",
+      "Name": "pMN--\u003EMuscle Fast",
       "TimeLine_ms": {
         "PeriodsJSON": ""
       },
@@ -7731,7 +7731,7 @@
       "Probability": 1,
       "JncActive": true,
       "SourcePool": "sMN-ms-type",
-      "TargetPool": "Muscle Fast AP",
+      "TargetPool": "Muscle Fast",
       "CoreType": "SimpleSyn",
       "AxonReachMode": 1,
       "JunctionType": 3,
@@ -7741,7 +7741,7 @@
       "Delay_ms": 1.43,
       "Source": null,
       "Target": null,
-      "Name": "sMN-ms-type--\u003EMuscle Fast AP",
+      "Name": "sMN-ms-type--\u003EMuscle Fast",
       "TimeLine_ms": {
         "PeriodsJSON": ""
       },
@@ -7938,7 +7938,7 @@
       "Probability": 1,
       "JncActive": true,
       "SourcePool": "sMN-m-type",
-      "TargetPool": "Muscle Fast AP",
+      "TargetPool": "Muscle Fast",
       "CoreType": "SimpleSyn",
       "AxonReachMode": 1,
       "JunctionType": 3,
@@ -7948,7 +7948,7 @@
       "Delay_ms": 1.43,
       "Source": null,
       "Target": null,
-      "Name": "sMN-m-type--\u003EMuscle Fast AP",
+      "Name": "sMN-m-type--\u003EMuscle Fast",
       "TimeLine_ms": {
         "PeriodsJSON": ""
       },

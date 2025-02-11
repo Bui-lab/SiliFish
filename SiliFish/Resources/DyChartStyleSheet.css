@@ -146,7 +146,6 @@
 }
 
 .chart {
-    max-width: 85%;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -154,7 +153,6 @@
 }
 
 .legend {
-    width: 15%;
     min-width: 200px;
     max-width: 300px;
     font: normal 10px sans-serif;

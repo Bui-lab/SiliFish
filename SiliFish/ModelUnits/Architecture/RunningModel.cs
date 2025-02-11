@@ -684,8 +684,8 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public virtual int GetNumberOfJunctions()
         {
-            int gapJunctions = CellPools.Sum(p => p.Cells.Sum(c => c.GapJunctions.Count));
-            int chemJunctions = CellPools.Sum(p => p.Cells.Sum(c => ((c as MuscleCell)?.EndPlates.Count ?? 0) + ((c as Neuron)?.Synapses.Count ?? 0)));
+            int gapJunctions = CellPools.SelectMany(p => p.Cells).Sum((Cell c) => c.GapJunctions.Count);
+            int chemJunctions = CellPools.SelectMany(p => p.Cells).Sum(c => ((c as MuscleCell)?.EndPlates.Count ?? 0) + ((c as Neuron)?.Synapses.Count ?? 0));
             return gapJunctions/2 + chemJunctions; //gap junctions are counted twice
         }
 
@@ -695,7 +695,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public virtual (int RollingWindow, int Capacity) CheckMemory()
         {
-            double maxDuration = CellPools.Max(p => p.Cells.Max(c => c.TimeDistance()));
+            double maxDuration = CellPools.SelectMany(p=>p.Cells).Max(c => c.TimeDistance());
             int rollingWindow = (int)Math.Ceiling(maxDuration / (100 * DeltaT)) * 100;
             GCMemoryInfo memoryInfo = GC.GetGCMemoryInfo();
             long availableMemory = memoryInfo.TotalAvailableMemoryBytes - memoryInfo.MemoryLoadBytes;

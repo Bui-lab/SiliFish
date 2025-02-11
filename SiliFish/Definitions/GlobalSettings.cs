@@ -34,6 +34,7 @@ namespace SiliFish.Definitions
         public static int PlotPointSize = 3;
         public static bool OptimizedForPrinting = false;
         public static int PlotMergedFontSize = 36;
+        public static int LegendWidthPercentage = 20;
         public static bool FullDynamicsGapCurrent = true;//not added to the UI
         public static bool FullDynamicsChemInCurrent = true;
         public static bool FullDynamicsChemOutCurrent = true;
@@ -201,6 +202,11 @@ namespace SiliFish.Definitions
             DisplayName("Label font size"),
             Category("Plotting")]
         public int PlotMergedFontSize { get { return GlobalSettings.PlotMergedFontSize; } set { GlobalSettings.PlotMergedFontSize = value; } }
+
+        [Description("The percentage of the chart width the legend can cover. (If you have long IDs for the cells, you may need to increase this value)."),
+            DisplayName("Legend percentage"),
+            Category("Plotting")]
+        public int LegendWidthPercentage { get { return GlobalSettings.LegendWidthPercentage; } set { GlobalSettings.LegendWidthPercentage = value; } }
 
         #endregion
 

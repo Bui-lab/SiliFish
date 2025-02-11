@@ -71,6 +71,8 @@ namespace SiliFish.Services.Plotting
                 html.Replace("__MERGED_X_AXIS_LABEL__", singleXLabel);
                 html.Replace("__MERGED_Y_AXIS_LABEL__", singleYLabel);
                 html.Replace("__LABEL_FONT_SIZE__", GlobalSettings.PlotMergedFontSize.ToString());
+                html.Replace("__CHART_WIDTH_PERC__", (100 - GlobalSettings.LegendWidthPercentage).ToString());
+                html.Replace("__LEGEND_WIDTH_PERC__", GlobalSettings.LegendWidthPercentage.ToString());
                 
 
                 if (Util.CheckOnlineStatus())

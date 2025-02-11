@@ -79,8 +79,10 @@ namespace SiliFish.UI.Controls
             flowLayoutPanel2 = new FlowLayoutPanel();
             pProjectionAscending = new Panel();
             cbAscendingAxon = new CheckBox();
+            lAscendingAxonSomites = new Label();
             distributionAscending = new DistributionControl();
             pProjectionDescending = new Panel();
+            lDescendingAxonSomites = new Label();
             cbDescendingAxon = new CheckBox();
             distributionDescending = new DistributionControl();
             tDynamics = new TabPage();
@@ -98,8 +100,6 @@ namespace SiliFish.UI.Controls
             splitMain = new SplitContainer();
             colorDialog = new ColorDialog();
             openFileJson = new OpenFileDialog();
-            lAscendingAxonSomites = new Label();
-            lDescendingAxonSomites = new Label();
             ((System.ComponentModel.ISupportInitialize)eNumOfCells).BeginInit();
             ((System.ComponentModel.ISupportInitialize)e2DColumn).BeginInit();
             pZAxis.SuspendLayout();
@@ -296,6 +296,7 @@ namespace SiliFish.UI.Controls
             ddBodyPosition.Name = "ddBodyPosition";
             ddBodyPosition.Size = new Size(146, 23);
             ddBodyPosition.TabIndex = 28;
+            ddBodyPosition.SelectedIndexChanged += ddBodyPosition_SelectedIndexChanged;
             // 
             // lBodyPosition
             // 
@@ -666,6 +667,7 @@ namespace SiliFish.UI.Controls
             pProjectionAscending.Controls.Add(cbAscendingAxon);
             pProjectionAscending.Controls.Add(lAscendingAxonSomites);
             pProjectionAscending.Dock = DockStyle.Top;
+            flowLayoutPanel2.SetFlowBreak(pProjectionAscending, true);
             pProjectionAscending.Location = new Point(0, 0);
             pProjectionAscending.Margin = new Padding(0);
             pProjectionAscending.Name = "pProjectionAscending";
@@ -694,6 +696,7 @@ namespace SiliFish.UI.Controls
             distributionAscending.BackColor = Color.White;
             distributionAscending.BorderStyle = BorderStyle.Fixed3D;
             distributionAscending.DefaultConstant = true;
+            flowLayoutPanel2.SetFlowBreak(distributionAscending, true);
             distributionAscending.Location = new Point(3, 31);
             distributionAscending.MinimumSize = new Size(204, 0);
             distributionAscending.Name = "distributionAscending";
@@ -706,6 +709,7 @@ namespace SiliFish.UI.Controls
             pProjectionDescending.Controls.Add(lDescendingAxonSomites);
             pProjectionDescending.Controls.Add(cbDescendingAxon);
             pProjectionDescending.Dock = DockStyle.Top;
+            flowLayoutPanel2.SetFlowBreak(pProjectionDescending, true);
             pProjectionDescending.Location = new Point(0, 151);
             pProjectionDescending.Margin = new Padding(0);
             pProjectionDescending.Name = "pProjectionDescending";
@@ -734,6 +738,7 @@ namespace SiliFish.UI.Controls
             distributionDescending.BackColor = Color.White;
             distributionDescending.BorderStyle = BorderStyle.Fixed3D;
             distributionDescending.DefaultConstant = true;
+            flowLayoutPanel2.SetFlowBreak(distributionDescending, true);
             distributionDescending.Location = new Point(3, 182);
             distributionDescending.MinimumSize = new Size(204, 0);
             distributionDescending.Name = "distributionDescending";
