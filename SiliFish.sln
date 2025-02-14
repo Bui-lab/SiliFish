@@ -28,17 +28,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{C9674DCB-5085-4A16-B785-4C70DD1589BD}") = "DB Integration", "DB Integration\DB Integration.dtproj", "{100015C5-04E2-4A89-9737-65F625055C50}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataSet 3.0", "DataSet 3.0", "{E5F374B8-ED26-4DD2-9DD2-AF9D2873C02D}"
-	ProjectSection(SolutionItems) = preProject
-		DataSet 3.0\10 Somite Fast Scale.json = DataSet 3.0\10 Somite Fast Scale.json
-		DataSet 3.0\10 Somite Intermediate Scale.json = DataSet 3.0\10 Somite Intermediate Scale.json
-		DataSet 3.0\10 Somite SIF.json = DataSet 3.0\10 Somite SIF.json
-		DataSet 3.0\10 Somite Slow Extreme.json = DataSet 3.0\10 Somite Slow Extreme.json
-		DataSet 3.0\10 Somite Slow Inter Comp.json = DataSet 3.0\10 Somite Slow Inter Comp.json
-		DataSet 3.0\10 Somite Slow Scale.json = DataSet 3.0\10 Somite Slow Scale.json
-		DataSet 3.0\SpeedMicrocircuits.mp4 = DataSet 3.0\SpeedMicrocircuits.mp4
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
