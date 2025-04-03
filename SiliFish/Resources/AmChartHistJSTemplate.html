@@ -1,0 +1,98 @@
+﻿        var sourceData__INDEX__ = [__DATA__];
+
+        var data__INDEX__ = getHistogramData(sourceData__INDEX__);
+
+        // Create root element
+        // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+        var root__INDEX__ = am5.Root.new("chartDiv__INDEX__");
+
+
+        // Set themes
+        // https://www.amcharts.com/docs/v5/concepts/themes/
+        root__INDEX__.setThemes([
+            am5themes_Animated.new(root__INDEX__)
+        ]);
+
+
+        // Create chart
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/
+        var chart__INDEX__ = root__INDEX__.container.children.push(am5xy.XYChart.new(root__INDEX__, {
+            panX: false,
+            panY: false,
+            wheelX: "panX",
+            wheelY: "zoomX",
+            layout: root__INDEX__.verticalLayout
+        }));
+
+
+        // Add legend
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
+        var legend__INDEX__ = chart__INDEX__.children.push(
+            am5.Legend.new(root__INDEX__, {
+                centerX: am5.p50,
+                x: am5.p50
+            })
+        );
+
+        // Create axes
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+        var xAxis__INDEX__ = chart__INDEX__.xAxes.push(am5xy.CategoryAxis.new(root__INDEX__, {
+            categoryField: "from",
+            renderer: am5xy.AxisRendererX.new(root__INDEX__, {
+                minGridDistance: 30
+            }),
+            tooltip: am5.Tooltip.new(root__INDEX__, {})
+        }));
+        let xRenderer__INDEX__ = xAxis__INDEX__.get("renderer");
+        xRenderer__INDEX__.labels.template.setAll({
+            rotation: -90,
+            centerY: am5.p50
+        });
+
+        xAxis__INDEX__.data.setAll(data__INDEX__);
+
+        var yAxis__INDEX__ = chart__INDEX__.yAxes.push(am5xy.ValueAxis.new(root__INDEX__, {
+            maxPrecision: 0,
+            renderer: am5xy.AxisRendererY.new(root__INDEX__, {})
+        }));
+
+
+        // Add series
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+        var series__INDEX__ = chart__INDEX__.series.push(am5xy.ColumnSeries.new(root__INDEX__, {
+            xAxis: xAxis__INDEX__,
+            yAxis: yAxis__INDEX__,
+            valueYField: "count",
+            categoryXField: "from"
+        }));
+
+        series__INDEX__.columns.template.setAll({
+            tooltipText: "{categoryX}:{valueY}",
+            width: am5.percent(90),
+            tooltipY: 0,
+            width: am5.p100
+        });
+
+        series__INDEX__.bullets.push(function () {
+            return am5.Bullet.new(root__INDEX__, {
+                locationY: 0.5,
+                sprite: am5.Label.new(root__INDEX__, {
+                    fill: root__INDEX__.interfaceColors.get("alternativeText"),
+                    centerY: am5.p50,
+                    centerX: am5.p50,
+                    populateText: true
+                })
+            });
+        });
+
+        series__INDEX__.data.setAll(data__INDEX__);
+        // Add export menu
+        var exporting = am5plugins_exporting.Exporting.new(root__INDEX__, {
+            menu: am5plugins_exporting.ExportingMenu.new(root__INDEX__, {})
+        });
+
+        series__INDEX__.appear();
+
+        // Make stuff animate on load
+        // https://www.amcharts.com/docs/v5/concepts/animations/
+        chart__INDEX__.appear(1000, 100);

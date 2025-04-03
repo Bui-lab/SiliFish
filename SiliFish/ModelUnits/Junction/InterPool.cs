@@ -9,7 +9,7 @@ namespace SiliFish.ModelUnits.Junction
     /// </summary>
     public class InterPool: ModelUnitBase
     {
-        private IEnumerable<JunctionBase> Junctions;
+        public IEnumerable<JunctionBase> Junctions { get; private set; }
 
         public string SourcePool, TargetPool;
         public int CountJunctions { get{ return Junctions.Count(); }}

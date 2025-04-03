@@ -75,7 +75,7 @@ namespace SiliFish.Services.Plotting
                 html.Replace("__LEGEND_WIDTH_PERC__", GlobalSettings.LegendWidthPercentage.ToString());
                 
 
-                if (Util.CheckOnlineStatus())
+                if (Util.CheckOnlineStatus("https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js"))
                 {
                     html.Replace("__OFFLINE_DYGRAPH_SCRIPT__", "");
                     html.Replace("__ONLINE_DYGRAPH_SCRIPT__", "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js\"></script>");

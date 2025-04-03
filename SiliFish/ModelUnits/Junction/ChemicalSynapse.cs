@@ -195,6 +195,12 @@ public override string SourcePool
             duration += delay;
         }
 
+        public override (int source, int target) GetCellIndices()
+        {
+            int source = PreNeuron.CellPool.BodyLocation == BodyLocation.SupraSpinal ? PreNeuron.Sequence : PreNeuron.Somite;
+            int target = PostCell.CellPool.BodyLocation == BodyLocation.SupraSpinal ? PostCell.Sequence : PostCell.Somite;
+            return (source, target);
+        }
         public override void NextStep(int tIndex)
         {
             if (!IsActive(tIndex))

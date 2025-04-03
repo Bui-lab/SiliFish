@@ -218,21 +218,21 @@ namespace SiliFish.ModelUnits.Cells
 
         public void ReadFromCSVRow(string row)
         {
-            string[] values = row.Split(',');
-            if (values.Length != ColumnNames.Count) return;
+            List<string> values = CSVUtil.SplitCells(row);
+            if (values.Count != ColumnNames.Count) return;
             string discriminator = values[0];
             if (!GetType().Name.Equals(discriminator, StringComparison.OrdinalIgnoreCase))
                 throw new Exception($"Type mismtach in cell import:{GetType().Name} vs {discriminator}");
-            ImportValues([.. row.Split(",")]);
+            ImportValues(values);
         }
 
         public static Cell GenerateFromCSVRow(string row)
         {
-            string[] values = row.Split(',');
-            if (values.Length != ColumnNames.Count) return null;
+            List<string> values = CSVUtil.SplitCells(row);
+            if (values.Count != ColumnNames.Count) return null;
             string discriminator = values[0];
             Cell cell = CreateCell(discriminator);
-            cell.ImportValues([.. row.Split(",")]);
+            cell.ImportValues(values);
             return cell;
         }
         public Cell()

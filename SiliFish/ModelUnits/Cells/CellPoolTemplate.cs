@@ -214,7 +214,7 @@ namespace SiliFish.ModelUnits.Cells
             for (int i = 1; i <= CellCore.CoreParamMaxCount; i++)
             {
                 if (iter > values.Count - 2) break;
-                string paramkey = values[iter++].Trim();
+                string paramkey = values[iter++]?.Trim() ?? string.Empty;
                 string paramvalue = values[iter++];
                 if (!string.IsNullOrEmpty(paramkey))
                 {

@@ -14,7 +14,7 @@ namespace SiliFish.Repositories
         {
             try
             {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikeFreqStats(simulation);
+                (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateSpikeFreqStats(simulation);
                 FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
                 return true;
             }
@@ -28,7 +28,7 @@ namespace SiliFish.Repositories
         {
             try
             {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikeCounts(simulation);
+                (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateSpikeCounts(simulation);
                 FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
                 return true;
             }
@@ -42,7 +42,7 @@ namespace SiliFish.Repositories
         {
             try
             {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikes(simulation);
+                (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateSpikesForCSV(simulation);
                 FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
                 return true;
             }
@@ -57,7 +57,7 @@ namespace SiliFish.Repositories
         {
             try
             {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateEpisodes(simulation);
+                (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateEpisodes(simulation);
                 FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
                 return true;
             }
@@ -88,16 +88,16 @@ namespace SiliFish.Repositories
                 workSheet.Cells[rowindex, 1].Value = "Delta t";
                 workSheet.Cells[rowindex++, 2].Value = simulation.RunParam.DeltaT;
                 List<string> errorList = [];
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikeFreqStats(simulation);
+                (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateSpikeFreqStats(simulation);
                 ExcelUtil.AddWorksheet(package, "Spike Freq", columnNames, values, errorList);
 
-                (columnNames, values) = ModelStats.GenerateSpikeCounts(simulation);
+                (columnNames, values) = SimulationStats.GenerateSpikeCounts(simulation);
                 ExcelUtil.AddWorksheet(package, "Spike Counts", columnNames, values, errorList);
 
-                (columnNames, values) = ModelStats.GenerateSpikes(simulation);
+                (columnNames, values) = SimulationStats.GenerateSpikesForCSV(simulation);
                 ExcelUtil.AddWorksheet(package, "Spikes", columnNames, values, errorList);
 
-                (columnNames, values) = ModelStats.GenerateEpisodes(simulation);
+                (columnNames, values) = SimulationStats.GenerateEpisodes(simulation);
                 ExcelUtil.AddWorksheet(package, "Episodes", columnNames, values, errorList);
 
                 package.Save();

@@ -455,6 +455,11 @@ namespace SiliFish.ModelUnits.Architecture
                                 .ToList();
             return (leftMNs, rightMNs);
         }
+        public List<Cell> GetNeurons()
+        {
+            return NeuronPools.SelectMany(np => np.GetCells()).ToList();
+        }
+
         public void ClearCells()
         {
             foreach (CellPool cellPool in CellPools)
@@ -802,6 +807,15 @@ namespace SiliFish.ModelUnits.Architecture
             }
             return (null, pools);
         }
+        public List<Cell> GetSubsetCells(string poolIdentifier, PlotSelectionInterface cellSelection, int iStart = 0, int iEnd = -1)
+        {
+            (List<Cell> Cells, List<CellPool> Pools) = GetSubsetCellsAndPools(poolIdentifier, cellSelection, iStart, iEnd);
+            Cells ??= [];
+            if (Cells.Count == 0 && Pools != null)
+                foreach (CellPool pool in Pools)
+                    Cells.AddRange(pool.Cells);
+            return Cells;
+        }
 
         private bool MemoryAllocation(RunParam runParam, SimulationDBLink dBLink)
         {
@@ -894,14 +908,14 @@ namespace SiliFish.ModelUnits.Architecture
         {
             if (pool1 == null || pool2 == null) return;
             TimeLine timeline = template.TimeLine_ms;
-            pool1.ReachToCellPoolViaGapJunction(pool2, template.CellReach, timeline, template.Parameters, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
+            pool1.ReachToCellPoolViaGapJunction(pool2, template, timeline);
         }
 
         protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, InterPoolTemplate template)
         {
             if (pool1 == null || pool2 == null) return;
             TimeLine timeline = template.TimeLine_ms;
-            pool1.ReachToCellPoolViaChemSynapse(pool2, template.CellReach, template.CoreType, template.Parameters, timeline, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
+            pool1.ReachToCellPoolViaChemSynapse(pool2, template, timeline);
         }
 
 

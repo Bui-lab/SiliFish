@@ -7,30 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace SiliFish.Services
+namespace SiliFish.Services.Plotting
 {
     public class HistogramGenerator : EmbeddedResourceReader
     {
-        private static string CreateSomiteDataPoint(string somite, double x, double y)
-        {
-            return $"{{id:\"{somite}\",settings: {{ fill: am5.color(\"#800080\") }},x:{x:0.##},y:{y:0.##} }}";
-        }
-
-        private static string CreateTimeDataPoints(Dictionary<string, Coordinate[]> somiteCoordinates, int timeIndex)
-        {
-            if (somiteCoordinates == null) return "";
-            List<string> somites = [];
-            foreach (string somite in somiteCoordinates.Keys)
-            {
-                Coordinate coor = somiteCoordinates[somite][timeIndex];
-                somites.Add(CreateSomiteDataPoint(somite, coor.X, coor.Y));
-            }
-            return $"[{string.Join(',', somites)}];";
-        }
-
         public static string GenerateHistogram(double[] dataPoints, string title, double width, double height)
         {
-            if (!Util.CheckOnlineStatus())
+            if (!Util.CheckOnlineStatus("https://www.amcharts.com"))
                 return "Histogram generation requires internet connection.";
 
             StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.AmChartHist.html"));
@@ -41,7 +24,7 @@ namespace SiliFish.Services
             double min = dataPoints.Min();
             double max = dataPoints.Max();
             int maxCols = (int)Math.Round((max - min) / 0.1);
-            html.Replace("__MAX_COLS__", maxCols.ToString()); 
+            html.Replace("__MAX_COLS__", maxCols.ToString());
             return html.ToString();
         }
     }

@@ -80,11 +80,11 @@ namespace SiliFish.ModelUnits.Stim
 
         public void GenerateFromCSVRow(RunningModel Model, string row)
         {
-            string[] values = row.Split(',');
-            if (values.Length != ColumnNames.Count) return;
+            List<string> values = CSVUtil.SplitCells(row);
+            if (values.Count != ColumnNames.Count) return;
             TargetCell = Model.GetCell(values[1]);
-            Settings.ImportValues(values.Take(new Range(2, (StimulusSettings.ColumnNames.Count + 1))).ToList());
-            TimeLine_ms.ImportValues(values.Take(new Range(StimulusSettings.ColumnNames.Count + 2, values.Length)).ToList());
+            Settings.ImportValues(values.Take(new Range(2, StimulusSettings.ColumnNames.Count + 1)).ToList());
+            TimeLine_ms.ImportValues(values.Take(new Range(StimulusSettings.ColumnNames.Count + 2, values.Count)).ToList());
             TargetCell?.AddStimulus(this);
         }
         public override ModelUnitBase CreateCopy()

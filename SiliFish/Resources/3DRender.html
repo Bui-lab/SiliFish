@@ -97,6 +97,8 @@
         function linkColor(l) {
             if (selectedNode == null)
                 return '#808080';//medium gray
+            if (!showLink(l))
+                return '#DDD'; //light gray
             if (l.type == 'gap')
                 return '#515151'; //dark gray
             if (showSingleNodeLinks && l.source == selectedNode

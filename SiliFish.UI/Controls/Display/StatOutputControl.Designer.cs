@@ -31,13 +31,13 @@ namespace SiliFish.UI.Controls
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle15 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle16 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle17 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle18 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle19 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle20 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle21 = new DataGridViewCellStyle();
             tabStats = new TabControl();
             tSpikes = new TabPage();
             dgSpikeStats = new DataGridView();
@@ -57,6 +57,7 @@ namespace SiliFish.UI.Controls
             colRCTrainStartDelay = new DataGridViewTextBoxColumn();
             colRCTrainMedianDelay = new DataGridViewTextBoxColumn();
             colRCTrainCenterDelay = new DataGridViewTextBoxColumn();
+            webViewRCTrains = new SiliFishWebView();
             tSpikeSummary = new TabPage();
             splitContainer1 = new SplitContainer();
             dgSpikeSummary = new DataGridView();
@@ -83,7 +84,8 @@ namespace SiliFish.UI.Controls
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            webViewRCTrains = new SiliFishWebView();
+            tRCRasterPlots = new TabPage();
+            webViewRasterPlot = new SiliFishWebView();
             tabStats.SuspendLayout();
             tSpikes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgSpikeStats).BeginInit();
@@ -94,6 +96,7 @@ namespace SiliFish.UI.Controls
             splitRCTrains.Panel2.SuspendLayout();
             splitRCTrains.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgRCTrains).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)webViewRCTrains).BeginInit();
             tSpikeSummary.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -104,13 +107,15 @@ namespace SiliFish.UI.Controls
             tEpisodes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgEpisodes).BeginInit();
             pStatsTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webViewRCTrains).BeginInit();
+            tRCRasterPlots.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)webViewRasterPlot).BeginInit();
             SuspendLayout();
             // 
             // tabStats
             // 
             tabStats.Controls.Add(tSpikes);
             tabStats.Controls.Add(tRCTrains);
+            tabStats.Controls.Add(tRCRasterPlots);
             tabStats.Controls.Add(tSpikeSummary);
             tabStats.Controls.Add(tEpisodes);
             tabStats.Dock = DockStyle.Fill;
@@ -149,19 +154,19 @@ namespace SiliFish.UI.Controls
             // 
             cmGrid.Items.AddRange(new ToolStripItem[] { cmGridExport, cmGridCopyAll });
             cmGrid.Name = "cmGrid";
-            cmGrid.Size = new Size(147, 48);
+            cmGrid.Size = new Size(146, 48);
             // 
             // cmGridExport
             // 
             cmGridExport.Name = "cmGridExport";
-            cmGridExport.Size = new Size(146, 22);
+            cmGridExport.Size = new Size(145, 22);
             cmGridExport.Text = "Export to CSV";
             cmGridExport.Click += cmGridExport_Click;
             // 
             // cmGridCopyAll
             // 
             cmGridCopyAll.Name = "cmGridCopyAll";
-            cmGridCopyAll.Size = new Size(146, 22);
+            cmGridCopyAll.Size = new Size(145, 22);
             cmGridCopyAll.Text = "Copy All";
             cmGridCopyAll.Click += cmGridCopyAll_Click;
             // 
@@ -232,9 +237,9 @@ namespace SiliFish.UI.Controls
             // 
             // colRCTrainStart
             // 
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle15.Format = "N2";
+            dataGridViewCellStyle15.NullValue = null;
+            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle15;
             colRCTrainStart.HeaderText = "Start Time";
             colRCTrainStart.Name = "colRCTrainStart";
             colRCTrainStart.ReadOnly = true;
@@ -242,8 +247,8 @@ namespace SiliFish.UI.Controls
             // 
             // colRCTrainEnd
             // 
-            dataGridViewCellStyle2.Format = "N2";
-            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle16.Format = "N2";
+            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle16;
             colRCTrainEnd.HeaderText = "End Time";
             colRCTrainEnd.Name = "colRCTrainEnd";
             colRCTrainEnd.ReadOnly = true;
@@ -251,8 +256,8 @@ namespace SiliFish.UI.Controls
             // 
             // colRCTrainMedianPoint
             // 
-            dataGridViewCellStyle3.Format = "N2";
-            colRCTrainMedianPoint.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle17.Format = "N2";
+            colRCTrainMedianPoint.DefaultCellStyle = dataGridViewCellStyle17;
             colRCTrainMedianPoint.HeaderText = "Median";
             colRCTrainMedianPoint.Name = "colRCTrainMedianPoint";
             colRCTrainMedianPoint.ReadOnly = true;
@@ -260,8 +265,8 @@ namespace SiliFish.UI.Controls
             // 
             // colRCTrainCenter
             // 
-            dataGridViewCellStyle4.Format = "N2";
-            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle18.Format = "N2";
+            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle18;
             colRCTrainCenter.HeaderText = "Center";
             colRCTrainCenter.Name = "colRCTrainCenter";
             colRCTrainCenter.ReadOnly = true;
@@ -269,9 +274,9 @@ namespace SiliFish.UI.Controls
             // 
             // colRCTrainStartDelay
             // 
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = null;
-            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle19.Format = "N2";
+            dataGridViewCellStyle19.NullValue = null;
+            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle19;
             colRCTrainStartDelay.HeaderText = "RC Delay [Start]";
             colRCTrainStartDelay.Name = "colRCTrainStartDelay";
             colRCTrainStartDelay.ReadOnly = true;
@@ -279,8 +284,8 @@ namespace SiliFish.UI.Controls
             // 
             // colRCTrainMedianDelay
             // 
-            dataGridViewCellStyle6.Format = "N2";
-            colRCTrainMedianDelay.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle20.Format = "N2";
+            colRCTrainMedianDelay.DefaultCellStyle = dataGridViewCellStyle20;
             colRCTrainMedianDelay.HeaderText = "RC Delay [Median]";
             colRCTrainMedianDelay.Name = "colRCTrainMedianDelay";
             colRCTrainMedianDelay.ReadOnly = true;
@@ -288,12 +293,24 @@ namespace SiliFish.UI.Controls
             // 
             // colRCTrainCenterDelay
             // 
-            dataGridViewCellStyle7.Format = "N2";
-            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle21.Format = "N2";
+            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle21;
             colRCTrainCenterDelay.HeaderText = "RC Delay [Center]";
             colRCTrainCenterDelay.Name = "colRCTrainCenterDelay";
             colRCTrainCenterDelay.ReadOnly = true;
             colRCTrainCenterDelay.SortMode = DataGridViewColumnSortMode.Programmatic;
+            // 
+            // webViewRCTrains
+            // 
+            webViewRCTrains.AllowExternalDrop = true;
+            webViewRCTrains.CreationProperties = null;
+            webViewRCTrains.DefaultBackgroundColor = Color.White;
+            webViewRCTrains.Dock = DockStyle.Fill;
+            webViewRCTrains.Location = new Point(0, 0);
+            webViewRCTrains.Name = "webViewRCTrains";
+            webViewRCTrains.Size = new Size(688, 318);
+            webViewRCTrains.TabIndex = 0;
+            webViewRCTrains.ZoomFactor = 1D;
             // 
             // tSpikeSummary
             // 
@@ -495,6 +512,7 @@ namespace SiliFish.UI.Controls
             cellSelectionStats.Name = "cellSelectionStats";
             cellSelectionStats.SelectedUnits = null;
             cellSelectionStats.Size = new Size(232, 113);
+            cellSelectionStats.StickToNeurons = false;
             cellSelectionStats.TabIndex = 60;
             // 
             // panel3
@@ -518,17 +536,28 @@ namespace SiliFish.UI.Controls
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // webViewRCTrains
+            // tRCRasterPlots
             // 
-            webViewRCTrains.AllowExternalDrop = true;
-            webViewRCTrains.CreationProperties = null;
-            webViewRCTrains.DefaultBackgroundColor = Color.White;
-            webViewRCTrains.Dock = DockStyle.Fill;
-            webViewRCTrains.Location = new Point(0, 0);
-            webViewRCTrains.Name = "webViewRCTrains";
-            webViewRCTrains.Size = new Size(688, 318);
-            webViewRCTrains.TabIndex = 0;
-            webViewRCTrains.ZoomFactor = 1D;
+            tRCRasterPlots.Controls.Add(webViewRasterPlot);
+            tRCRasterPlots.Location = new Point(4, 24);
+            tRCRasterPlots.Name = "tRCRasterPlots";
+            tRCRasterPlots.Padding = new Padding(3);
+            tRCRasterPlots.Size = new Size(694, 647);
+            tRCRasterPlots.TabIndex = 4;
+            tRCRasterPlots.Text = "Rostro-Caudal Raster Plots";
+            tRCRasterPlots.UseVisualStyleBackColor = true;
+            // 
+            // webViewRasterPlot
+            // 
+            webViewRasterPlot.AllowExternalDrop = true;
+            webViewRasterPlot.CreationProperties = null;
+            webViewRasterPlot.DefaultBackgroundColor = Color.White;
+            webViewRasterPlot.Dock = DockStyle.Fill;
+            webViewRasterPlot.Location = new Point(3, 3);
+            webViewRasterPlot.Name = "webViewRasterPlot";
+            webViewRasterPlot.Size = new Size(688, 641);
+            webViewRasterPlot.TabIndex = 4;
+            webViewRasterPlot.ZoomFactor = 1D;
             // 
             // StatOutputControl
             // 
@@ -548,6 +577,7 @@ namespace SiliFish.UI.Controls
             ((System.ComponentModel.ISupportInitialize)splitRCTrains).EndInit();
             splitRCTrains.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgRCTrains).EndInit();
+            ((System.ComponentModel.ISupportInitialize)webViewRCTrains).EndInit();
             tSpikeSummary.ResumeLayout(false);
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
@@ -559,7 +589,8 @@ namespace SiliFish.UI.Controls
             ((System.ComponentModel.ISupportInitialize)dgEpisodes).EndInit();
             pStatsTop.ResumeLayout(false);
             pStatsTop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)webViewRCTrains).EndInit();
+            tRCRasterPlots.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)webViewRasterPlot).EndInit();
             ResumeLayout(false);
         }
 
@@ -580,12 +611,10 @@ namespace SiliFish.UI.Controls
         }
 
         private TabControl tabStats;
-        private TabPage tSpikes;
         internal TabPage tRCTrains;
         internal DataGridView dgRCTrains;
         private SplitContainer splitRCTrains;
         private SiliFishWebView webViewRCTrains;
-        private TabPage tSpikeSummary;
         private DataGridView dgSpikeSummaryDetails;
         private SplitContainer splitContainer1;
         private DataGridView dgSpikeSummary;
@@ -603,7 +632,6 @@ namespace SiliFish.UI.Controls
         private ContextMenuStrip cmGrid;
         private ToolStripMenuItem cmGridExport;
         private ToolStripMenuItem cmGridCopyAll;
-        private TabPage tEpisodes;
         private DataGridView dgEpisodes;
         private General.StartEndTimeControl timeRangeStat;
         private DataGridViewTextBoxColumn colRCTrainNumber;
@@ -616,5 +644,10 @@ namespace SiliFish.UI.Controls
         private DataGridViewTextBoxColumn colRCTrainStartDelay;
         private DataGridViewTextBoxColumn colRCTrainMedianDelay;
         private DataGridViewTextBoxColumn colRCTrainCenterDelay;
+        internal TabPage tRCRasterPlots;
+        internal TabPage tSpikes;
+        internal TabPage tSpikeSummary;
+        internal TabPage tEpisodes;
+        private SiliFishWebView webViewRasterPlot;
     }
 }

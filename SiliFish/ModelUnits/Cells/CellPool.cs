@@ -334,7 +334,9 @@ namespace SiliFish.ModelUnits.Cells
             bool neuron = CellType == CellType.Neuron;
             
             ModelDimensions MD = Model.ModelDimensions;
-            List<int> somites = PerSomiteOrTotal == CountingMode.PerSomite ? 
+            List<int> somites = BodyLocation == BodyLocation.SupraSpinal ?
+                [0] :
+                PerSomiteOrTotal == CountingMode.PerSomite ? 
                 Util.ParseRange(SomiteRange, defMin: 1, defMax: MD.NumberOfSomites) :
                 [-1];
 
@@ -426,14 +428,10 @@ namespace SiliFish.ModelUnits.Cells
 
         #region Junction Functions
         public void ReachToCellPoolViaGapJunction(CellPool target, 
-            CellReach reach, 
-            TimeLine timeline,
-            Dictionary<string, Distribution> synParams,
-            double probability, 
-            DistanceMode distanceMode,
-            double? delay_ms,
-            double? fixedduration_ms)
+            InterPoolTemplate template,
+            TimeLine timeline)
         {
+            CellReach reach = template.CellReach;
             int maxIncoming = reach.MaxIncoming;
             int maxOutgoing = reach.MaxOutgoing;
             if (maxIncoming > 0 && maxOutgoing == 0)
@@ -464,17 +462,17 @@ namespace SiliFish.ModelUnits.Cells
                             continue;
                     }
                     double r = Model.randomNumGenerator.NextDouble();
-                    if (probability < r)
+                    if (template.Probability < r)
                         continue;
                     if (reach.WithinReach(pre, post))
                     {
-                        Dictionary<string, double> paramValues = synParams.GenerateSingleInstanceValues();
+                        Dictionary<string, double> paramValues = template.Parameters.GenerateSingleInstanceValues();
 
-                        GapJunction jnc = pre.CreateGapJunction(post, paramValues, distanceMode);
-                        jnc.SetDelay(delay_ms);
+                        GapJunction jnc = pre.CreateGapJunction(post, paramValues, template.DistanceMode);
+                        jnc.SetDelay(template.Delay_ms);
                         jnc.SetTimeLine(timeline);
-                        if (fixedduration_ms != null)
-                            jnc.SetFixedDuration((double)fixedduration_ms);
+                        if (template.FixedDuration_ms != null)
+                            jnc.SetFixedDuration((double)template.FixedDuration_ms);
                         counter++;
                         if (maxOutgoing > 0 && counter >= maxOutgoing)
                             break;
@@ -484,15 +482,10 @@ namespace SiliFish.ModelUnits.Cells
         }
 
         public void ReachToCellPoolViaChemSynapse(CellPool target, 
-            CellReach reach,
-            string coreType,
-            Dictionary<string, Distribution> synParams, 
-            TimeLine timeline, 
-            double probability, 
-            DistanceMode distanceMode, 
-            double? delay_ms,
-            double? fixedduration_ms)
+            InterPoolTemplate template,
+            TimeLine timeline)
         {
+            CellReach reach = template.CellReach;
             int maxIncoming = reach.MaxIncoming;
             int maxOutgoing = reach.MaxOutgoing;
             if (maxIncoming > 0 && maxOutgoing == 0)
@@ -528,15 +521,15 @@ namespace SiliFish.ModelUnits.Cells
                         }
                     }
                     double r = Model.randomNumGenerator.NextDouble();
-                    if (probability < r)
+                    if (template.Probability < r)
                         continue;
                     if (reach.WithinReach(pre, post))
                     {
-                        Dictionary<string, double> paramValues = synParams.GenerateSingleInstanceValues();
-                        ChemicalSynapse syn = pre.CreateChemicalSynapse(post, coreType, paramValues, distanceMode);
-                        syn.SetDelay(delay_ms);
-                        if (fixedduration_ms != null)
-                            syn.SetFixedDuration((double)fixedduration_ms);
+                        Dictionary<string, double> paramValues = template.Parameters.GenerateSingleInstanceValues();
+                        ChemicalSynapse syn = pre.CreateChemicalSynapse(post, template.CoreType, paramValues, template.DistanceMode);
+                        syn.SetDelay(template.Delay_ms);
+                        if (template.FixedDuration_ms != null)
+                            syn.SetFixedDuration((double)template.FixedDuration_ms);
                         syn.SetTimeLine(timeline);
                         counter++;
                         if (maxOutgoing > 0 && counter >= maxOutgoing)

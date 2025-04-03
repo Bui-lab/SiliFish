@@ -84,6 +84,9 @@ namespace SiliFish.UI.Controls
                 sagPlane = SagittalPlane.Right;
             else if (ddSagittalPosition.Text is "Left/Right" or "Both")
                 sagPlane = SagittalPlane.Both;
+            double.TryParse(eDelayPerSomite.Text, out double delayPerSomite);
+            double.TryParse(eDelaySagittal.Text, out double delaySagittal);
+
             Stimulus = new StimulusTemplate()
             {
                 Name = eName.Text,
@@ -92,8 +95,8 @@ namespace SiliFish.UI.Controls
                 TargetSomite = cbAllSomites.Checked ? "All somites" : eTargetSomites.Text,
                 TargetCell = cbAllCells.Checked ? "All cells" : eTargetCells.Text,
                 LeftRight = sagPlane.ToString(),
-                DelayPerSomite = double.Parse(eDelayPerSomite.Text),
-                DelaySagittal = double.Parse(eDelaySagittal.Text),
+                DelayPerSomite = delayPerSomite,
+                DelaySagittal = delaySagittal,
                 TimeLine_ms = timeLineControl.GetTimeLine(),
                 Active = cbActive.Checked
             };

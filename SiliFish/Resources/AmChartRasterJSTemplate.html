@@ -1,0 +1,48 @@
+﻿var sourceDataX__INDEX__ = [__DATA_X__];
+var sourceDataY__INDEX__ = [__DATA_Y__];
+var sourceDataID__INDEX__ = [__DATA_ID__];
+
+var series__INDEX__ = chart.series.push(am5xy.LineSeries.new(root, {
+  name: "__NAME__",
+  xAxis: xAxis,
+  yAxis: yAxis,
+  valueYField: "y",
+  valueXField: "Time"
+}));
+
+if (__SHOW_TOOLTIP__)
+{
+    let tooltip__INDEX__ = am5.Tooltip.new(root, {
+      getFillFromSprite: false,
+      labelText: "{ID}"
+    });
+
+    tooltip__INDEX__.get("background").setAll({
+      fill: __COLOR__,
+      fillOpacity: 0.8
+    });
+
+    series__INDEX__.set("tooltip", tooltip__INDEX__);
+}
+
+series__INDEX__.bullets.push(function() {
+  var graphics = am5.Circle.new(root, {
+    radius: 1.5, // Fixed size
+    fill: __COLOR__
+  });
+  return am5.Bullet.new(root, {
+    sprite: graphics
+  });
+});
+
+
+// Remove heat rules
+series__INDEX__.set("heatRules", []);
+
+// Set strokes to invisible for both series
+series__INDEX__.strokes.template.set("strokeOpacity", 0);
+
+var data__INDEX__ = generateRasterPlotData(sourceDataX__INDEX__, sourceDataY__INDEX__, sourceDataID__INDEX__);
+
+series__INDEX__.data.setAll(data__INDEX__);
+

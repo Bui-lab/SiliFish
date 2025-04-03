@@ -15,25 +15,23 @@
 
     <!-- Styles -->
     <style>
-        #chartDiv {
+        .chartDiv {
             width: __WIDTH__px;
             height: __HEIGHT__px;
             max-width: 100%
         }
     </style>
-    <link rel="stylesheet" type="text/css" href="StyleSheet.css">
+    <style>
+        __STYLE_SHEET__
+    </style>
 </head>
 
 <body>
     <div id="top_panel" style="text-align: center">__TITLE__</div>
-    <div id="chartDiv">
-    </div>
+    __CHART_DIVS__
 
     <!-- Chart code -->
     <script>
-
-        var sourceData = [__DATA__];
-
         var maxCols = __MAX_COLS__;
         function getHistogramData(source) {
 
@@ -68,102 +66,7 @@
             return data;
         }
 
-        var data = getHistogramData(sourceData);
-
-        // Create root element
-        // https://www.amcharts.com/docs/v5/getting-started/#Root_element
-        var root = am5.Root.new("chartDiv");
-
-
-        // Set themes
-        // https://www.amcharts.com/docs/v5/concepts/themes/
-        root.setThemes([
-            am5themes_Animated.new(root)
-        ]);
-
-
-        // Create chart
-        // https://www.amcharts.com/docs/v5/charts/xy-chart/
-        var chart = root.container.children.push(am5xy.XYChart.new(root, {
-            panX: false,
-            panY: false,
-            wheelX: "panX",
-            wheelY: "zoomX",
-            layout: root.verticalLayout
-        }));
-
-
-        // Add legend
-        // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
-        var legend = chart.children.push(
-            am5.Legend.new(root, {
-                centerX: am5.p50,
-                x: am5.p50
-            })
-        );
-
-        // Create axes
-        // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
-        var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
-            categoryField: "from",
-            renderer: am5xy.AxisRendererX.new(root, {
-                minGridDistance: 30
-            }),
-            tooltip: am5.Tooltip.new(root, {})
-        }));
-        let xRenderer = xAxis.get("renderer");
-        xRenderer.labels.template.setAll({
-            rotation: -90,
-            centerY: am5.p50
-        });
-
-        xAxis.data.setAll(data);
-
-        var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
-            maxPrecision: 0,
-            renderer: am5xy.AxisRendererY.new(root, {})
-        }));
-
-
-        // Add series
-        // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
-        var series = chart.series.push(am5xy.ColumnSeries.new(root, {
-            xAxis: xAxis,
-            yAxis: yAxis,
-            valueYField: "count",
-            categoryXField: "from"
-        }));
-
-        series.columns.template.setAll({
-            tooltipText: "{categoryX}:{valueY}",
-            width: am5.percent(90),
-            tooltipY: 0,
-            width: am5.p100
-        });
-
-        series.bullets.push(function () {
-            return am5.Bullet.new(root, {
-                locationY: 0.5,
-                sprite: am5.Label.new(root, {
-                    fill: root.interfaceColors.get("alternativeText"),
-                    centerY: am5.p50,
-                    centerX: am5.p50,
-                    populateText: true
-                })
-            });
-        });
-
-        series.data.setAll(data);
-        // Add export menu
-        var exporting = am5plugins_exporting.Exporting.new(root, {
-            menu: am5plugins_exporting.ExportingMenu.new(root, {})
-        });
-
-        series.appear();
-
-        // Make stuff animate on load
-        // https://www.amcharts.com/docs/v5/concepts/animations/
-        chart.appear(1000, 100);
+        __JAVASCRIPT_HTML__
     </script>
 
 </body>

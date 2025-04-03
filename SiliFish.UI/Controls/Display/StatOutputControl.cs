@@ -9,6 +9,10 @@ using System.Data;
 using SiliFish.Repositories;
 using SiliFish.Services.Dynamics;
 using SiliFish.ModelUnits.Parameters;
+using SiliFish.Services.Plotting;
+using SiliFish.DataTypes;
+using System.Windows.Forms;
+using SiliFish.Services.Plotting.PlotSelection;
 
 namespace SiliFish.UI.Controls
 {
@@ -55,6 +59,7 @@ namespace SiliFish.UI.Controls
         private async void InitAsync()
         {
             await webViewRCTrains.EnsureCoreWebView2Async();
+            await webViewRasterPlot.EnsureCoreWebView2Async();
         }
 
         private void Wait()
@@ -125,12 +130,8 @@ namespace SiliFish.UI.Controls
             UseWaitCursor = true;
             int iSpikeStart = simulation.RunParam.iIndex((double)timeRangeStat.StartTime);
             int iSpikeEnd = simulation.RunParam.iIndex((double)timeRangeStat.EndTime);
-            (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionStats.PoolSubset, cellSelectionStats.GetSelection(), iSpikeStart, iSpikeEnd);
-            Cells ??= [];
-            if (Cells.Count == 0 && Pools != null)
-                foreach (CellPool pool in Pools)
-                    Cells.AddRange(pool.Cells);
-            (List<string> colNames, List<List<string>> values) = ModelStats.GenerateSpikes(simulation, Cells, iSpikeStart, iSpikeEnd);
+            List<Cell> Cells = model.GetSubsetCells(cellSelectionStats.PoolSubset, cellSelectionStats.GetSelection(), iSpikeStart, iSpikeEnd);
+            (List<string> colNames, List<List<string>> values) = SimulationStats.GenerateSpikesForCSV(simulation, Cells, iSpikeStart, iSpikeEnd);
             int spikeCount = values.Count;
             if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnitsToList)
             {
@@ -170,11 +171,7 @@ namespace SiliFish.UI.Controls
         {
             if (simulation == null || !simulation.SimulationRun) return;
             UseWaitCursor = true;
-            (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionStats.PoolSubset, cellSelectionStats.GetSelection());
-            Cells ??= [];
-            if (Cells.Count == 0 && Pools != null)
-                foreach (CellPool pool in Pools)
-                    Cells.AddRange(pool.Cells);
+            List<Cell> Cells = model.GetSubsetCells(cellSelectionStats.PoolSubset, cellSelectionStats.GetSelection());
             int iSpikeStart = simulation.RunParam.iIndex((double)timeRangeStat.StartTime);
             int iSpikeEnd = simulation.RunParam.iIndex((double)timeRangeStat.EndTime);
 
@@ -224,7 +221,20 @@ namespace SiliFish.UI.Controls
                 colIndex == colRCTrainMedianDelay.Index)
                 GenerateHistogramOfRCColumn(colIndex);
         }
+        private void GenerateRasterPlot(List<Cell> Cells)
+        {
+            int iStatsStart = simulation.RunParam.iIndex(timeRangeStat.StartTime);
+            int iStatsEnd = simulation.RunParam.iIndex(timeRangeStat.EndTime);
 
+            (List<List<XYDataSet>> dataPoints, List<string> IDs, List<Color> colors) =
+                SimulationStats.GenerateSpikeRasterDataSet(simulation, Cells, iStatsStart, iStatsEnd);
+
+            double width = webViewRasterPlot.ClientSize.Width - 50;
+            double height = webViewRasterPlot.ClientSize.Height - 70;
+            string htmlPlot = RasterPlotGenerator.GenerateRasterPlotHTML(dataPoints, IDs, colors, "Raster Plot", width, height);
+            bool navigated = false;
+            webViewRasterPlot.NavigateTo(htmlPlot, "Raster Plot", GlobalSettings.TempFolder, ref tempFile, ref navigated);
+        }
         private int AddCellPoolSpikeSummaryGrid(CellPool pool)
         {
             dgSpikeSummaryDetails.RowCount++;
@@ -251,7 +261,7 @@ namespace SiliFish.UI.Controls
         {
             UseWaitCursor = true;
             (Dictionary<string, int> cellSpikes, Dictionary<string, int> cellPoolSpikes) = 
-                ModelStats.GenerateSpikeSummary(simulation, timeRangeStat.StartTime, timeRangeStat.EndTime);
+                SimulationStats.GenerateSpikeSummary(simulation, timeRangeStat.StartTime, timeRangeStat.EndTime);
             string period = $"{timeRangeStat.StartTime}-{timeRangeStat.EndTime}";
             int scrollRowSummary = 0;
             int scrollRowDetails = 0;
@@ -293,7 +303,7 @@ namespace SiliFish.UI.Controls
         private void GenerateEpisodes()
         {
             UseWaitCursor = true;
-            (List<string> colNames, List<List<string>> values) = ModelStats.GenerateEpisodes(simulation);
+            (List<string> colNames, List<List<string>> values) = SimulationStats.GenerateEpisodes(simulation);
             dgEpisodes.LoadData(colNames, values, cbStatsAppend.Checked, out int scrollRow);
             if (scrollRow >= 0)
                 dgEpisodes.FirstDisplayedScrollingRowIndex = scrollRow;
@@ -316,6 +326,13 @@ namespace SiliFish.UI.Controls
                 GenerateRCTrains();
             else if (tabStats.SelectedTab == tEpisodes)
                 GenerateEpisodes();
+            else if (tabStats.SelectedTab == tRCRasterPlots)
+            {
+                if (simulation == null || !simulation.SimulationRun) return;
+                PlotSelectionInterface psi = cellSelectionStats.GetSelection();
+                List<Cell> Cells = model.GetSubsetCells(cellSelectionStats.PoolSubset, cellSelectionStats.GetSelection());
+                GenerateRasterPlot(Cells);
+            }
         }
         private void tabStats_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -338,6 +355,13 @@ namespace SiliFish.UI.Controls
                 btnListStats.Text = "List RC Spike Trains";
                 cellSelectionStats.Enabled = true;
                 cbStatsAppend.Enabled = true;
+                timeRangeStat.Enabled = true;
+            }
+            else if (tabStats.SelectedTab == tRCRasterPlots)
+            {
+                btnListStats.Text = "RasterPlot RC Activity";
+                cellSelectionStats.Enabled = true;
+                cbStatsAppend.Enabled = false;
                 timeRangeStat.Enabled = true;
             }
             else if (tabStats.SelectedTab == tEpisodes)

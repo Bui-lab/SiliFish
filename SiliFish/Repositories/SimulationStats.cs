@@ -1,20 +1,27 @@
 ﻿using GeneticSharp;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Storage.Json;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiliFish.Repositories
 {
-    public static class ModelStats
+    public static class SimulationStats
     {
         public static (List<string>, List<List<string>>) GenerateSpikeCounts(Simulation simulation)
         {
@@ -157,7 +164,7 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static (List<string>, List<List<string>>) GenerateSpikes(Simulation simulation, List<Cell> cells = null, int spikeStart = 0, int spikeEnd = -1)
+        public static (List<string>, List<List<string>>) GenerateSpikesForCSV(Simulation simulation, List<Cell> cells = null, int spikeStart = 0, int spikeEnd = -1)
         {
             try
             {
@@ -190,6 +197,44 @@ namespace SiliFish.Repositories
             {
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
                 return (null, null);
+            }
+        }
+
+        public static (List<List<XYDataSet>> , List<string>, List<Color>) GenerateSpikeRasterDataSet(Simulation simulation, 
+            List<Cell> cells = null, int spikeStart = 0, int spikeEnd = -1)
+        {
+            try
+            {
+                List<List<XYDataSet>> fullSet= [];
+                List<Color> colors = [];
+                List<string> IDs = [];
+                cells ??= simulation.Model.GetCells();
+                int rowCounter = 1;
+                foreach (IGrouping<CellPool, Cell> grCells in cells.GroupBy(c => c.CellPool).OrderBy(c => c.Key))
+                {
+                    List<XYDataSet> dataSets = [];
+                    bool firstPass = true;
+                    foreach (Cell cell in grCells.OrderBy(cc => cc.Somite).ThenBy(cc => cc.Sequence))
+                    {
+                        if (firstPass)
+                        {
+                            colors.Add(cell.CellPool.Color);
+                            IDs.Add(cell.CellPool.ID);
+                            firstPass = false;
+                        }
+                        List<double> spikeTimes = cell.SpikeTrain.Where(s => s >= spikeStart && s <= spikeEnd).Select(s=>s * simulation.RunParam.DeltaT).ToList();
+                        dataSets.Add(new XYDataSet(cell.ID, spikeTimes, Enumerable.Repeat(rowCounter, spikeTimes.Count)));
+                        rowCounter++;
+                    }
+                    fullSet.Add(dataSets);
+
+                }
+                return (fullSet, IDs, colors);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return (null, null, null);
             }
         }
 

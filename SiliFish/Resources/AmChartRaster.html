@@ -1,0 +1,120 @@
+﻿<!--Modified from https://www.amcharts.com/demos/bubble-chart/-->
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>__TITLE__</title>
+
+    <!-- Resources -->
+    <!-- specific version: https://cdn.amcharts.com/lib/version/5.3.6/index.js -->
+    <!-- latest version: https://cdn.amcharts.com/lib/5/index.js -->
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/plugins/exporting.js"></script>
+    <!-- Styles -->
+    <style>
+        #chartdiv {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+    <style>
+        __STYLE_SHEET__
+    </style>
+
+</head>
+
+<body>
+    <div id="top_panel" style="text-align: center">__TITLE__</div>
+    <div id="chartdiv"></div>
+
+<!-- Chart code -->
+<script>
+am5.ready(function() {
+
+    function generateRasterPlotData(timeValues, rowValues, idValues) {
+        var data = [];
+        for (var i = 0; i < timeValues.length; ++i) {
+            data.push({
+                Time: timeValues[i],
+                y: rowValues[i],
+                ID: idValues[i]
+            });
+        }
+        return data;
+    }
+
+    // Create root element
+    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+    var root = am5.Root.new("chartdiv");
+
+    // Create chart
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/
+    var chart = root.container.children.push(am5xy.XYChart.new(root, {
+      panX: true,
+      wheelY: "zoomX"
+    }));
+
+
+    // Create axes
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+    var xAxis = chart.xAxes.push(am5xy.ValueAxis.new(root, {
+      renderer: am5xy.AxisRendererX.new(root, { minGridDistance: 50 }),
+      tooltip: am5.Tooltip.new(root, {})
+    }));
+
+    var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+      renderer: am5xy.AxisRendererY.new(root, {}),
+      tooltip: am5.Tooltip.new(root, {})
+    }));
+
+    var groups = [
+        __LABEL_GROUPS__
+    ];
+
+    // Set axis ranges and labels
+    groups.forEach(function (group) {
+        var range = yAxis.makeDataItem({
+            value: group.start,
+            endValue: group.end
+        });
+
+        yAxis.createAxisRange(range);
+
+        range.get("label").setAll({
+            text: group.name,
+            centerY: am5.p50, // Center the label vertically relative to the group
+            inside: false, // Place the label outside the axis
+            textAlign: "center", // Ensure proper alignment
+            dx: -40, // Adjust horizontal offset to move label left
+            paddingLeft: 0, // Remove additional padding if necessary
+            paddingRight: 0 // Remove additional padding if necessary
+        });
+        range.get("grid").set("strokeOpacity", 0);
+        range.get("tick").set("visible", false);
+    });
+
+      __JAVASCRIPT_HTML__
+
+    // Add cursor
+    var cursor = am5xy.XYCursor.new(root, {
+      xAxis: xAxis,
+      yAxis: yAxis,
+        snapToSeries: [__SNAP_TO_SERIES__]
+    });
+    chart.set("cursor", cursor)
+
+    cursor.lineX.setAll({
+        visible: false
+    });
+    cursor.lineY.setAll({
+        visible: false
+    });
+
+
+
+}); // end am5.ready()
+
+</script>
+
+</body>

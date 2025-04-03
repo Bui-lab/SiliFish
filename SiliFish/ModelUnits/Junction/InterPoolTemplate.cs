@@ -40,6 +40,10 @@ namespace SiliFish.ModelUnits.Junction
             set { base.Active = value; }
         }
 
+        [JsonIgnore]
+        public bool Chemical => JunctionType == JunctionType.Synapse || JunctionType == JunctionType.NMJ;
+        [JsonIgnore]
+        public bool Electrical => JunctionType == JunctionType.Gap;
         public override string SourcePool
         {
             get { return sourcePool; }
@@ -73,7 +77,7 @@ namespace SiliFish.ModelUnits.Junction
                 coreType = value;
             }
         }
-        [JsonPropertyOrder(2)]
+        [JsonPropertyOrder(3)]
         public CellReach CellReach { get; set; } = new();
 
 

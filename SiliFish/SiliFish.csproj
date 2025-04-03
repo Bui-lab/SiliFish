@@ -36,6 +36,9 @@
     <None Remove="Resources\3DModel2.html" />
     <None Remove="Resources\3DRender.html" />
     <None Remove="Resources\AmChartHist.html" />
+    <None Remove="Resources\AmChartHistJSTemplate.html" />
+    <None Remove="Resources\AmChartRaster.html" />
+    <None Remove="Resources\AmChartRasterJSTemplate.html" />
     <None Remove="Resources\Animation.html" />
     <None Remove="Resources\Animation.TimePoint.js" />
     <None Remove="Resources\Animation.TimeSeries.js" />
@@ -65,6 +68,9 @@
     <EmbeddedResource Include="Resources\3d-force-graph.min.js" />
     <EmbeddedResource Include="Resources\3DRender.html" />
     <EmbeddedResource Include="Resources\AmChartHist.html" />
+    <EmbeddedResource Include="Resources\AmChartHistJSTemplate.html" />
+    <EmbeddedResource Include="Resources\AmChartRaster.html" />
+    <EmbeddedResource Include="Resources\AmChartRasterJSTemplate.html" />
     <EmbeddedResource Include="Resources\Animation.html" />
     <EmbeddedResource Include="Resources\d3-dsv.min.js" />
     <EmbeddedResource Include="Resources\DorsalHead.png" />

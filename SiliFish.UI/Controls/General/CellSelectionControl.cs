@@ -21,7 +21,10 @@ namespace SiliFish.UI.Controls.Display
             set => pCombine.Visible = value;
             get => pCombine.Visible;
         }
+        public bool StickToNeurons { get; set; } = false;
         public string PoolSubset;
+        public SagittalPlane SagittalPlane;
+
         public bool ControlsEnabled
         {
             set
@@ -94,20 +97,31 @@ namespace SiliFish.UI.Controls.Display
             ddPools.Items.Clear();
             ddPools.Text = "";
             List<string> itemList =
-            [
-                Const.AllPools,
-                Const.SupraSpinal,
-                Const.Spinal,
-                Const.MusculoSkeletal,
-                Const.MuscleCells,
-                Const.Motoneurons,
-                Const.Interneurons,
-                Const.Neurons,
-                Const.ExcitatoryNeurons,
-                Const.InhibitoryNeurons
-            ];
+                StickToNeurons ?
+                [
+                    Const.Neurons,
+                    Const.Motoneurons,
+                    Const.Interneurons,
+                    Const.ExcitatoryNeurons,
+                    Const.InhibitoryNeurons
+                ] :
+                [
+                    Const.AllPools,
+                    Const.SupraSpinal,
+                    Const.Spinal,
+                    Const.MusculoSkeletal,
+                    Const.MuscleCells,
+                    Const.Neurons,
+                    Const.Motoneurons,
+                    Const.Interneurons,
+                    Const.ExcitatoryNeurons,
+                    Const.InhibitoryNeurons
+                ];
             if (runningModel == null || runningModel.CellPools.Count == 0) return;
-            itemList.AddRange([.. runningModel.CellPools.Where(cp => cp.Active).Select(p => p.CellGroup).OrderBy(p => p)]);
+            if (StickToNeurons) 
+                itemList.AddRange([.. runningModel.NeuronPools.Where(cp => cp.Active).Select(p => p.CellGroup).OrderBy(p => p)]);
+            else
+                itemList.AddRange([.. runningModel.CellPools.Where(cp => cp.Active).Select(p => p.CellGroup).OrderBy(p => p)]);
 
             ddPools.Items.AddRange(itemList.Distinct().ToArray());
             if (ddPools.Items?.Count > 0)
@@ -260,8 +274,11 @@ namespace SiliFish.UI.Controls.Display
 
         private void ddSagittal_SelectedIndexChanged(object sender, EventArgs e)
         {
+            SagittalPlane = ddSagittal.Text.GetValueFromName(SagittalPlane.Both);
             if (ddSagittal.Focused)
+            {
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void ddPools_SelectedIndexChanged(object sender, EventArgs e)

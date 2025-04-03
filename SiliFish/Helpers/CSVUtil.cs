@@ -70,7 +70,7 @@ namespace SiliFish.Helpers
 
             for (int i = 1; i < csvLines.Length; i++)
             {
-                var values = csvLines[i].Split(',');
+                var values = SplitCells(csvLines[i]);
                 var rowDict = new Dictionary<string, string>();
 
                 for (int j = 0; j < columnNames.Length; j++)
@@ -84,5 +84,29 @@ namespace SiliFish.Helpers
             return result;
         }
 
+        public static List<string> SplitCells(string rowString)
+        {
+            List<string> cells = [];
+            StringBuilder sb = new();
+            bool inQuotes = false;
+            for (int i = 0; i < rowString.Length; i++)
+            {
+                char c = rowString[i];
+                if (c == '"')
+                {
+                    inQuotes = !inQuotes;
+                    continue;
+                }
+                if (c == ',' && !inQuotes)
+                {
+                    cells.Add(sb.ToString());
+                    sb.Clear();
+                    continue;
+                }
+                sb.Append(c);
+            }
+            cells.Add(sb.ToString());
+            return cells;
+        }
     }
 }

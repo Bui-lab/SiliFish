@@ -126,5 +126,10 @@ namespace SiliFish.ModelUnits.Junction
             else
                 inputCurrent = null;
         }
+
+        public virtual (int source,int target) GetCellIndices()
+        {
+            throw new NotImplementedException();            
+        }
     }
 }

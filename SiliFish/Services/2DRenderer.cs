@@ -257,7 +257,7 @@ namespace SiliFish.Services
 
             html.Replace("__STYLE_SHEET__", ReadEmbeddedText("SiliFish.Resources.StyleSheet.css"));
 
-            if (!offline && Util.CheckOnlineStatus())
+            if (!offline && Util.CheckOnlineStatus("https://unpkg.com/"))
             {
                 html.Replace("__OFFLINE_2D_SCRIPT__", "");
                 html.Replace("__ONLINE_2D_SCRIPT__", "<script src=\"https://unpkg.com/force-graph\"></script>" +

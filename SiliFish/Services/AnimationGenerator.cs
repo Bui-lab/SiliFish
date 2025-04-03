@@ -76,12 +76,13 @@ namespace SiliFish.Services
             Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time,
             int iStart, int iEnd, double dt, double animdt)
         {
-            if (!Util.CheckOnlineStatus())
+            if (!Util.CheckOnlineStatus("https://cdn.amcharts.com/"))
                 return "Animation requires internet connection.";
 
             StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.Animation.html"));
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             html.Replace("__PARAMS__", HttpUtility.HtmlEncode(animParams).Replace("\n", "<br/>"));
+            html.Replace("__STYLE_SHEET__", ReadEmbeddedText("SiliFish.Resources.StyleSheet.css"));
 
             int jump = (int)(animdt / dt);
             if (jump < 1) jump = 1;

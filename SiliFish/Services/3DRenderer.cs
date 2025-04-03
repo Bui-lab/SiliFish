@@ -120,7 +120,7 @@ namespace SiliFish.Services
             html.Replace("__SHOW_GAP__", showGap.ToString().ToLower());
             html.Replace("__SHOW_CHEM__", showChem.ToString().ToLower());
 
-            if (!offline && Util.CheckOnlineStatus())
+            if (!offline && Util.CheckOnlineStatus("https://unpkg.com/"))
             {
                 html.Replace("__OFFLINE_3D_SCRIPT__", "");
                 html.Replace("__ONLINE_3D_SCRIPT__", "<script src=\"https://unpkg.com/3d-force-graph@1\"></script>" +

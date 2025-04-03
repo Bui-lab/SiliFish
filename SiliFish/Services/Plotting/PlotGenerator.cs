@@ -19,7 +19,7 @@ namespace SiliFish.Services.Plotting
         public long NumOfDataPoints { get; set; } = 0;
         public string errorMessage { get; set; }
 
-        public (string, List<Chart>) GetPlotData(PlotDefinition Plot, Simulation simulation, List<Cell> Cells, List<CellPool> Pools,
+        public virtual (string, List<Chart>) GetPlotData(PlotDefinition Plot, Simulation simulation, List<Cell> Cells, List<CellPool> Pools,
             int tStart = 0, int tEnd = -1)
         {
             errorMessage = string.Empty;
@@ -178,12 +178,12 @@ namespace SiliFish.Services.Plotting
                     plotGeneratorEpisodesTail2.CreateCharts(charts, Plot.PlotType);
                     if (Plot.PlotType != PlotType.TailMovementFreq) //skip the somite based plots
                     {
-                        List<int> somites = simulation.Model.MotoNeuronPools[0].GetSomites((PlotSelectionMultiCells)Plot.Selection).ToList();
-                        foreach (int s in somites)
-                        {
-                            (double[] mnMaxPotentials2, SwimmingEpisodes episodesMN2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(simulation, s);
-                            PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 1, mnMaxPotentials2, episodesMN2, s);
-                            plotGeneratorEpisodesMN2.CreateCharts(charts, Plot.PlotType);
+                    List<int> somites = simulation.Model.MotoNeuronPools[0].GetSomites((PlotSelectionMultiCells)Plot.Selection).ToList();
+                    foreach (int s in somites)
+                    {
+                        (double[] mnMaxPotentials2, SwimmingEpisodes episodesMN2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(simulation, s);
+                        PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 1, mnMaxPotentials2, episodesMN2, s);
+                        plotGeneratorEpisodesMN2.CreateCharts(charts, Plot.PlotType);
                         }
                     }
                     break;

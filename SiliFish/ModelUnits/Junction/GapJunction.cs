@@ -173,6 +173,12 @@ namespace SiliFish.ModelUnits.Junction
             }
         }
 
+        public override (int source, int target) GetCellIndices()
+        {
+            int source = Cell1.CellPool.BodyLocation == BodyLocation.SupraSpinal ? Cell1.Sequence : Cell1.Somite;
+            int target = Cell2.CellPool.BodyLocation == BodyLocation.SupraSpinal ? Cell2.Sequence : Cell2.Somite;
+            return (source, target);
+        }
         public override void NextStep(int tIndex)
         {
             if (tIndex <= 0) return;

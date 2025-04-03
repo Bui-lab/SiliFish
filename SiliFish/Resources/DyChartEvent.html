@@ -4,3 +4,11 @@
       const deltaY = event.deltaY;
       legend__CHART_INDEX__.scrollTop += deltaY; // Adjust the scrollTop property based on the scroll direction
     });
+
+div__CHART_INDEX__.addEventListener("mouseenter", function() {
+    legend__CHART_INDEX__.style.visibility = "visible";
+});
+
+div__CHART_INDEX__.addEventListener("mouseleave", function() {
+    legend__CHART_INDEX__.style.visibility = "hidden";
+});

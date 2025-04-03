@@ -35,12 +35,12 @@ namespace SiliFish.Helpers
             return decPoints;
         }
 
-        public static bool CheckOnlineStatus()
+        public static bool CheckOnlineStatus(string src)
         {
             using var httpClient = new HttpClient();
             try
             {
-                HttpResponseMessage response = httpClient.Send(new HttpRequestMessage(HttpMethod.Head, "https://unpkg.com/three"));
+                HttpResponseMessage response = httpClient.Send(new HttpRequestMessage(HttpMethod.Head, src));
                 return response.IsSuccessStatusCode;
             }
             catch { return false; }
