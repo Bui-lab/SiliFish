@@ -1,12 +1,12 @@
 # SiliFish v3.0
 
-Developed by Emine Topcu @ Bui Lab, University of Ottawa, 2023
+Developed by Emine Topcu @ Bui Lab, University of Ottawa, 2023-2025
 
 *in **Sili**co* **Fish** is an open-source software to model spinal control of motor movement in larval zebrafish. It is inspired by the code written by (Roussel *et al.* 2021), which is available on https://raw.githubusercontent.com/Bui-lab/Code. The software allows custom model generation.
 
 The executable file can be downloaded from the <a href="https://github.com/Bui-lab/SiliFish/releases">Releases</a> link.
 
-*(The explanations below are for version 2.0. Version 2.6 offers many other features that will be helpful to the researcher. If you intend to use the software, feel free to reach out to me through GitGub, or my personal Twitter account @EmineTheStudent. I would be happy to give you a quick tour so you can make the most of the tool.)*
+*(The explanations below are for version 2.0. Version 3.0 offers many other features that will be helpful to the researcher. If you intend to use the software, feel free to reach out to me through GitGub, or my personal Twitter account @EmineTheStudent. I would be happy to give you a quick tour so you can make the most of the tool.)*
 
 ## Model Components
 *Sili*Fish allows you to define cell pools, connections between cell pools and stimuli.
