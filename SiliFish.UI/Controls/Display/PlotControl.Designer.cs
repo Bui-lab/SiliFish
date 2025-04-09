@@ -40,7 +40,7 @@ namespace SiliFish.UI.Controls
             cmPlotImageSave = new ContextMenuStrip(components);
             cmiPlotImageSave = new ToolStripMenuItem();
             pPlot = new Panel();
-            timeRangePlot = new General.StartEndTimeControl();
+            timeRangePlot = new SiliFish.UI.Controls.General.StartEndTimeControl();
             btnPlotHTML = new Button();
             cmPlot = new ContextMenuStrip(components);
             cmiNonInteractivePlot = new ToolStripMenuItem();
@@ -76,21 +76,19 @@ namespace SiliFish.UI.Controls
             tabPlotSub.Controls.Add(tPlotHTML);
             tabPlotSub.Controls.Add(tPlotWindows);
             tabPlotSub.Dock = DockStyle.Fill;
-            tabPlotSub.Location = new Point(0, 233);
-            tabPlotSub.Margin = new Padding(4, 5, 4, 5);
+            tabPlotSub.Location = new Point(0, 140);
             tabPlotSub.Name = "tabPlotSub";
             tabPlotSub.SelectedIndex = 0;
-            tabPlotSub.Size = new Size(1003, 1092);
+            tabPlotSub.Size = new Size(702, 655);
             tabPlotSub.TabIndex = 6;
             // 
             // tPlotHTML
             // 
             tPlotHTML.Controls.Add(webViewPlot);
-            tPlotHTML.Location = new Point(4, 34);
-            tPlotHTML.Margin = new Padding(4, 5, 4, 5);
+            tPlotHTML.Location = new Point(4, 24);
             tPlotHTML.Name = "tPlotHTML";
-            tPlotHTML.Padding = new Padding(4, 5, 4, 5);
-            tPlotHTML.Size = new Size(995, 1054);
+            tPlotHTML.Padding = new Padding(3, 3, 3, 3);
+            tPlotHTML.Size = new Size(694, 627);
             tPlotHTML.TabIndex = 1;
             tPlotHTML.Text = "HTML Plots";
             tPlotHTML.UseVisualStyleBackColor = true;
@@ -102,10 +100,9 @@ namespace SiliFish.UI.Controls
             webViewPlot.CreationProperties = null;
             webViewPlot.DefaultBackgroundColor = Color.White;
             webViewPlot.Dock = DockStyle.Fill;
-            webViewPlot.Location = new Point(4, 5);
-            webViewPlot.Margin = new Padding(4, 5, 4, 5);
+            webViewPlot.Location = new Point(3, 3);
             webViewPlot.Name = "webViewPlot";
-            webViewPlot.Size = new Size(987, 1044);
+            webViewPlot.Size = new Size(688, 621);
             webViewPlot.TabIndex = 1;
             webViewPlot.ZoomFactor = 1D;
             webViewPlot.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
@@ -114,11 +111,10 @@ namespace SiliFish.UI.Controls
             // 
             tPlotWindows.AutoScroll = true;
             tPlotWindows.Controls.Add(pPictureBox);
-            tPlotWindows.Location = new Point(4, 34);
-            tPlotWindows.Margin = new Padding(4, 5, 4, 5);
+            tPlotWindows.Location = new Point(4, 24);
             tPlotWindows.Name = "tPlotWindows";
-            tPlotWindows.Padding = new Padding(4, 5, 4, 5);
-            tPlotWindows.Size = new Size(995, 1054);
+            tPlotWindows.Padding = new Padding(3, 3, 3, 3);
+            tPlotWindows.Size = new Size(694, 627);
             tPlotWindows.TabIndex = 0;
             tPlotWindows.Text = "Image Plots";
             // 
@@ -128,17 +124,15 @@ namespace SiliFish.UI.Controls
             pPictureBox.AutoSize = true;
             pPictureBox.Controls.Add(pictureBox);
             pPictureBox.Dock = DockStyle.Fill;
-            pPictureBox.Location = new Point(4, 5);
-            pPictureBox.Margin = new Padding(4, 5, 4, 5);
+            pPictureBox.Location = new Point(3, 3);
             pPictureBox.Name = "pPictureBox";
-            pPictureBox.Size = new Size(987, 1044);
+            pPictureBox.Size = new Size(688, 621);
             pPictureBox.TabIndex = 1;
             // 
             // pictureBox
             // 
             pictureBox.ContextMenuStrip = cmPlotImageSave;
             pictureBox.Location = new Point(0, 0);
-            pictureBox.Margin = new Padding(4, 5, 4, 5);
             pictureBox.Name = "pictureBox";
             pictureBox.Size = new Size(104, 45);
             pictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -150,12 +144,12 @@ namespace SiliFish.UI.Controls
             cmPlotImageSave.ImageScalingSize = new Size(24, 24);
             cmPlotImageSave.Items.AddRange(new ToolStripItem[] { cmiPlotImageSave });
             cmPlotImageSave.Name = "cmImageSave";
-            cmPlotImageSave.Size = new Size(177, 36);
+            cmPlotImageSave.Size = new Size(135, 26);
             // 
             // cmiPlotImageSave
             // 
             cmiPlotImageSave.Name = "cmiPlotImageSave";
-            cmiPlotImageSave.Size = new Size(176, 32);
+            cmiPlotImageSave.Size = new Size(134, 22);
             cmiPlotImageSave.Text = "Save Image";
             cmiPlotImageSave.Click += cmiPlotImageSave_Click;
             // 
@@ -174,18 +168,17 @@ namespace SiliFish.UI.Controls
             pPlot.Controls.Add(lPlotPlot);
             pPlot.Dock = DockStyle.Top;
             pPlot.Location = new Point(0, 0);
-            pPlot.Margin = new Padding(4, 5, 4, 5);
             pPlot.Name = "pPlot";
-            pPlot.Size = new Size(1003, 233);
+            pPlot.Size = new Size(702, 140);
             pPlot.TabIndex = 5;
             // 
             // timeRangePlot
             // 
             timeRangePlot.EndTime = 1000;
-            timeRangePlot.Location = new Point(6, 5);
-            timeRangePlot.Margin = new Padding(6, 8, 6, 8);
+            timeRangePlot.Location = new Point(4, 3);
+            timeRangePlot.Margin = new Padding(4, 5, 4, 5);
             timeRangePlot.Name = "timeRangePlot";
-            timeRangePlot.Size = new Size(296, 93);
+            timeRangePlot.Size = new Size(207, 56);
             timeRangePlot.StartTime = 0;
             timeRangePlot.TabIndex = 67;
             // 
@@ -197,10 +190,9 @@ namespace SiliFish.UI.Controls
             btnPlotHTML.FlatAppearance.BorderColor = Color.LightGray;
             btnPlotHTML.FlatStyle = FlatStyle.Flat;
             btnPlotHTML.ForeColor = Color.White;
-            btnPlotHTML.Location = new Point(637, 8);
-            btnPlotHTML.Margin = new Padding(4, 5, 4, 5);
+            btnPlotHTML.Location = new Point(446, 5);
             btnPlotHTML.Name = "btnPlotHTML";
-            btnPlotHTML.Size = new Size(107, 40);
+            btnPlotHTML.Size = new Size(75, 24);
             btnPlotHTML.TabIndex = 52;
             btnPlotHTML.Text = "Plot";
             btnPlotHTML.UseVisualStyleBackColor = false;
@@ -211,19 +203,19 @@ namespace SiliFish.UI.Controls
             cmPlot.ImageScalingSize = new Size(24, 24);
             cmPlot.Items.AddRange(new ToolStripItem[] { cmiNonInteractivePlot, cmiMaximizePlotWindow });
             cmPlot.Name = "cmPlot";
-            cmPlot.Size = new Size(243, 36);
+            cmPlot.Size = new Size(196, 48);
             // 
             // cmiNonInteractivePlot
             // 
             cmiNonInteractivePlot.Name = "cmiNonInteractivePlot";
-            cmiNonInteractivePlot.Size = new Size(242, 32);
+            cmiNonInteractivePlot.Size = new Size(195, 22);
             cmiNonInteractivePlot.Text = "Non-interactive plot";
             cmiNonInteractivePlot.Click += cmiNonInteractivePlot_Click;
             // 
             // cmiMaximizePlotWindow
             // 
             cmiMaximizePlotWindow.Name = "cmiMaximizePlotWindow";
-            cmiMaximizePlotWindow.Size = new Size(242, 32);
+            cmiMaximizePlotWindow.Size = new Size(195, 22);
             cmiMaximizePlotWindow.Text = "Maximize Plot Window";
             cmiMaximizePlotWindow.Click += cmiMaximizePlotWindow_Click;
             // 
@@ -233,10 +225,9 @@ namespace SiliFish.UI.Controls
             ddPlot.DropDownStyle = ComboBoxStyle.DropDownList;
             ddPlot.FlatStyle = FlatStyle.Flat;
             ddPlot.FormattingEnabled = true;
-            ddPlot.Location = new Point(397, 10);
-            ddPlot.Margin = new Padding(4, 5, 4, 5);
+            ddPlot.Location = new Point(278, 6);
             ddPlot.Name = "ddPlot";
-            ddPlot.Size = new Size(234, 33);
+            ddPlot.Size = new Size(165, 23);
             ddPlot.TabIndex = 34;
             ddPlot.SelectedIndexChanged += ddPlot_SelectedIndexChanged;
             // 
@@ -244,11 +235,11 @@ namespace SiliFish.UI.Controls
             // 
             listPlotHistory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             listPlotHistory.FirstItem = "(Plot History - Double click to select.)";
-            listPlotHistory.Location = new Point(770, 47);
-            listPlotHistory.Margin = new Padding(6, 8, 6, 8);
+            listPlotHistory.Location = new Point(539, 28);
+            listPlotHistory.Margin = new Padding(4, 5, 4, 5);
             listPlotHistory.Name = "listPlotHistory";
             listPlotHistory.SelectedIndex = -1;
-            listPlotHistory.Size = new Size(229, 180);
+            listPlotHistory.Size = new Size(160, 108);
             listPlotHistory.TabIndex = 64;
             listPlotHistory.ItemSelect += listPlotHistory_ItemSelect;
             listPlotHistory.ItemEdit += listPlotHistory_ItemEdit;
@@ -258,11 +249,12 @@ namespace SiliFish.UI.Controls
             // cellSelectionPlot
             // 
             cellSelectionPlot.CombineOptionsVisible = false;
-            cellSelectionPlot.Location = new Point(303, 42);
-            cellSelectionPlot.Margin = new Padding(6, 8, 6, 8);
+            cellSelectionPlot.Location = new Point(212, 25);
+            cellSelectionPlot.Margin = new Padding(4, 5, 4, 5);
             cellSelectionPlot.Name = "cellSelectionPlot";
             cellSelectionPlot.SelectedUnits = null;
-            cellSelectionPlot.Size = new Size(451, 185);
+            cellSelectionPlot.Size = new Size(316, 111);
+            cellSelectionPlot.StickToNeurons = false;
             cellSelectionPlot.TabIndex = 66;
             // 
             // cbPlotHistory
@@ -270,10 +262,9 @@ namespace SiliFish.UI.Controls
             cbPlotHistory.AutoSize = true;
             cbPlotHistory.Checked = true;
             cbPlotHistory.CheckState = CheckState.Checked;
-            cbPlotHistory.Location = new Point(770, 10);
-            cbPlotHistory.Margin = new Padding(4, 5, 4, 5);
+            cbPlotHistory.Location = new Point(539, 6);
             cbPlotHistory.Name = "cbPlotHistory";
-            cbPlotHistory.Size = new Size(139, 29);
+            cbPlotHistory.Size = new Size(93, 19);
             cbPlotHistory.TabIndex = 65;
             cbPlotHistory.Text = "Keep History";
             cbPlotHistory.UseVisualStyleBackColor = true;
@@ -283,10 +274,9 @@ namespace SiliFish.UI.Controls
             linkExportPlotData.AutoSize = true;
             linkExportPlotData.Enabled = false;
             linkExportPlotData.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportPlotData.Location = new Point(99, 125);
-            linkExportPlotData.Margin = new Padding(4, 0, 4, 0);
+            linkExportPlotData.Location = new Point(69, 75);
             linkExportPlotData.Name = "linkExportPlotData";
-            linkExportPlotData.Size = new Size(68, 25);
+            linkExportPlotData.Size = new Size(43, 15);
             linkExportPlotData.TabIndex = 59;
             linkExportPlotData.TabStop = true;
             linkExportPlotData.Text = "Export ";
@@ -297,10 +287,9 @@ namespace SiliFish.UI.Controls
             // 
             pLinePlots.BackColor = Color.LightGray;
             pLinePlots.Dock = DockStyle.Bottom;
-            pLinePlots.Location = new Point(0, 231);
-            pLinePlots.Margin = new Padding(4, 5, 4, 5);
+            pLinePlots.Location = new Point(0, 139);
             pLinePlots.Name = "pLinePlots";
-            pLinePlots.Size = new Size(1003, 2);
+            pLinePlots.Size = new Size(702, 1);
             pLinePlots.TabIndex = 58;
             // 
             // linkSaveHTMLPlots
@@ -308,10 +297,9 @@ namespace SiliFish.UI.Controls
             linkSaveHTMLPlots.AutoSize = true;
             linkSaveHTMLPlots.Enabled = false;
             linkSaveHTMLPlots.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveHTMLPlots.Location = new Point(16, 125);
-            linkSaveHTMLPlots.Margin = new Padding(4, 0, 4, 0);
+            linkSaveHTMLPlots.Location = new Point(11, 75);
             linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
-            linkSaveHTMLPlots.Size = new Size(54, 25);
+            linkSaveHTMLPlots.Size = new Size(34, 15);
             linkSaveHTMLPlots.TabIndex = 53;
             linkSaveHTMLPlots.TabStop = true;
             linkSaveHTMLPlots.Text = "Save ";
@@ -321,10 +309,9 @@ namespace SiliFish.UI.Controls
             // lPlotPlot
             // 
             lPlotPlot.AutoSize = true;
-            lPlotPlot.Location = new Point(310, 17);
-            lPlotPlot.Margin = new Padding(4, 0, 4, 0);
+            lPlotPlot.Location = new Point(217, 10);
             lPlotPlot.Name = "lPlotPlot";
-            lPlotPlot.Size = new Size(43, 25);
+            lPlotPlot.Size = new Size(28, 15);
             lPlotPlot.TabIndex = 19;
             lPlotPlot.Text = "Plot";
             lPlotPlot.DoubleClick += lPlotPlot_DoubleClick;
@@ -355,13 +342,12 @@ namespace SiliFish.UI.Controls
             // 
             // PlotControl
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(tabPlotSub);
             Controls.Add(pPlot);
-            Margin = new Padding(4, 5, 4, 5);
             Name = "PlotControl";
-            Size = new Size(1003, 1325);
+            Size = new Size(702, 795);
             tabPlotSub.ResumeLayout(false);
             tPlotHTML.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webViewPlot).EndInit();

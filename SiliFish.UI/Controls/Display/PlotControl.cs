@@ -734,6 +734,7 @@ namespace SiliFish.UI.Controls
             webView.NavigateTo(htmlPlot, PlotType.GetDisplayName(), GlobalSettings.TempFolder, ref tempFile, ref navigated);
             webView.ShowDialog();
         }
+
     }
 
 }

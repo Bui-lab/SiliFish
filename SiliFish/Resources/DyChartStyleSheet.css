@@ -140,13 +140,13 @@
 }
 
 .chart-container {
+    overflow: hidden !important;
     display: flex;
     flex-flow: row nowrap;
     overflow: hidden;
 }
 
 .chart {
-
     flex-grow: 1;
     display: flex;
     flex-direction: column;

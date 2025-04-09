@@ -41,12 +41,12 @@ namespace SiliFish.Services.Plotting
                 if (optimizedForPrinting) //check whether all charts have the same labels
                 {
                     html.Replace("__EXTRA_STYLES__",
-                        ".chart {max - width: 100 %;margin - left: 20px;}\r\n"+
+                        ".chart {max - width: 100 %;margin - left: 20px;}\r\n" +
                     ".dygraph-xlabel {\r\n    " +
                         "font-size: 24px;\r\n" +
                         "}\r\n\r\n" +
                         ".dygraph-ylabel {\r\n    " +
-                        "margin-top: -20px;\r\n"+
+                        "margin-top: -20px;\r\n" +
                         "font-size: 24px;\r\n" +
                         "}\r\n\r\n" +
                         ".dygraph-axis-label-x {\r\n    " +
@@ -65,13 +65,15 @@ namespace SiliFish.Services.Plotting
                     }
                 }
                 else
-                    html.Replace("__STYLESHEET__", "");
+                {
+                    html.Replace("__EXTRA_STYLES__", "");
+                }
 
 
                 html.Replace("__MERGED_X_AXIS_LABEL__", singleXLabel);
                 html.Replace("__MERGED_Y_AXIS_LABEL__", singleYLabel);
                 html.Replace("__LABEL_FONT_SIZE__", GlobalSettings.PlotMergedFontSize.ToString());
-                html.Replace("__CHART_WIDTH_PERC__", (100 - GlobalSettings.LegendWidthPercentage).ToString());
+                html.Replace("__CHART_WIDTH_PERC__", (90 - GlobalSettings.LegendWidthPercentage).ToString());
                 html.Replace("__LEGEND_WIDTH_PERC__", GlobalSettings.LegendWidthPercentage.ToString());
                 
 

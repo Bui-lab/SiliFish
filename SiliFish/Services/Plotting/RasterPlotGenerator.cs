@@ -45,7 +45,7 @@ namespace SiliFish.Services.Plotting
         }
 
         public static string GenerateRasterPlotHTML(List<List<XYDataSet>> dataPoints, List<string> IDs, List<Color> colors,
-            string mainTitle, double width, double height, bool showTooltip = true)
+            string mainTitle, double width, double height)
         {
             if (!Util.CheckOnlineStatus("https://www.amcharts.com"))
                 return "Raster plot generation requires internet connection.";
@@ -79,7 +79,6 @@ namespace SiliFish.Services.Plotting
             html.Replace("__LABEL_GROUPS__", string.Join(',', groupList));
             html.Replace("__SNAP_TO_SERIES__", string.Join(',', seriesList));
             html.Replace("__JAVASCRIPT_HTML__", jshtml.ToString());
-            html.Replace("__SHOW_TOOLTIP__", showTooltip ? "true" : "false");
             return html.ToString();
         }
     }
