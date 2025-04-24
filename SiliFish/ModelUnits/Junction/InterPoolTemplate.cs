@@ -284,6 +284,8 @@ namespace SiliFish.ModelUnits.Junction
                 differences.Add(new Difference(Name, "Probability", Probability, ipt.Probability));
             if (AxonReachMode != ipt.AxonReachMode)
                 differences.Add(new Difference(Name, "AxonReachMode", AxonReachMode, ipt.AxonReachMode));
+            if (DistanceMode != ipt.DistanceMode)
+                differences.Add(new Difference(Name, "DistanceMode", DistanceMode, ipt.DistanceMode));
             if (JunctionType != ipt.JunctionType)
                 differences.Add(new Difference(Name, "JunctionType", JunctionType, ipt.JunctionType));
             if (CoreType != ipt.CoreType)

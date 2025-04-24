@@ -53,7 +53,7 @@ namespace SiliFish.UI.Controls
             pRheobase = new Panel();
             label1 = new Label();
             pCoreType = new Panel();
-            upDownParams = new General.UpDownControl();
+            upDownParams = new SiliFish.UI.Controls.General.UpDownControl();
             linkImportParams = new LinkLabel();
             eDeltaT = new NumericUpDown();
             lDeltaT = new Label();
@@ -363,7 +363,7 @@ namespace SiliFish.UI.Controls
             splitLeft.Panel2.BackColor = Color.White;
             splitLeft.Panel2.Controls.Add(tabDynamics);
             splitLeft.Size = new Size(328, 636);
-            splitLeft.SplitterDistance = 323;
+            splitLeft.SplitterDistance = 174;
             splitLeft.TabIndex = 39;
             // 
             // pfParams
@@ -372,7 +372,7 @@ namespace SiliFish.UI.Controls
             pfParams.Dock = DockStyle.Fill;
             pfParams.Location = new Point(0, 91);
             pfParams.Name = "pfParams";
-            pfParams.Size = new Size(328, 138);
+            pfParams.Size = new Size(328, 0);
             pfParams.TabIndex = 23;
             // 
             // pRheobase
@@ -388,7 +388,7 @@ namespace SiliFish.UI.Controls
             pRheobase.Controls.Add(lRheobase);
             pRheobase.Controls.Add(eRheobaseDuration);
             pRheobase.Dock = DockStyle.Bottom;
-            pRheobase.Location = new Point(0, 229);
+            pRheobase.Location = new Point(0, 80);
             pRheobase.Name = "pRheobase";
             pRheobase.Size = new Size(328, 94);
             pRheobase.TabIndex = 25;
@@ -522,7 +522,7 @@ namespace SiliFish.UI.Controls
             tabDynamics.Location = new Point(0, 0);
             tabDynamics.Name = "tabDynamics";
             tabDynamics.SelectedIndex = 0;
-            tabDynamics.Size = new Size(328, 309);
+            tabDynamics.Size = new Size(328, 458);
             tabDynamics.TabIndex = 40;
             // 
             // tDynamics
@@ -532,7 +532,7 @@ namespace SiliFish.UI.Controls
             tDynamics.Location = new Point(4, 24);
             tDynamics.Name = "tDynamics";
             tDynamics.Padding = new Padding(3);
-            tDynamics.Size = new Size(320, 281);
+            tDynamics.Size = new Size(320, 430);
             tDynamics.TabIndex = 1;
             tDynamics.Text = "Dynamics";
             tDynamics.UseVisualStyleBackColor = true;
@@ -546,7 +546,7 @@ namespace SiliFish.UI.Controls
             tabAnalysis.Location = new Point(3, 172);
             tabAnalysis.Name = "tabAnalysis";
             tabAnalysis.SelectedIndex = 0;
-            tabAnalysis.Size = new Size(314, 106);
+            tabAnalysis.Size = new Size(314, 255);
             tabAnalysis.TabIndex = 39;
             // 
             // tStimulusTest
@@ -649,7 +649,7 @@ namespace SiliFish.UI.Controls
             tParameterAnalysis.Location = new Point(4, 24);
             tParameterAnalysis.Name = "tParameterAnalysis";
             tParameterAnalysis.Padding = new Padding(3);
-            tParameterAnalysis.Size = new Size(306, 78);
+            tParameterAnalysis.Size = new Size(306, 227);
             tParameterAnalysis.TabIndex = 1;
             tParameterAnalysis.Text = "Parameter Analysis";
             tParameterAnalysis.UseVisualStyleBackColor = true;

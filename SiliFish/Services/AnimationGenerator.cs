@@ -6,6 +6,7 @@ using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 
@@ -76,10 +77,21 @@ namespace SiliFish.Services
             Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time,
             int iStart, int iEnd, double dt, double animdt)
         {
-            if (!Util.CheckOnlineStatus("https://cdn.amcharts.com/"))
-                return "Animation requires internet connection.";
-
             StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.Animation.html"));
+            StringBuilder scripts = new();
+            if (Util.CheckOnlineStatus("https://cdn.amcharts.com/lib/5/index.js"))
+            {
+                scripts.AppendLine("<script src = \"https://cdn.amcharts.com/lib/5/index.js\" ></script>");
+                scripts.AppendLine("<script src = \"https://cdn.amcharts.com/lib/5/xy.js\" ></script>");
+                scripts.AppendLine("<script src = \"https://cdn.amcharts.com/lib/5/themes/Animated.js\" ></script>");
+            }
+            else //offline
+            {
+                scripts.AppendLine(HTMLUtil.CreateScriptHTML("SiliFish.Resources.amcharts-bundle.js"));
+                html.Replace("am5themes_Animated.new", "am5themes_Animated.default.new");
+            }
+            html.Replace("__AMCHART5_SCRIPTS__", scripts.ToString());
+
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             html.Replace("__PARAMS__", HttpUtility.HtmlEncode(animParams).Replace("\n", "<br/>"));
             html.Replace("__STYLE_SHEET__", ReadEmbeddedText("SiliFish.Resources.StyleSheet.css"));

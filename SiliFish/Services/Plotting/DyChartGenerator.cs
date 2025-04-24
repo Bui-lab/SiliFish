@@ -75,18 +75,17 @@ namespace SiliFish.Services.Plotting
                 html.Replace("__LABEL_FONT_SIZE__", GlobalSettings.PlotMergedFontSize.ToString());
                 html.Replace("__CHART_WIDTH_PERC__", (90 - GlobalSettings.LegendWidthPercentage).ToString());
                 html.Replace("__LEGEND_WIDTH_PERC__", GlobalSettings.LegendWidthPercentage.ToString());
-                
 
-                if (Util.CheckOnlineStatus("https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js"))
+                StringBuilder scripts = new();
+                if (Util.CheckOnlineStatus("https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.2.1/dygraph.js"))
                 {
-                    html.Replace("__OFFLINE_DYGRAPH_SCRIPT__", "");
-                    html.Replace("__ONLINE_DYGRAPH_SCRIPT__", "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js\"></script>");
+                    scripts.AppendLine("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.2.1/dygraph.js\"></script>");
                 }
                 else
                 {
-                    html.Replace("__OFFLINE_DYGRAPH_SCRIPT__", ReadEmbeddedText("SiliFish.Resources.dygraph.js"));
-                    html.Replace("__ONLINE_DYGRAPH_SCRIPT__", "");
+                    scripts.AppendLine(HTMLUtil.CreateScriptHTML("SiliFish.Resources.dygraph.js"));
                 }
+                html.Replace("__DYGRAPH_SCRIPTS__", scripts.ToString());
 
                 if (width < 200) width = 200;
                 if (height < 100) height = 100;

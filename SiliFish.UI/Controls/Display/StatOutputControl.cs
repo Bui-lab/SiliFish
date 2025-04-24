@@ -13,6 +13,7 @@ using SiliFish.Services.Plotting;
 using SiliFish.DataTypes;
 using System.Windows.Forms;
 using SiliFish.Services.Plotting.PlotSelection;
+using System.Collections.Generic;
 
 namespace SiliFish.UI.Controls
 {
@@ -156,14 +157,13 @@ namespace SiliFish.UI.Controls
                 webViewRCTrains.NavigateToString("");
                 return;
             }
-            double mean = dataPoints.Average();
-            double std = dataPoints.StandardDeviation();
+            (double median, (double IQR1, double IQR3)) = dataPoints.ToList().MedianAndIQR();
+            double mode = dataPoints.ToList().Mode(2);
             dataPoints = dataPoints.Select(dp => Math.Round(dp, 2)).ToArray();
-
-            string title = $"{dgRCTrains.Columns[colIndex].HeaderText} {mean:0.##}±{std:0.##}";
+            string title = $"{dgRCTrains.Columns[colIndex].HeaderText} Mode:{mode:0.##} Median:{median:0.##}:IQR[{IQR1:0.##} - {IQR3:0.##}]";
             double width = webViewRCTrains.ClientSize.Width;
             double height = webViewRCTrains.ClientSize.Height - 50;
-            string histHtml = HistogramGenerator.GenerateHistogram(dataPoints, title, width, height);
+            string histHtml = HistogramGenerator.GenerateHistogramHTML(dataPoints, title, width, height);
             bool navigated = false;
             webViewRCTrains.NavigateTo(histHtml, title, GlobalSettings.TempFolder, ref tempFile, ref navigated);
         }

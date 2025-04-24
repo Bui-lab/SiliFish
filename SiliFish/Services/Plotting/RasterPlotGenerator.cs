@@ -47,9 +47,19 @@ namespace SiliFish.Services.Plotting
         public static string GenerateRasterPlotHTML(List<List<XYDataSet>> dataPoints, List<string> IDs, List<Color> colors,
             string mainTitle, double width, double height)
         {
-            if (!Util.CheckOnlineStatus("https://www.amcharts.com"))
-                return "Raster plot generation requires internet connection.";
             StringBuilder html = AddHeader(mainTitle, width, height);
+            StringBuilder scripts = new();
+            if (Util.CheckOnlineStatus("https://cdn.amcharts.com/lib/5/index.js"))
+            {
+                scripts.AppendLine("<script src = \"https://cdn.amcharts.com/lib/5/index.js\" ></script>");
+                scripts.AppendLine("<script src = \"https://cdn.amcharts.com/lib/5/xy.js\" ></script>");
+                scripts.AppendLine("<script src = \"https://cdn.amcharts.com/lib/5/plugins/exporting.js\" ></script>");
+            }
+            else
+            {
+                scripts.AppendLine(HTMLUtil.CreateScriptHTML("SiliFish.Resources.amcharts-bundle.js"));
+            }
+            html.Replace("__AMCHART5_SCRIPTS__", scripts.ToString());
 
             StringBuilder jshtml = new();
             int chartIndex = 0;
