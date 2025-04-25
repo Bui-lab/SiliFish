@@ -36,7 +36,7 @@ namespace SiliFish.ModelUnits.Junction
                 else
                 {
                     double distance = Util.Distance(PreNeuron.Coordinate, PostCell.Coordinate, DistanceMode);
-                    return (distance / PreNeuron.ConductionVelocity) + (Delay_ms ?? 0);
+                    return (distance / PreNeuron.ConductionVelocity) + (Delay_ms ?? PreNeuron.Model.Settings.synaptic_delay);
                 }
             }
         }

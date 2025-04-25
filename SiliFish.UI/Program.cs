@@ -1,3 +1,4 @@
+using OfficeOpenXml;
 using SiliFish.Definitions;
 using SiliFish.Services;
 
@@ -23,6 +24,11 @@ namespace SiliFish.UI
             MainForm = new MainForm();
             GlobalSettingsProperties gs = new();
             gs = GlobalSettingsProperties.Load();//reload from global.settings
+
+            // Update the line causing the error by creating an instance of EPPlusLicense and calling the method on it.
+            EPPlusLicense license = new();
+            license.SetNonCommercialPersonal("Emine Topcu @ Bui Lab - uOttawa");
+
             Application.Run(MainForm);
             foreach (string f in GlobalSettings.TempFiles)
             {
