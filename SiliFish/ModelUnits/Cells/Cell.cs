@@ -143,7 +143,7 @@ namespace SiliFish.ModelUnits.Cells
 
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
-            ListBuilder.Build<string>("CellType", "CellPool", "Somite", "Sequence", Coordinate.ColumnNames,
+            ListBuilder.Build<string>("Cell ID (Read only)", "CellType", "CellPool", "Somite", "Sequence", Coordinate.ColumnNames,
             "Descending Axon", "Ascending Axon",
             "Conduction Velocity", "CoreType", "Rheobase (output only)",
             Enumerable.Range(1, CellCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
@@ -173,13 +173,14 @@ namespace SiliFish.ModelUnits.Cells
 
         public List<string> ExportValues()
         {
-            return ListBuilder.Build<string>(Discriminator, CellPool.ID, Somite, Sequence, Coordinate.ExportValues(),
+            return ListBuilder.Build<string>(ID, Discriminator, CellPool.ID, Somite, Sequence, Coordinate.ExportValues(),
                 DescendingAxonLength, AscendingAxonLength,
                 ConductionVelocity, Core.CoreType, Rheobase, csvExportCoreValues, Active, TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
         {
-            int iter = 1; //discriminitor field will be already used when this object is created
+            //1st field: readonly ID; 2nd field: discriminitor  - will be already used when this object is created
+            int iter = 2;
             if (values.Count < ColumnNames.Count - 1) return;//Timeline may be blank
             CellGroup = values[iter++];//this is the ID of the cell pool
             if (CellGroup.StartsWith("L_"))
@@ -226,7 +227,7 @@ namespace SiliFish.ModelUnits.Cells
             ImportValues(values);
         }
 
-        public static Cell GenerateFromCSVRow(string row)
+        public static Cell GenerateFromCSVRow(string row, string version)
         {
             List<string> values = CSVUtil.SplitCells(row);
             if (values.Count != ColumnNames.Count) return null;

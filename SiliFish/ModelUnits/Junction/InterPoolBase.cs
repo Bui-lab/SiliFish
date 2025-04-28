@@ -34,7 +34,7 @@ namespace SiliFish.ModelUnits.Junction
 
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } = 
-            ListBuilder.Build<string>(
+            ListBuilder.Build<string>("ID (Read only)",
                 "Source", "Target",
                 "Junction Type", "Core Type",
                Enumerable.Range(1, JunctionCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),

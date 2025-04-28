@@ -41,7 +41,7 @@ namespace SiliFish.ModelUnits.Junction
             }
         }
 
-public override string SourcePool
+        public override string SourcePool
         {
             get => PreNeuron.CellPool.ID;
             set { }
@@ -56,7 +56,7 @@ public override string SourcePool
 
         public override List<string> ExportValues()
         {
-            return ListBuilder.Build<string>(
+            return ListBuilder.Build<string>(ID,
             PreNeuron.ID, PostCell.ID,
             JunctionType.Synapse, Core.SynapseType,
             csvExportCoreValues,
@@ -70,8 +70,8 @@ public override string SourcePool
         {
             try
             {
+                int iter = 1;//skip the first id column
                 if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
-                int iter = 0;
                 Source = values[iter++].Trim();
                 Target = values[iter++].Trim();
                 iter++; //junction type is already read before junction creation
@@ -120,7 +120,7 @@ public override string SourcePool
         }
 
 
-        public ChemicalSynapse(ChemicalSynapse syn): base(syn)
+        public ChemicalSynapse(ChemicalSynapse syn) : base(syn)
         {
             Core = ChemSynapseCore.CreateCore(syn.Core as ChemSynapseCore);
             Core = new SimpleSyn(syn.Core as SimpleSyn);
@@ -183,7 +183,7 @@ public override string SourcePool
             base.InitForSimulation(runParam, ref uniqueID);
             RunningModel model = PreNeuron.Model;
             Core.InitForSimulation(dt, ref uniqueID);
-            
+
             if (FixedDuration_ms != null)
                 duration = (int)(FixedDuration_ms / dt);
             else

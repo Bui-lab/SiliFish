@@ -58,9 +58,10 @@ namespace SiliFish.ModelUnits.Stim
         }
         public void ImportValues(List<string> values)
         {
+            int iter = 0;
             if (values.Count != ColumnNames.Count) return;
-            targetPool= values[0];
-            targetCellID = values[1];
+            targetPool= values[iter++];
+            targetCellID = values[iter++];
             int lastSettingsCol = StimulusSettings.ColumnNames.Count + 2;
             Settings.ImportValues(values.Take(new Range(2, lastSettingsCol)).ToList());
             TimeLine_ms.ImportValues(values.Take(new Range(lastSettingsCol, values.Count)).ToList());

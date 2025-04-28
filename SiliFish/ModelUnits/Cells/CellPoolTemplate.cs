@@ -155,7 +155,7 @@ namespace SiliFish.ModelUnits.Cells
 
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
-            ListBuilder.Build<string>("CellGroup", "CellType", "NTMode",
+            ListBuilder.Build<string>("Cell Pool ID (Read only)", "CellGroup", "CellType", "NTMode",
                 "BodyLocation", "PositionLeftRight", "NumOfCells", "PerSomiteOrTotal", "SomiteRange","2DRendSpread",
                 SpatialDistribution.ColumnNames, 
                 "Descending Axon", "Ascending Axon",
@@ -180,7 +180,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public List<string> ExportValues()
         {
-            return ListBuilder.Build<string>(CellGroup, CellType, NTMode,
+            return ListBuilder.Build<string>(ID, CellGroup, CellType, NTMode,
                 BodyLocation, PositionLeftRight, NumOfCells, PerSomiteOrTotal, SomiteRange, ColumnIndex2D,
                 SpatialDistribution.ExportValues(),
                 DescendingAxonLength?.CSVCellExportValues ?? string.Empty,
@@ -191,7 +191,7 @@ namespace SiliFish.ModelUnits.Cells
         }
         public void ImportValues(List<string> values)
         {
-            int iter = 0;
+            int iter = 1;//skip the first id column
             if (values.Count < ColumnNames.Count - CellCore.CoreParamMaxCount) return;
             CellGroup = values[iter++];
             CellType = (CellType)Enum.Parse(typeof(CellType), values[iter++]);

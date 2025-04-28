@@ -65,7 +65,7 @@ namespace SiliFish.ModelUnits.Junction
         }
         public override List<string> ExportValues()
         {
-            return ListBuilder.Build<string>(
+            return ListBuilder.Build<string>(ID,
                 Cell1.ID, Cell2.ID,
                 JunctionType.Gap, Core.SynapseType,
                 csvExportCoreValues,
@@ -78,8 +78,8 @@ namespace SiliFish.ModelUnits.Junction
         {
             try
             {
+                int iter = 1; //skip the first id column
                 if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
-                int iter = 0;
                 Source = values[iter++].Trim();
                 Target = values[iter++].Trim();
                 iter++; //junction type is already read before junction creation
