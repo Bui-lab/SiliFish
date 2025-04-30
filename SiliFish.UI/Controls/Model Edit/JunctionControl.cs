@@ -295,7 +295,7 @@ namespace SiliFish.UI.Controls
                     foreach (Cell tc in targetCells)
                     {
                         if ((JunctionType)ddJunctionType.SelectedItem == JunctionType.Gap)
-                            junction = new GapJunction(sc, tc, nameof(SimpleGap), (propCore.SelectedObject as BaseCore).Parameters, distanceMode);
+                            junction = new GapJunction(sc, tc, ddCoreType.Text, (propCore.SelectedObject as BaseCore).Parameters, distanceMode);
                         else
                             junction = new ChemicalSynapse(sc as Neuron, tc, ddCoreType.Text, (propCore.SelectedObject as BaseCore).Parameters, distanceMode);
                         junctions.Add(junction);

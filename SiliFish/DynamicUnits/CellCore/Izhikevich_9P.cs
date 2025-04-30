@@ -63,6 +63,9 @@ namespace SiliFish.DynamicUnits
         [JsonIgnore, Browsable(false)]
         public override double Vreset { get => c; set => c = value; }
 
+        [JsonIgnore, Browsable(false)]
+        public override double VSpikeThreshold => (Vmax + Vthreshold) / 2;
+
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             Dictionary<string, double> MinValues = new() {

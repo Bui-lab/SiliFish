@@ -805,7 +805,7 @@ namespace SiliFish.Repositories
                 while (iter < contents.Length)
                 {
                     string row = contents[iter++];
-                    Cell cell = Cell.GenerateFromCSVRow(row, model.Version);
+                    Cell cell = Cell.GenerateFromCSVRow(row);
                     CellPool cellPool = model.CellPools.FirstOrDefault(cp => cp.CellGroup == cell.CellGroup && cp.PositionLeftRight == cell.PositionLeftRight);
                     if (cellPool == null) continue;
                     Cell origCell = cellPool.Cells.FirstOrDefault(c => c.ID == cell.ID);

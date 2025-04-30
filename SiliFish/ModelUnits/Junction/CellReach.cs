@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
 
-namespace SiliFish.ModelUnits
+namespace SiliFish.ModelUnits.Junction
 {
     public class CellReach
     {
@@ -48,27 +48,27 @@ namespace SiliFish.ModelUnits
                 MaxOutgoing, MaxIncoming, Autapse, SomiteBased);
         }
         public void Importvalues(List<string> values)
+        {
+            if (values.Count != ColumnNames.Count) return;
+            try
             {
-                if (values.Count != ColumnNames.Count) return;
-                try
-                {
-                    int iter = 0;
-                    Ascending = bool.Parse(values[iter++]);
-                    MinAscReach = double.Parse(values[iter++]);
-                    MaxAscReach = double.Parse(values[iter++]);
-                    Descending = bool.Parse(values[iter++]);
-                    MinDescReach = double.Parse(values[iter++]);
-                    MaxDescReach = double.Parse(values[iter++]);
-                    MaxOutgoing = int.Parse(values[iter++]);
-                    MaxIncoming = int.Parse(values[iter++]);
-                    Autapse = bool.Parse(values[iter++]);
-                    SomiteBased = bool.Parse(values[iter++]);
-                }
-                catch (Exception ex)
-                {
-                    ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-                    throw;
-                }
+                int iter = 0;
+                Ascending = bool.Parse(values[iter++]);
+                MinAscReach = double.Parse(values[iter++]);
+                MaxAscReach = double.Parse(values[iter++]);
+                Descending = bool.Parse(values[iter++]);
+                MinDescReach = double.Parse(values[iter++]);
+                MaxDescReach = double.Parse(values[iter++]);
+                MaxOutgoing = int.Parse(values[iter++]);
+                MaxIncoming = int.Parse(values[iter++]);
+                Autapse = bool.Parse(values[iter++]);
+                SomiteBased = bool.Parse(values[iter++]);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                throw;
+            }
         }
         public CellReach() { }
         public CellReach(CellReach cr)
@@ -109,23 +109,25 @@ namespace SiliFish.ModelUnits
         {
             if (!Autapse && cell1 == cell2)
                 return false;
+            if (cell1.Somite == 0 && cell2.Somite == 0)
+                return true;
 
             double diff_x = SomiteBased ? cell2.Somite - cell1.Somite :
                 cell2.X - cell1.X;//positive values mean cell2 is more caudal
-            double descAxonLength = SomiteBased? cell1.DescendingAxonLength:
+            double descAxonLength = SomiteBased ? cell1.DescendingAxonLength :
                 cell1.DescendingAxonTrueLength;
-            if (Descending && diff_x >= 0 && 
-                diff_x <= descAxonLength && 
+            if (Descending && diff_x >= 0 &&
+                diff_x <= descAxonLength &&
                 diff_x >= MinDescReach && diff_x <= MaxDescReach)
                 return true;
             double ascAxonLength = SomiteBased ? cell1.AscendingAxonLength :
                 cell1.AscendingAxonTrueLength;
-            if (Ascending && diff_x <= 0 && 
+            if (Ascending && diff_x <= 0 &&
                 -diff_x <= ascAxonLength &&
                 -diff_x >= MinAscReach && -diff_x <= MaxAscReach)
                 return true;
             return false;
         }
     }
- 
+
 }

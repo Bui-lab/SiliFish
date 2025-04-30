@@ -36,7 +36,8 @@ namespace SiliFish.ModelUnits.Junction
                 if (linkedSource != null && !linkedSource.Active ||
                     linkedTarget != null && !linkedTarget.Active)
                     return false;
-                return base.Active; }
+                return base.Active;
+            }
             set { base.Active = value; }
         }
 
@@ -204,8 +205,11 @@ namespace SiliFish.ModelUnits.Junction
         public void SetParameter(string key, Distribution value)
         {
             if (parameters != null)
+            {
                 parameters[key] = value;
+            }
         }
+        
 
         [JsonIgnore, Browsable(false)]
         private List<string> csvExportCoreValues
@@ -332,6 +336,10 @@ namespace SiliFish.ModelUnits.Junction
             return $"{(!string.IsNullOrEmpty(SourcePool) ? SourcePool : "__")}-->{(!string.IsNullOrEmpty(TargetPool) ? TargetPool : "__")}";
         }
 
+        public void MultiplyConductance(double mult)
+        {
+                Parameters["Conductance"].Multiply(mult);
+        }
         internal void BackwardCompatibility()
         {
             if (string.IsNullOrEmpty(coreType))

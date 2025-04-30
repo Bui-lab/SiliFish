@@ -2,6 +2,7 @@
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.DynamicUnits.JncCore;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
@@ -227,7 +228,7 @@ namespace SiliFish.ModelUnits.Cells
             ImportValues(values);
         }
 
-        public static Cell GenerateFromCSVRow(string row, string version)
+        public static Cell GenerateFromCSVRow(string row)
         {
             List<string> values = CSVUtil.SplitCells(row);
             if (values.Count != ColumnNames.Count) return null;
@@ -383,9 +384,9 @@ namespace SiliFish.ModelUnits.Cells
         {
             return GapJunctions?.Select(junc => junc.iDuration).DefaultIfEmpty().Max() ?? 0;
         }
-        public GapJunction CreateGapJunction(Cell n2, Dictionary<string, double> synParams, DistanceMode distanceMode)
+        public GapJunction CreateGapJunction(Cell n2, string coreType, Dictionary<string, double> synParams, DistanceMode distanceMode)
         {
-            GapJunction jnc = new(this, n2, nameof(SimpleGap), synParams, distanceMode);
+            GapJunction jnc = new(this, n2, coreType, synParams, distanceMode);
             if (jnc == null) return null;
             GapJunctions.Add(jnc);
             n2.GapJunctions.Add(jnc);
@@ -393,7 +394,7 @@ namespace SiliFish.ModelUnits.Cells
         }
         public virtual void AddChemicalSynapse(ChemicalSynapse jnc)
         {
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
         public virtual (double, double) GetJunctionRange()
         {
@@ -477,9 +478,15 @@ namespace SiliFish.ModelUnits.Cells
         public virtual void NextStep(int t, double stim, double minV, double maxV)
         {
             bool spike = false;
+            double vprev = Core.VMomentary;
             double v = Core.GetNextVal(stim, ref spike);
             if (spike)
                 spikeTrain.Add(t - 1);
+            else //check whether there is spiking without reaching the Vmax
+            {
+                if (vprev > Core.VSpikeThreshold && v < Core.VSpikeThreshold && stim < 0)
+                    spikeTrain.Add(t - 2);//half spike that doesn't register due to negative stimulus
+            }
             if (v < minV)
                 v = minV;
             else if (v > maxV)

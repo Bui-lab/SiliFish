@@ -17,7 +17,6 @@ namespace SiliFish.DynamicUnits
         public double TauDFast { get; set; }
         public double TauDSlow { get; set; }
         public double TauR { get; set; }
-        public double Vth { get; set; }
         
         [JsonIgnore, Browsable(false)]
         public override double ISyn => iSyn;
@@ -80,7 +79,7 @@ namespace SiliFish.DynamicUnits
                 double t_t0 = tCurrent - ti;
                 double rise = 1 - Math.Exp(-t_t0 / TauR);
                 double fast_decay = (1 - SlowComponent) * Math.Exp(-t_t0 / TauDFast);
-                double slow_decay = (SlowComponent) * Math.Exp(-t_t0 / TauDSlow);
+                double slow_decay = SlowComponent * Math.Exp(-t_t0 / TauDSlow);
                 double g_partial = Conductance * rise * (slow_decay + fast_decay);
                 if (g_partial < GlobalSettings.Epsilon)
                     tLastSignificantSpike = ti; //if the conductance becomes very small, no need to use in future calculations

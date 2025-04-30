@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits.JncCore
 {
@@ -13,6 +14,8 @@ namespace SiliFish.DynamicUnits.JncCore
         private static readonly Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
         .Where(type => typeof(ElecSynapseCore).IsAssignableFrom(type))
         .ToDictionary(type => type.Name, type => type);
+        public virtual double ISynForward { get { return ISyn; } }
+        public virtual double ISynBackward { get { return -1 * ISyn; } }
 
         public static List<string> GetSynapseTypes()
         {
@@ -44,6 +47,8 @@ namespace SiliFish.DynamicUnits.JncCore
         }
         #endregion
 
+        [JsonIgnore]
+        public bool bidirectional { get; set; } = true;
         public ElecSynapseCore()
         { }
 

@@ -533,7 +533,7 @@ namespace SiliFish.UI.Controls
                             Model.GetGapJunctions()
                                 .Where(c => c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup)
                                 .ToList()
-                                .ForEach(c => (c as InterPoolTemplate).Parameters["Conductance"].Multiply(mult));
+                                .ForEach(c => (c as InterPoolTemplate).MultiplyConductance(mult));
                             changes.Add($"Conductance value of {count} gap junctions of {poolTemplate.CellGroup} multiplied by {mult}");
                         }
                     }
@@ -562,7 +562,7 @@ namespace SiliFish.UI.Controls
                             Model.GetChemicalJunctions()
                                 .Where(c => c.SourcePool == poolTemplate.CellGroup)
                                 .ToList()
-                                .ForEach(c => (c as InterPoolTemplate).Parameters["Conductance"].Multiply(mult));
+                                .ForEach(c => (c as InterPoolTemplate).MultiplyConductance(mult));
                             changes.Add($"Conductance value of {count} chem junctions originating from {poolTemplate.CellGroup} multiplied by {mult}");
                         }
                     }
@@ -949,7 +949,7 @@ namespace SiliFish.UI.Controls
             if (CurrentMode == RunMode.Template)
             {
                 ControlContainer frmControl = new(ParentForm.Location);
-                InterPoolControl ipControl = new(Model.Settings);
+                InterPoolTemplateControl ipControl = new(Model.Settings, Model.ModelDimensions);
                 ModelTemplate modelTemplate = Model as ModelTemplate;
                 InterPoolTemplate interPoolTemplate = interpool as InterPoolTemplate;
                 ipControl.WriteDataToControl(modelTemplate.CellPoolTemplates, interPoolTemplate);
@@ -1002,6 +1002,17 @@ namespace SiliFish.UI.Controls
                 }
             }
             return null;
+        }
+
+        private void OpenConnectionDialog(InterPool interPool)
+        {
+            if (Model is not RunningModel rm) return;
+            ControlContainer frmControl = new(ParentForm.Location);
+            InterPoolControl ipControl = new(rm);
+            ipControl.WriteDataToControl(interPool);
+            frmControl.AddControl(ipControl, null);
+            frmControl.Text = interPool.ToString();
+            frmControl.ShowDialog();
         }
 
         private void listConnections_ItemAdd(object sender, EventArgs e)
@@ -1074,9 +1085,9 @@ namespace SiliFish.UI.Controls
         }
         private void listConnections_ItemView(object sender, EventArgs e)
         {
-            if (sender is InterPool)
+            if (sender is InterPool ip)
             {
-                MessageBox.Show("Please select an individual junction to view/edit.", "Info");
+                OpenConnectionDialog(ip);
                 return;
             }
             if (sender is not InterPoolBase jnc)
@@ -1276,7 +1287,7 @@ namespace SiliFish.UI.Controls
                         else
                         {
                             double prevConductance = jncTemplate.Parameters["Conductance"].UniqueValue;
-                            jncTemplate.Parameters["Conductance"].Multiply(mult);
+                            jncTemplate.MultiplyConductance(mult);
                             double newConductance = jncTemplate.Parameters["Conductance"].UniqueValue;
                             changes.Add($"{jncTemplate.ID} conductance changed from {prevConductance} to {newConductance}");
                         }

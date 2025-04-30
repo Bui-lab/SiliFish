@@ -14,6 +14,7 @@ using SiliFish.DataTypes;
 using System.Windows.Forms;
 using SiliFish.Services.Plotting.PlotSelection;
 using System.Collections.Generic;
+using SiliFish.ModelUnits;
 
 namespace SiliFish.UI.Controls
 {
@@ -131,7 +132,11 @@ namespace SiliFish.UI.Controls
             UseWaitCursor = true;
             int iSpikeStart = simulation.RunParam.iIndex((double)timeRangeStat.StartTime);
             int iSpikeEnd = simulation.RunParam.iIndex((double)timeRangeStat.EndTime);
-            List<Cell> Cells = model.GetSubsetCells(cellSelectionStats.PoolSubset, cellSelectionStats.GetSelection(), iSpikeStart, iSpikeEnd);
+            (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionStats.PoolSubset, cellSelectionStats.GetSelection(), iSpikeStart, iSpikeEnd);
+            Cells ??= [];
+            if (Cells.Count == 0 && Pools != null)
+                foreach (CellPool pool in Pools)
+                    Cells.AddRange(pool.Cells);
             (List<string> colNames, List<List<string>> values) = SimulationStats.GenerateSpikesForCSV(simulation, Cells, iSpikeStart, iSpikeEnd);
             int spikeCount = values.Count;
             if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnitsToList)
@@ -171,7 +176,11 @@ namespace SiliFish.UI.Controls
         {
             if (simulation == null || !simulation.SimulationRun) return;
             UseWaitCursor = true;
-            List<Cell> Cells = model.GetSubsetCells(cellSelectionStats.PoolSubset, cellSelectionStats.GetSelection());
+            (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionStats.PoolSubset, cellSelectionStats.GetSelection());
+            Cells ??= [];
+            if (Cells.Count == 0 && Pools != null)
+                foreach (CellPool pool in Pools)
+                    Cells.AddRange(pool.Cells);
             int iSpikeStart = simulation.RunParam.iIndex((double)timeRangeStat.StartTime);
             int iSpikeEnd = simulation.RunParam.iIndex((double)timeRangeStat.EndTime);
 
@@ -374,6 +383,18 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        /// <summary>
+        /// Called from the architecture panel
+        /// The plot type is determined by the units selected
+        /// Assumption: all the units have the same type
+        /// Eg: Currently plotting a cell pool and a junction is not supported
+        /// </summary>
+        /// <param name="unitsToPlot"></param>
+        internal void Plot(List<ModelUnitBase> unitsToPlot)
+        {
+            cellSelectionStats.SelectedUnits = unitsToPlot;
+            btnListStats_Click(null, null);
+        }
     }
 
 }

@@ -51,8 +51,23 @@ namespace SiliFish.ModelUnits.Junction
 
 
         [JsonIgnore]
-        public override string ID { get { return $"{Cell1.ID}  ↔ {Cell2.ID}"; } }
+        public override string ID { get { return 
+                    (Core as ElecSynapseCore).bidirectional?
+                    $"{Cell1.ID}  ↔ {Cell2.ID}" :
+                    $"{Cell1.ID}  → {Cell2.ID}";
+            } }
 
+        [JsonIgnore]
+        public override string Tooltip
+        {
+            get
+            {
+                return $"{Name}\r\n" +
+                    $"Conductance:{Core.Conductance: 0.#####}\r\n" +
+                    $"TimeLine: {TimeLine_ms}\r\n" +
+                    $"Active: {Active}";
+            }
+        }
         public override string SourcePool
         {
             get => Cell1.CellPool.ID;

@@ -225,8 +225,11 @@ namespace SiliFish.ModelUnits.Cells
                 }
                 foreach (GapJunction jnc in GapJunctions)
                 {
+                    //if this is the source of a unidirectinoal gap jnc, skip
+                    if (!(jnc.Core as ElecSynapseCore).bidirectional && jnc.Cell1 == this)
+                        continue;
                     if (jnc.IsActive(timeIndex))
-                        IGap += jnc.Cell1 == this ? jnc.Core.ISyn : -1 * jnc.Core.ISyn;
+                        IGap += jnc.Cell1 == this ? (jnc.Core as ElecSynapseCore).ISynBackward : (jnc.Core as ElecSynapseCore).ISynForward;
                 }
                 stim = GetStimulus(timeIndex);
             }
@@ -255,7 +258,6 @@ namespace SiliFish.ModelUnits.Cells
             return 0;
         }
 
-
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {
             Dictionary<string, Color> colors = [];
@@ -267,14 +269,11 @@ namespace SiliFish.ModelUnits.Cells
             }
             return (colors, AffarentCurrents);
         }
-
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetOutgoingSynapticCurrents()
         {
             return (null, null);
         }
         #endregion
-
-
     }
 
 }

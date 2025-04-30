@@ -7,47 +7,45 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-//Modified from the code written by Yann Roussel and Tuan Bui
-
 namespace SiliFish.DynamicUnits
 {
-    public class SimpleSyn: ChemSynapseCore
+    public class SingleExpSyn: ChemSynapseCore
     {
-        private double ISynA = 0; //the momentary current value
-        private double ISynB = 0; //the momentary current value
+        private double iSyn = 0; //the momentary current value
 
         private double tLastSignificantSpike = -1;
         [JsonIgnore, Browsable(false)]
-        public override double ISyn { get { return ISynA - ISynB; } }
+        public override double ISyn => iSyn;
         public override void ZeroISyn()
         {
-            ISynA = ISynB = 0;
+            iSyn = 0;
         }
         public double TauD { get; set; }
         public double TauR { get; set; }
-        public double Vth { get; set; }
 
         [JsonIgnore, Browsable(false)]
         public override string Identifier => $"Conductance: {Conductance:0.####} τ(r/d): {TauR}/{TauD}";
 
-        public SimpleSyn()
+        public SingleExpSyn()
         { }
 
-        public SimpleSyn(Dictionary<string, double> paramExternal)
+        public SingleExpSyn(Dictionary<string, double> paramExternal)
             :base()
         {
             SetParameters(paramExternal);
         }
 
-        public SimpleSyn(SimpleSyn copyFrom)
+        public SingleExpSyn(SimpleSyn copyFrom)
             :base(copyFrom)
         {
         }
         public override void InitForSimulation(double deltaT, ref int uniqueID)
         {
             base.InitForSimulation(deltaT, ref uniqueID);
-            ISynA = ISynB = 0;
+            iSyn = 0;
             tLastSignificantSpike = -1;
+            if (TauD == TauR)
+                TauD += GlobalSettings.Epsilon;
         }
 
         public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
@@ -58,17 +56,18 @@ namespace SiliFish.DynamicUnits
             base.CheckValues(ref errors, ref warnings);
             if (TauD < GlobalSettings.Epsilon || TauR < GlobalSettings.Epsilon)
                 errors.Add($"Chemical synapse: Tau has 0 value.");
-            if (TauD < TauR)
-                warnings.Add($"Chemical synapse: Tau decay is less than tau rise - can cause unexpected results.");
+            if (TauD == TauR)
+                warnings.Add($"Chemical synapse: Tau decay is equal to the tau rise. " +
+                    $"Due to mathematical modelling of the SingleExpSynapse, " +
+                    $"tau decay will be increased by {GlobalSettings.Epsilon} during simulation.");
             return errors.Count + warnings.Count == preCount;
         }
         public override double GetNextVal(double vPreSynapse, double vPost, List<double> spikeArrivalTimes, double tCurrent, DynamicsParam settings, bool excitatory)
         {
-            /*TODO copied and modified from TwoExpSyn - compare and check 
             double g_t = 0;
 
             double threshold = Math.Max(tLastSignificantSpike, tCurrent - settings.ThresholdMultiplier * (TauR + TauD));
-            List<double> closeBySpikes = spikeArrivalTimes.Where(t => t > threshold && t < tCurrent).ToList();
+            List<double> closeBySpikes = spikeArrivalTimes.Where(t => t >= threshold && t < tCurrent).ToList();
             if (settings.SpikeTrainSpikeCount > 0)
                 closeBySpikes = closeBySpikes.TakeLast(settings.SpikeTrainSpikeCount).ToList();
 
@@ -77,33 +76,14 @@ namespace SiliFish.DynamicUnits
                 double t_t0 = tCurrent - ti;
                 double rise = Math.Exp(-t_t0 / TauR);
                 double decay = Math.Exp(-t_t0 / TauD);
-                double g_partial = Conductance * (rise - decay);
-                if (g_partial < GlobalSettings.Epsilon)
+                double mult = TauR * TauR / (TauR - TauD);
+                double g_partial = Conductance * mult * (rise - decay);
+                if (Math.Abs(g_partial) < GlobalSettings.Epsilon)
                     tLastSignificantSpike = ti; //if the conductance becomes very small, no need to use in future calculations
                 g_t += g_partial;
             }
-            double iSyn = g_t * (ERev - vPost);
-            */
-            if (vPreSynapse > Vth)//pre-synaptic neuron spikes
-            {
-                // mEPSC
-                ISynA += (ERev - vPost) * Conductance;
-                ISynB += (ERev - vPost) * Conductance;
-                double dIsynA = -1 / TauD * ISynA;
-                double dIsynB = -1 / TauR * ISynB;
-                ISynA += DeltaT * dIsynA;
-                ISynB += DeltaT * dIsynB;
-            }
-            else
-            {
-                // no synaptic event
-                double dIsynA = -1 / TauD * ISynA;
-                double dIsynB = -1 / TauR * ISynB;
-                ISynA += DeltaT * dIsynA;
-                ISynB += DeltaT * dIsynB;
-            }
-
-            return ISynA - ISynB;
+            iSyn = g_t * (ERev - vPost);
+            return iSyn;
         }
         public override bool CausesReverseCurrent(double V, bool excitatory)
         {

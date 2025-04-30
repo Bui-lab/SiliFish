@@ -75,7 +75,9 @@ namespace SiliFish.DynamicUnits
             set => rheobase = value; }
 
         [JsonIgnore, Browsable(false)]
-        public virtual double VSpikeThreshold { get => Vmax; }//to determine whether there is a spike or not
+        public virtual double VMomentary{ get => V; }
+        [JsonIgnore, Browsable(false)]
+        public virtual double VSpikeThreshold { get => Vthreshold; }//to determine whether there is a spike or not
 
         [Description("The resting membrane potential.")]
         public double Vr { get; set; } = -70;

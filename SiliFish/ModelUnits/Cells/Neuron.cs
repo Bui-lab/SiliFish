@@ -297,8 +297,11 @@ namespace SiliFish.ModelUnits.Cells
                     }
                     foreach (GapJunction jnc in GapJunctions.Where(jnc => jnc.Active))
                     {
+                        //if this is the source of a unidirectinoal gap jnc, skip
+                        if (!(jnc.Core as ElecSynapseCore).bidirectional && jnc.Cell1 == this)
+                            continue;
                         if (jnc.IsActive(timeIndex))
-                            IGap += jnc.Cell1 == this ? -1 * jnc.Core.ISyn : jnc.Core.ISyn;
+                            IGap += jnc.Cell1 == this ? (jnc.Core as ElecSynapseCore).ISynBackward : (jnc.Core as ElecSynapseCore).ISynForward;
                     }
                     stim = GetStimulus(timeIndex);
                 }

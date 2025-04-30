@@ -468,7 +468,7 @@ namespace SiliFish.ModelUnits.Cells
                     {
                         Dictionary<string, double> paramValues = template.Parameters.GenerateSingleInstanceValues();
 
-                        GapJunction jnc = pre.CreateGapJunction(post, paramValues, template.DistanceMode);
+                        GapJunction jnc = pre.CreateGapJunction(post, template.CoreType, paramValues, template.DistanceMode);
                         jnc.SetDelay(template.Delay_ms);
                         jnc.SetTimeLine(timeline);
                         if (template.FixedDuration_ms != null)
