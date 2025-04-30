@@ -96,7 +96,7 @@ namespace SiliFish.UI.Controls
                 if (tabOutputs.SelectedTab == t2DRender)
                     await twoDRenderControl.ExecuteScriptAsync($"SelectCellPool('{cell.CellPool.ID}');");
                 else
-                { }//TODOawait webView3DRender.ExecuteScriptAsync($"SelectCell('{cell.ID}');");
+                    await threeDRenderControl.ExecuteScriptAsync($"SelectCell('{cell.ID}');");
             }
 
         }
