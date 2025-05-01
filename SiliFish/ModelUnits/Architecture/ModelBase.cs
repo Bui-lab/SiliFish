@@ -1,4 +1,5 @@
-﻿using SiliFish.DataTypes;
+﻿using OfficeOpenXml;
+using SiliFish.DataTypes;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
@@ -44,7 +45,18 @@ namespace SiliFish.ModelUnits.Architecture
         public ModelBase()
         {
         }
-
+        public (int startSomite, int endSomite) GetMidBodySomiteRange()
+        {
+            int startSomite = (int)Math.Floor((double)ModelDimensions.NumberOfSomites / 4);
+            int endSomite = (int)Math.Ceiling((double)ModelDimensions.NumberOfSomites * 3 / 4);
+            if (!string.IsNullOrEmpty(Settings.Plotting_BodyMidRange))
+            {
+                (double d1, double d2) = Settings.Plotting_BodyMidRange.ParseRange(startSomite, endSomite);
+                startSomite = (int)d1;
+                endSomite = (int)d2;
+            }
+            return (startSomite, endSomite);
+        }
         public virtual List<Difference> DiffersFrom(ModelBase other)
         {
             List<Difference> differences = [];

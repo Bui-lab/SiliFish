@@ -1,4 +1,5 @@
-﻿using SiliFish.ModelUnits;
+﻿using SiliFish.Extensions;
+using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -51,22 +52,8 @@ namespace SiliFish.DataTypes
             {
                 if (string.IsNullOrEmpty(period))
                     continue;
-                int sep = period.IndexOf(" - ");
-                if (sep == -1)
-                {
-                    if (double.TryParse(period, out double i))
-                    {
-                        Periods.Add((i, -1));
-                        continue;
-                    }
-                }
-                if (double.TryParse(period.AsSpan(0, sep), out double j))
-                {
-                    if (double.TryParse(period.AsSpan(sep + 3), out double k))
-                        Periods.Add((j, k));
-                    else
-                        Periods.Add((j, -1));
-                }
+                (double i, double j) = period.ParseRange(defStart:0, defEnd:-1);
+                Periods.Add((i, j));
             }
         }
   

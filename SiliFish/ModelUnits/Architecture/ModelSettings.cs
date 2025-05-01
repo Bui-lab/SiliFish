@@ -79,6 +79,10 @@ namespace SiliFish.ModelUnits.Architecture
             Category("Default Values")]
         public double E_ach { get; set; } = 120;
 
+        [Description("The range of somites to be plotted when Body Mid Range is selected."),
+            DisplayName("Body Mid Range"),
+            Category("Plotting")]
+        public string Plotting_BodyMidRange { get; set; } = "0-10";
 
         public ModelSettings Clone()
         {

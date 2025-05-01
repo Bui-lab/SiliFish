@@ -35,10 +35,11 @@ namespace SiliFish.Definitions
         public static bool OptimizedForPrinting = false;
         public static int PlotMergedFontSize = 36;
         public static int LegendWidthPercentage = 20;
-        public static bool FullDynamicsGapCurrent = true;//not added to the UI
-        public static bool FullDynamicsChemInCurrent = true;
-        public static bool FullDynamicsChemOutCurrent = true;
-        public static bool FullDynamicsStimulus = true;
+        public static bool FullDynamics_ShowGapCurrent = true;
+        public static bool FullDynamics_ShowChemInCurrent = true;
+        public static bool FullDynamics_ShowChemOutCurrent = true;
+        public static bool FullDynamics_ShowStimulus = true;
+        public static bool MembranePotential_ShowSpike = true;
 
         public static int MaxNumberOfUnitsToList = 100;
         public static int MaxNumberOfUnitsToRender = 50_000;
@@ -207,6 +208,33 @@ namespace SiliFish.Definitions
             DisplayName("Legend percentage"),
             Category("Plotting")]
         public int LegendWidthPercentage { get { return GlobalSettings.LegendWidthPercentage; } set { GlobalSettings.LegendWidthPercentage = value; } }
+
+
+        [Description("Whether gap currents will be plotted in the Full Dynamics plots."),
+            DisplayName("Show gap currents"),
+            Category("Plotting")]
+        public bool FullDynamics_ShowGapCurrent { get { return GlobalSettings.FullDynamics_ShowGapCurrent; } set { GlobalSettings.FullDynamics_ShowGapCurrent = value; } }
+
+        [Description("Whether incoming chemical currents will be plotted in the Full Dynamics plots."),
+            DisplayName("Show synaptic currents"),
+            Category("Plotting")]
+        public bool FullDynamics_ShowChemInCurrent { get { return GlobalSettings.FullDynamics_ShowChemInCurrent; } set { GlobalSettings.FullDynamics_ShowChemInCurrent = value; } }
+        [Description("Whether outgoing chemical currents will be plotted in the Full Dynamics plots."),
+            DisplayName("Show terminal currents"),
+            Category("Plotting")]
+        public bool FullDynamics_ShowChemOutCurrent { get { return GlobalSettings.FullDynamics_ShowChemOutCurrent; } set { GlobalSettings.FullDynamics_ShowChemOutCurrent = value; } }
+
+        [Description("Whether stimulus will be plotted in the Full Dynamics plots."),
+            DisplayName("Show stimulus"),
+            Category("Plotting")]
+        public bool FullDynamics_ShowStimulus { get { return GlobalSettings.FullDynamics_ShowStimulus; } set { GlobalSettings.FullDynamics_ShowStimulus = value; } }
+
+        [Description("Whether spikes will be plotted in the Membrane Potential plots."),
+            DisplayName("Show spikes"),
+            Category("Plotting")]
+        public bool MembranePotential_ShowSpike { get { return GlobalSettings.MembranePotential_ShowSpike; } set { GlobalSettings.MembranePotential_ShowSpike = value; } }
+
+
 
         #endregion
 

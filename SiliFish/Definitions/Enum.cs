@@ -99,6 +99,7 @@ namespace SiliFish.Definitions
         [Display(Name = "Random")] Random,
         [Display(Name = "Rostral to")] RostralTo,
         [Display(Name = "Caudal to")] CaudalTo,
+        [Display(Name = "Mid range")] MidRange,
     }
     public enum PlotCellSelection
     {

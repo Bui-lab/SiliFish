@@ -39,18 +39,24 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 List<Color> colorPerChart = [];
                 foreach (Cell cell in cellGroup)
                 {
-                    columnTitles += $"{cell.ID},{cell.ID}-Spikes,";
+                    if (GlobalSettings.MembranePotential_ShowSpike)
+                        columnTitles += $"{cell.ID},{cell.ID}-Spikes,";
+                    else
+                        columnTitles += $"{cell.ID},";
                     colorPerChart.Add(cell.CellPool.Color);
                     yMultiData.Add(cell.V.ToArray()[iStart..iEnd]);
                     List<int> spikeTrains = cell.SpikeTrain?.Where(s => s >= iStart && s <= iEnd).ToList();
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                     {
                         string value = cell.V?[iStart + i].ToString(GlobalSettings.PlotDataFormat) ?? ""; 
-                        data[i] += value + ",";      
-                        if ((bool)(spikeTrains?.Contains(iStart + i)))
-                            data[i] += value + ",";
-                        else
-                            data[i] += "null,";
+                        data[i] += value + ",";
+                        if (GlobalSettings.MembranePotential_ShowSpike)
+                        {
+                            if ((bool)(spikeTrains?.Contains(iStart + i)))
+                                data[i] += value + ",";
+                            else
+                                data[i] += "null,";
+                        }
                     }
                 }
                 if (!GlobalSettings.SameYAxis)

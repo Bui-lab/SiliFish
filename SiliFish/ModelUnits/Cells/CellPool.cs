@@ -282,6 +282,11 @@ namespace SiliFish.ModelUnits.Cells
             {
                 som.AddRange(Enumerable.Range(somiteSelection.NSomite, Model.ModelDimensions.NumberOfSomites - somiteSelection.NSomite + 1));
             }
+            else if (somiteSelection.SomiteSelection == PlotSomiteSelection.MidRange)
+            {
+                (int startSomite, int endSomite) = Model.GetMidBodySomiteRange();
+                som.AddRange(Enumerable.Range(startSomite, endSomite - startSomite + 1));
+            }
             return som;
         }
 
