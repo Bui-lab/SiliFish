@@ -30,7 +30,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 
 
             //Tail Movement
-            if (plotType is PlotType.EpisodesTail or PlotType.TailMovement or PlotType.TailMovementFreq)
+            if (plotType is PlotType.EpisodesTail or PlotType.TailMovementAndVROutput or PlotType.TailMovementFreq)
             {
                 title = "Time,Y-Axis";
                 data = new string[iEnd - iStart + 2];
@@ -97,9 +97,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 {
                     //Episode Duration
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.EpisodeDuration, tStart, tEnd);
+                    int inrangeEpisodeCount = xValues.Length;
                     title = "Time,Episode Duration";
-                    data = new string[episodes.EpisodeCount];
-                    foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
+                    data = new string[inrangeEpisodeCount];
+                    foreach (int i in Enumerable.Range(0, inrangeEpisodeCount))
                         data[i] = xValues[i] + "," + yValues[i];
                     csvData = title + "\n" + string.Join("\n", data);
                     Chart chart = new()
@@ -117,13 +118,22 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     };
                     if (!AddChart(chart)) return;
 
-                    if (plotType == PlotType.EpisodesTail && episodes.EpisodeCount > 1)
+                    if (plotType == PlotType.EpisodesTail && inrangeEpisodeCount > 1)
                     {
-                        xValues = Enumerable.Range(0, episodes.EpisodeCount - 1).Select(i => episodes[i].End).ToArray();
-                        yValues = Enumerable.Range(0, episodes.EpisodeCount - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray();
+                        xValues = Enumerable.Range(0, episodes.EpisodeCount - 1)
+                            .Select(i => episodes[i].End)
+                            .Where(x => x > tStart)
+                            .ToArray();
+                        yValues = Enumerable.Range(1, episodes.EpisodeCount - 1)
+                            .Select(i => episodes[i].Start)
+                            .Where(y => y > xValues[0])
+                            .ToArray();
+                        if (yValues.Length != xValues.Length)
+                            throw new Exception("Episode ends and next starts have different lengths");
+                        yValues = Enumerable.Range(0, xValues.Length).Select(i => yValues[i] - xValues[i]).ToArray();
                         title = "Time,Episode Intervals";
-                        data = new string[episodes.EpisodeCount];
-                        foreach (int i in Enumerable.Range(0, episodes.EpisodeCount - 1))
+                        data = new string[inrangeEpisodeCount];
+                        foreach (int i in Enumerable.Range(0, inrangeEpisodeCount - 1))
                             data[i] = xValues[i] + "," + yValues[i];
                         csvData = title + "\n" + string.Join("\n", data);
                         chart = new Chart
@@ -146,7 +156,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatsPerEpisode, tStart, tEnd);
                     title = "Time,Tail Beat/Episode";
                     data = new string[episodes.EpisodeCount];
-                    foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
+                    foreach (int i in Enumerable.Range(0, inrangeEpisodeCount))
                         data[i] = xValues[i] + "," + yValues[i];
                     csvData = title + "\n" + string.Join("\n", data);
                     Chart chart2 = new()
@@ -169,8 +179,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     (xValues, double[] medianyValues) = episodes.GetXYValues(EpisodeStats.EpisodeMedianAmplitude, tStart, tEnd);
                     (xValues, double[] maxyValues) = episodes.GetXYValues(EpisodeStats.EpisodeMaxAmplitude, tStart, tEnd);
                     title = "Time,Mean Ampl.,Median Ampl.,Max Ampl.";
-                    data = new string[episodes.EpisodeCount];
-                    foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
+                    data = new string[inrangeEpisodeCount];
+                    foreach (int i in Enumerable.Range(0, inrangeEpisodeCount))
                         data[i] = xValues[i] + "," + meanyValues[i] + "," + medianyValues[i] + "," + maxyValues[i];
                     csvData = title + "\n" + string.Join("\n", data);
                     List<Color> colorPerChart = [Color.Blue, Color.Purple, Color.Red];

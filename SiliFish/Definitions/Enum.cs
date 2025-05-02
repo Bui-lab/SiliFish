@@ -79,9 +79,9 @@ namespace SiliFish.Definitions
         [Display(Name = "Episodes (MN)"),
             Group("episode")]
         EpisodesMN,
-        [Display(Name = "Tail Movement"),
+        [Display(Name = "Tail Movement & VR Outputs"),
             Group("episode")]
-        TailMovement,
+        TailMovementAndVROutput,
         [Display(Name = "Tail Movement & Freq"),
             Group("episode")]
         TailMovementFreq,

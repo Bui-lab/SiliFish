@@ -165,7 +165,7 @@ namespace SiliFish.Services.Plotting
                     PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, mnMaxPotentials, episodesMN, somite);
                     plotGeneratorEpisodesMN.CreateCharts(charts);
                     break;
-                case PlotType.TailMovement:
+                case PlotType.TailMovementAndVROutput:
                 case PlotType.TailMovementFreq:
                     if (simulation.Model.MusclePools.Count == 0)
                     {
@@ -178,12 +178,12 @@ namespace SiliFish.Services.Plotting
                     plotGeneratorEpisodesTail2.CreateCharts(charts, Plot.PlotType);
                     if (Plot.PlotType != PlotType.TailMovementFreq) //skip the somite based plots
                     {
-                    List<int> somites = simulation.Model.MotoNeuronPools[0].GetSomites((PlotSelectionMultiCells)Plot.Selection).ToList();
-                    foreach (int s in somites)
-                    {
-                        (double[] mnMaxPotentials2, SwimmingEpisodes episodesMN2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(simulation, s);
-                        PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 1, mnMaxPotentials2, episodesMN2, s);
-                        plotGeneratorEpisodesMN2.CreateCharts(charts, Plot.PlotType);
+                        List<int> somites = simulation.Model.MotoNeuronPools[0].GetSomites((PlotSelectionMultiCells)Plot.Selection).ToList();
+                        foreach (int s in somites)
+                        {
+                            (double[] mnMaxPotentials2, SwimmingEpisodes episodesMN2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(simulation, s);
+                            PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 1, mnMaxPotentials2, episodesMN2, s);
+                            plotGeneratorEpisodesMN2.CreateCharts(charts, Plot.PlotType);
                         }
                     }
                     break;

@@ -72,6 +72,10 @@ namespace SiliFish.UI.Controls
                 cellSelectionPlot.TurnOnSingleCellOrSomite();
                 cellSelectionPlot.Refresh();//the drop down boxes do not refresh properly otherwise
             }
+            else if (PlotType == PlotType.TailMovementFreq)
+            {
+                cellSelectionPlot.Visible = false;
+            }
             else if (PlotType.GetGroup() == "episode")
             {
                 cellSelectionPlot.CombineOptionsVisible = false;
@@ -204,7 +208,7 @@ namespace SiliFish.UI.Controls
 
         private void DisplayNumberOfPlots(List<Cell> Cells, List<CellPool> Pools)
         {
-            if (PlotType == PlotType.TailMovement || PlotType == PlotType.TailMovementFreq)
+            if (PlotType == PlotType.TailMovementAndVROutput || PlotType == PlotType.TailMovementFreq)
             {
                 switch ((plotSelection as PlotSelectionMultiCells).SomiteSelection)
                 {
