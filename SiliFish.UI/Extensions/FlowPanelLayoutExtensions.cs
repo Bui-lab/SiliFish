@@ -71,8 +71,7 @@ namespace Extensions
                         TabIndex = tabIndex++
                     };
                     flowPanel.Controls.Add(numBox);
-                    string tooltip = DescDict[key];
-                    if (!string.IsNullOrEmpty(tooltip))
+                    if (DescDict.TryGetValue(key, out string tooltip))
                     {
                         toolTip.SetToolTip(lbl, tooltip);
                         toolTip.SetToolTip(numBox, tooltip);

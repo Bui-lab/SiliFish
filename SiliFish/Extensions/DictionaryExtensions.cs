@@ -1,4 +1,5 @@
-﻿using SiliFish.DataTypes;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using SiliFish.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -147,17 +148,19 @@ namespace SiliFish.Extensions
         public static bool SameAs(this Dictionary<string, Distribution> dictionary, Dictionary<string, Distribution> dic2, out List<Difference> diff)
         {
             diff = [];
+            bool checkReverse = false;
             if (dictionary?.Count != dic2?.Count)
             {
                 diff.Add(new Difference("Number of items", dictionary?.Count, dic2?.Count));
-                return false;
+                checkReverse = true;
             }
             foreach (var key in dictionary.Keys)
             {
                 if (!dic2.TryGetValue(key, out Distribution value))
                 {
                     diff.Add(new Difference("Missing value", null, key));
-                    return false;
+                    checkReverse = true;
+                    continue;
                 }
                 string s1 = dictionary[key]?.ToString() ?? "";
                 string s2 = value?.ToString() ?? "";
@@ -167,6 +170,14 @@ namespace SiliFish.Extensions
                     if (value.UniqueValue == dictionary[key].UniqueValue)
                         similar = true;
                     diff.Add(new Difference( key+(similar?" (similar)":""), s1, s2));
+                }
+            }
+            if (checkReverse)
+            {
+                foreach (var key2 in dic2.Keys)
+                {
+                    if (!dictionary.TryGetValue(key2, out Distribution value))
+                        diff.Add(new Difference("New value", key2, null));
                 }
             }
             return diff.Count == 0;

@@ -15,7 +15,7 @@ namespace SiliFish.UI.Extensions
                 sb.AppendLine(string.Join(',', dataGrid.Columns.OfType<DataGridViewColumn>().Select(c => c.HeaderText)));
                 foreach (DataGridViewRow row in dataGrid.Rows)
                 {
-                    List<string> values = row.Cells.OfType<DataGridViewCell>().Select(c => c.Value).Cast<string>().ToList();
+                    List<string> values = row.Cells.OfType<DataGridViewCell>().Select(c => c.Value?.ToString() ?? "").ToList();
                     string csvLine = CSVUtil.WriteCSVLine(values);
                     sb.AppendLine(csvLine);
                 }
