@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace SiliFish.DynamicUnits.JncCore
 {
     [JsonDerivedType(typeof(TwoExpSyn), typeDiscriminator: "twoexpsyn")]
-    [JsonDerivedType(typeof(TwoExpSyn), typeDiscriminator: "singleexpsyn")]
+    [JsonDerivedType(typeof(SingleExpSyn), typeDiscriminator: "singleexpsyn")]
     [JsonDerivedType(typeof(SimpleSyn), typeDiscriminator: "simplesyn")]
     [JsonDerivedType(typeof(SimpleGap), typeDiscriminator: "simplegap")]
     [JsonDerivedType(typeof(UnidirectionalGap), typeDiscriminator: "unidirectionalgap")]
