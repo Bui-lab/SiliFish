@@ -23,7 +23,7 @@ namespace SiliFish.UI
                 {
                     FileUtil.SaveToFile(saveFileCSV.FileName, text);
                     saved = true;
-                    string filename = saveFileCSV.FileName; 
+                    string filename = saveFileCSV.FileName;
                     if (GlobalSettings.ShowFileFolderAfterSave)
                         FileUtil.ShowFile(filename);
                     else

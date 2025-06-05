@@ -58,10 +58,10 @@ namespace SiliFish.ModelUnits.Architecture
                 foreach (StimulusTemplate stim in StimulusTemplates.Where(s => s.Settings.Mode == StimulusMode.Sinusoidal))
                 {
                     if (stim.Settings.Frequency == null || stim.Settings.Frequency == 0)
-                    { 
+                    {
                         stim.Settings.Frequency = stim.Settings.Value2;
                         stim.Settings.Value2 = 0;
-                    } 
+                    }
                 }
                 foreach (StimulusTemplate stim in StimulusTemplates.Where(s => s.Settings.Mode == StimulusMode.Pulse))
                 {
@@ -102,7 +102,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public override bool UpdateCellPool(CellPoolTemplate cellPoolNew)
         {
-            CellPoolTemplate cellPoolOld = CellPoolTemplates.FirstOrDefault(cp=>cp.CellGroup == cellPoolNew.CellGroup);
+            CellPoolTemplate cellPoolOld = CellPoolTemplates.FirstOrDefault(cp => cp.CellGroup == cellPoolNew.CellGroup);
             CellPoolTemplates.Remove(cellPoolOld);
             CellPoolTemplates.Add(cellPoolNew);
             return true;
@@ -131,10 +131,10 @@ namespace SiliFish.ModelUnits.Architecture
                 .Where(ip => ip.JunctionType is JunctionType.Gap)
                 .Select(ip => (InterPoolBase)ip).ToList();
         }
-        public override bool AddJunction(InterPoolBase jnc) 
+        public override bool AddJunction(InterPoolBase jnc)
         {
             if (jnc is InterPoolTemplate ipt && !InterPoolTemplates.Contains(ipt))
-            { 
+            {
                 InterPoolTemplates.Add(ipt);
                 return true;
             }
@@ -258,7 +258,7 @@ namespace SiliFish.ModelUnits.Architecture
                 cpt.CheckValues(ref errors, ref warnings);
             foreach (InterPoolTemplate ipt in InterPoolTemplates)
                 ipt.CheckValues(ref errors, ref warnings);
-            return errors.Count  + warnings.Count == preCount;
+            return errors.Count + warnings.Count == preCount;
         }
         public bool RenameCellPool(string oldName, string newName)
         {

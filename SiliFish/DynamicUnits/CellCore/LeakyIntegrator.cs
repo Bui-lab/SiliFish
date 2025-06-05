@@ -68,7 +68,7 @@ namespace SiliFish.DynamicUnits
             if (R < GlobalSettings.Epsilon)
                 errors.Add($"Leaky integrator: R has 0 value.");
             if (C < GlobalSettings.Epsilon)
-                errors.Add($"Leaky integrator: C has 0 value.");           
+                errors.Add($"Leaky integrator: C has 0 value.");
             return errors.Count + warnings.Count == preCount;
         }
 
@@ -79,7 +79,7 @@ namespace SiliFish.DynamicUnits
             // ODE eqs
             double dv = (-1 / (R * C)) * (V - Vr) + I / C;
             double vNew = V + dv * deltaT;
-            if (V < Vcontraction && vNew >= Vcontraction) 
+            if (V < Vcontraction && vNew >= Vcontraction)
                 spike = true;
             V = vNew;
             if (V >= Vmax) V = Vmax;

@@ -5,7 +5,7 @@ namespace SiliFish.UI.Services
 {
     public static class Warner
     {
-        public static void LargeFileWarning(string filename) 
+        public static void LargeFileWarning(string filename)
         {
             double limit = GlobalSettings.FileSizeWarningLimit;
             string message = $"The size of the file to be displayed is larger than {limit:0.##} MB. It is saved as {filename}.\r\n" +

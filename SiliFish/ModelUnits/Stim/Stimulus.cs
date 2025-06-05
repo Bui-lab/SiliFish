@@ -60,7 +60,7 @@ namespace SiliFish.ModelUnits.Stim
         {
             int iter = 0;
             if (values.Count != ColumnNames.Count) return;
-            targetPool= values[iter++];
+            targetPool = values[iter++];
             targetCellID = values[iter++];
             int lastSettingsCol = StimulusSettings.ColumnNames.Count + 2;
             Settings.ImportValues(values.Take(new Range(2, lastSettingsCol)).ToList());
@@ -119,7 +119,7 @@ namespace SiliFish.ModelUnits.Stim
                 int iStart = RunParam.iIndex(start);
                 int iEnd = RunParam.iIndex(end);
                 for (int ind = iStart; ind < iEnd; ind++)
-                {                    
+                {
                     values[ind] = Settings.Value1;
                 }
             }
@@ -160,7 +160,7 @@ namespace SiliFish.ModelUnits.Stim
         }
         private void GenerateSinusoidalStimulus(List<(double start, double end)> timeRanges)
         {
-            if (Settings.Frequency is null ||  Settings.Frequency <= 0) return;
+            if (Settings.Frequency is null || Settings.Frequency <= 0) return;
             double sinCycle = 1000 / (double)Settings.Frequency;//the period of the sin wave (period in ms)
             double dt = RunParam.DeltaT;
             //for sinusoidal, the number of full cycles occur for each period
@@ -185,7 +185,7 @@ namespace SiliFish.ModelUnits.Stim
                 int ind = RunParam.iIndex(tStart);
                 int iEnd = RunParam.iIndex(tEnd);
                 double tPeriodStart = tStart;
-                while (ind < iEnd-1)
+                while (ind < iEnd - 1)
                 {
                     int iPeriodStart = RunParam.iIndex(tPeriodStart);
                     double tPeriodEnd = Math.Min(tPeriodStart + period, tEnd);

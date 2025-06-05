@@ -74,7 +74,7 @@ namespace SiliFish.Extensions
         /// <summary>
         /// Generate equally spaced numbers with noise
         /// </summary>
-        public static double[] Spaced(this Random rand, double start, double end, 
+        public static double[] Spaced(this Random rand, double start, double end,
             double noisemean, double noiseStdDev, int n, bool ordered = false)
         {
             if (n <= 0) return null;

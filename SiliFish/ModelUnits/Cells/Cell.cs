@@ -2,7 +2,6 @@
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
-using SiliFish.DynamicUnits.JncCore;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
@@ -15,7 +14,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Security.Policy;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Cells
@@ -25,7 +23,7 @@ namespace SiliFish.ModelUnits.Cells
     [JsonDerivedType(typeof(MuscleCell), typeDiscriminator: "musclecell")]
     public class Cell : ModelUnitBase, IDataExporterImporter
     {
-       private static Type GetTypeOfCell(string discriminator)
+        private static Type GetTypeOfCell(string discriminator)
         {
             return discriminator switch
             {
@@ -135,7 +133,10 @@ namespace SiliFish.ModelUnits.Cells
         public double[] V;//FeaturingDBMemory ValueCapsule V; //Membrane potential array or link to db
         #endregion
         [JsonIgnore]
-        public virtual double RestingMembranePotential { get {
+        public virtual double RestingMembranePotential
+        {
+            get
+            {
                 Exception exception = new NotImplementedException();
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
                 throw exception;
@@ -151,7 +152,7 @@ namespace SiliFish.ModelUnits.Cells
             "Active",
             TimeLine.ColumnNames);
 
-         [JsonIgnore, Browsable(false)]
+        [JsonIgnore, Browsable(false)]
         private List<string> csvExportCoreValues
         {
             get
@@ -159,7 +160,7 @@ namespace SiliFish.ModelUnits.Cells
                 List<string> paramValues = Core.Parameters
                     .Take(CellCore.CoreParamMaxCount)
                     .OrderBy(kv => kv.Key)
-                    .SelectMany(kv => new[] { kv.Key, kv.Value.ToString()}).ToList();
+                    .SelectMany(kv => new[] { kv.Key, kv.Value.ToString() }).ToList();
                 for (int i = Core.Parameters.Count; i < CellCore.CoreParamMaxCount; i++)
                 {
                     paramValues.Add(string.Empty);
@@ -429,7 +430,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public virtual void MemoryAllocation(RunParam runParam, SimulationDBLink dBLink)
         {
-            V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray(); 
+            V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray();
             /*//FeaturingDBMemory 
             if (dBLink == null)
             {
@@ -447,7 +448,7 @@ namespace SiliFish.ModelUnits.Cells
             }*/
         }
 
-        public virtual double MemoryFlush ()
+        public virtual double MemoryFlush()
         {
             //FeaturingDBMemory V.Flush();
             double cleared = 0;
@@ -493,7 +494,7 @@ namespace SiliFish.ModelUnits.Cells
                 v = maxV;
             V[t] = v;
         }
-        
+
         public virtual void CalculateCellularOutputs(int t)
         {
             try

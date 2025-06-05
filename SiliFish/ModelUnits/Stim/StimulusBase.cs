@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 namespace SiliFish.ModelUnits.Stim
 {
-    public class StimulusBase: ModelUnitBase
+    public class StimulusBase : ModelUnitBase
     {
         public StimulusSettings Settings { get; set; } = new();
 
-        public StimulusBase() {
+        public StimulusBase()
+        {
             PlotType = "Stimulus";
         }
 

@@ -1,6 +1,6 @@
 ﻿using SiliFish.Definitions;
-using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

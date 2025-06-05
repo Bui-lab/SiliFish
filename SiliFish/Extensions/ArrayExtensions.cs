@@ -62,9 +62,9 @@ namespace SiliFish.Extensions
             if (thisArray == null || thisArray.Length == 0)
                 return 0;
             double avg = thisArray.AverageValue(iStart, iEnd);
-            
+
             if (iEnd == -1 && iStart == 0)
-                return Math.Sqrt(thisArray.Average(v => Math.Pow(v - avg, 2))); 
+                return Math.Sqrt(thisArray.Average(v => Math.Pow(v - avg, 2)));
             if (iStart < 0 || iStart >= thisArray.Length)
                 iEnd = thisArray.Length - 1;
             if (iEnd <= -1 || iEnd >= thisArray.Length)
@@ -91,7 +91,7 @@ namespace SiliFish.Extensions
                 }
                 if (increasing && thisArray[i] < thisArray[i - 1] - GlobalSettings.Epsilon)
                 {
-                    increasing = false; 
+                    increasing = false;
                 }
                 if (!decreasing && !increasing)
                     break;
@@ -106,7 +106,7 @@ namespace SiliFish.Extensions
         {
             if (thisArray == null || thisArray.Length == 0) return false;
             iEnd = iEnd < 0 ? thisArray.Length - 1 : iEnd;
-            int ind = Array.FindIndex(thisArray, iStart, iEnd-iStart, value => value >= threshold);
+            int ind = Array.FindIndex(thisArray, iStart, iEnd - iStart, value => value >= threshold);
             return ind >= 0;
         }
         public static List<int> GetSpikeIndices(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1, int buffer = 0)
@@ -132,7 +132,7 @@ namespace SiliFish.Extensions
                     lastInd = ind;
                 }
                 return indices;
-            }            
+            }
             catch (Exception ex)
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);

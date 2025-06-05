@@ -3,9 +3,9 @@
     public partial class JunctionSelectionControl : UserControl
     {
         private bool chemInOutExists = false;
-       public bool GapJunctions { get => cbGapJunctions.Checked; set => cbGapJunctions.Checked = value; }
-        public bool CheminalIncoming 
-        { 
+        public bool GapJunctions { get => cbGapJunctions.Checked; set => cbGapJunctions.Checked = value; }
+        public bool CheminalIncoming
+        {
             get => ChemInOutExists && cbChemIn.Checked ||
                 !ChemInOutExists && cbChem.Checked;
             set
@@ -14,7 +14,7 @@
                 else cbChem.Checked = value;
             }
         }
-        public bool ChemicalOutgoing        
+        public bool ChemicalOutgoing
         {
             get => ChemInOutExists && cbChemOut.Checked ||
                 !ChemInOutExists && cbChem.Checked;

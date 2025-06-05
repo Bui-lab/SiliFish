@@ -8,7 +8,7 @@ namespace SiliFish.Extensions
         {
             return "0x" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
         }
-        public static Color FromHex(this Color _, string hex )
+        public static Color FromHex(this Color _, string hex)
         {
             hex = hex.Replace("'", "");
             if (hex.StartsWith("0x") && hex.Length == 8)

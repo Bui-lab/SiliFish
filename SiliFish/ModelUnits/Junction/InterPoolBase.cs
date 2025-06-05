@@ -20,7 +20,7 @@ namespace SiliFish.ModelUnits.Junction
         public double? Delay_ms { get; set; } = null;//in ms
 
         [JsonIgnore]
-        public virtual double Duration_ms { get => throw new NotImplementedException();  }
+        public virtual double Duration_ms { get => throw new NotImplementedException(); }
 
         /// <summary>
         /// used for import/exports
@@ -33,14 +33,14 @@ namespace SiliFish.ModelUnits.Junction
 
 
         [JsonIgnore, Browsable(false)]
-        public static List<string> ColumnNames { get; } = 
+        public static List<string> ColumnNames { get; } =
             ListBuilder.Build<string>("ID (Read only)",
                 "Source", "Target",
                 "Junction Type", "Core Type",
                Enumerable.Range(1, JunctionCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
                 "Distance Mode",
-                "Fixed Duration (ms)", "Delay (ms)","Duration (readonly - in ms)",
-                "Active", 
+                "Fixed Duration (ms)", "Delay (ms)", "Duration (readonly - in ms)",
+                "Active",
                 TimeLine.ColumnNames);
 
         public virtual List<string> ExportValues()

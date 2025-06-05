@@ -1,5 +1,4 @@
-﻿using SiliFish.Definitions;
-using SiliFish.Extensions;
+﻿using SiliFish.Extensions;
 using System;
 using System.Text.Json.Serialization;
 
@@ -8,8 +7,8 @@ namespace SiliFish.ModelUnits.Parameters
     public class RunParam
     {
         public bool TrackJunctionCurrent { get; set; } = true;
-        public int SkipDuration { get; set; } 
-        public int MaxTime { get; set; } 
+        public int SkipDuration { get; set; }
+        public int MaxTime { get; set; }
         public double DeltaT { get; set; }
         public int iIndex(double t)
         {

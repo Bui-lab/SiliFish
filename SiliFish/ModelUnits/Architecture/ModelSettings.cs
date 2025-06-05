@@ -14,22 +14,22 @@ namespace SiliFish.ModelUnits.Architecture
         [Description("In ms - the default simulation duration."),
             DisplayName("Simulation Duration"),
             Category("Simulation")]
-        public int SimulationEndTime { get; set; }= 1000;
+        public int SimulationEndTime { get; set; } = 1000;
 
         [Description("In ms - the default duration to skip."),
             DisplayName("Simulation Skip Duration"),
             Category("Simulation")]
-        public int SimulationSkipTime { get; set; }= 0;
+        public int SimulationSkipTime { get; set; } = 0;
 
         [Description("In ms - the default time unit."),
             DisplayName("Default δt"),
             Category("Simulation")]
-        public double SimulationDeltaT { get; set; }= 0.1;
+        public double SimulationDeltaT { get; set; } = 0.1;
 
         [Description("Whether junction level current tracking is on or off. For larger models turning it off is recommended."),
             DisplayName("Junction level current tracking"),
             Category("Simulation")]
-        public bool JunctionLevelTracking { get; set; }= false;
+        public bool JunctionLevelTracking { get; set; } = false;
 
         #endregion
 
@@ -38,8 +38,8 @@ namespace SiliFish.ModelUnits.Architecture
             Category("Randomization")]
         public bool FlickerOff { get; set; } = false;
 
-        [Description("The seed to initialize the random number generator."), 
-            DisplayName("Random Seed"), 
+        [Description("The seed to initialize the random number generator."),
+            DisplayName("Random Seed"),
             Category("Randomization")]
         public int Seed { get; set; } = 0;
 
@@ -71,10 +71,10 @@ namespace SiliFish.ModelUnits.Architecture
         public double E_glu { get; set; } = 0;
         [Description("Default reversal potential of glycine."),
             Category("Default Values")]
-        public double E_gly { get; set; } = -70; 
+        public double E_gly { get; set; } = -70;
         [Description("Default reversal potential of GABA."),
             Category("Default Values")]
-        public double E_gaba { get; set; } = -70; 
+        public double E_gaba { get; set; } = -70;
         [Description("Default reversal potential of ACh."),
             Category("Default Values")]
         public double E_ach { get; set; } = 120;

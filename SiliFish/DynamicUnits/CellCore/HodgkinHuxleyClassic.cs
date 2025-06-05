@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class HodgkinHuxleyClassic: CellCore
+    public class HodgkinHuxleyClassic : CellCore
     {
         protected static double g_K_suggestedMin = 30;
         protected static double g_K_suggestedMax = 40;
@@ -51,7 +51,7 @@ namespace SiliFish.DynamicUnits
         public double Vt { get; set; } = -57;
 
         [Description("The membrane capacitance.")]
-        public double Cm { get; set; } = 10; 
+        public double Cm { get; set; } = 10;
 
         //keeps the current value of n, m, and h
         protected double n = 0;
@@ -92,12 +92,12 @@ namespace SiliFish.DynamicUnits
             maxE = Math.Max(E_Na, Math.Max(E_K, E_L));
         }
 
-        [JsonIgnore, Browsable(false)] 
+        [JsonIgnore, Browsable(false)]
         public override double Vthreshold { get => Vt; set => Vt = value; }
 
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
-         {
-             Dictionary<string, double> MinValues = new() {
+        {
+            Dictionary<string, double> MinValues = new() {
                 { "g_K",  g_K_suggestedMin},
                 { "g_Na",  g_Na_suggestedMin},
                 { "g_L",  g_L_suggestedMin},
@@ -109,7 +109,7 @@ namespace SiliFish.DynamicUnits
                 { "Vt", Vt_suggestedMin},
                 { "Cm", Cm_suggestedMin}
              };
-             Dictionary<string, double> MaxValues = new() {
+            Dictionary<string, double> MaxValues = new() {
                 { "g_K",  g_K_suggestedMax},
                 { "g_Na",  g_Na_suggestedMax},
                 { "g_L",  g_L_suggestedMax},
@@ -122,8 +122,8 @@ namespace SiliFish.DynamicUnits
                 { "Cm", Cm_suggestedMax}
              };
 
-             return (MinValues, MaxValues);
-         }
+            return (MinValues, MaxValues);
+        }
 
         public override double GetNextVal(double I, ref bool spike)
         {

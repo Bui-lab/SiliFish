@@ -32,7 +32,7 @@ namespace SiliFish.Extensions
 
         public static List<Difference> DiffersFrom(this object obj, object other)
         {
-            if (other.GetType() != obj.GetType()) 
+            if (other.GetType() != obj.GetType())
                 return [new Difference("Incompatible classes.", null, null)];
             List<Difference> differences = [];
             foreach (PropertyInfo prop in obj.GetType().GetProperties())
@@ -50,7 +50,7 @@ namespace SiliFish.Extensions
 
         //https://stackoverflow.com/questions/39201271/get-all-properties-marked-with-jsonignore-attribute
         public static string GetProperties(this object obj, string seperator)
-        
+
         {
             List<string> properties = [];
             foreach (PropertyInfo prop in obj.GetType().GetProperties()

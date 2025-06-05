@@ -1,15 +1,15 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Architecture;
-using System.Collections.Generic;
-using System.Linq;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
+using SiliFish.Services.Dynamics;
 using SiliFish.Services.Plotting.PlotGenerators;
 using SiliFish.Services.Plotting.PlotSelection;
-using SiliFish.Services.Dynamics;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SiliFish.Services.Plotting
 {
@@ -106,19 +106,19 @@ namespace SiliFish.Services.Plotting
                     break;
                 case PlotType.Current:
                     Title = "Incoming Currents";
-                    PlotGeneratorCurrentsOfCells pg1 = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, Cells, Plot.Selection, 
+                    PlotGeneratorCurrentsOfCells pg1 = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, Cells, Plot.Selection,
                         includeGap: true, includeChemIn: true, includeChemOut: false);
                     pg1.CreateCharts(charts);
                     break;
                 case PlotType.GapCurrent:
                     Title = "Incoming Gap Currents";
-                    PlotGeneratorCurrentsOfCells pg2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, Cells, Plot.Selection, 
+                    PlotGeneratorCurrentsOfCells pg2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, Cells, Plot.Selection,
                         includeGap: true, includeChemIn: false, includeChemOut: false);
                     pg2.CreateCharts(charts);
                     break;
                 case PlotType.ChemCurrent:
                     Title = "Incoming Synaptic Currents";
-                    PlotGeneratorCurrentsOfCells pg3 = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, Cells, Plot.Selection, 
+                    PlotGeneratorCurrentsOfCells pg3 = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, Cells, Plot.Selection,
                         includeGap: false, includeChemIn: true, includeChemOut: false);
                     pg3.CreateCharts(charts);
                     break;

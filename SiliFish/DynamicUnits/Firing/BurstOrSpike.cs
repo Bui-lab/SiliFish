@@ -17,7 +17,7 @@ namespace SiliFish.DynamicUnits
         public double Start => SpikeTimeList.Count > 0 ? SpikeTimeList[0] : -1;
         public double End => SpikeTimeList.Count > 0 ? SpikeTimeList[^1] : -1;
         public double Center => SpikeTimeList.Count > 0 ? (SpikeTimeList[0] + SpikeTimeList[^1]) / 2 : -1;
-        public double WeightedCenter => SpikeTimeList.Count > 0 ? SpikeTimeList.Average(): -1;
+        public double WeightedCenter => SpikeTimeList.Count > 0 ? SpikeTimeList.Average() : -1;
 
         public static List<BurstOrSpike> SpikesToBursts(DynamicsParam settings, double dt, List<int> SpikeList, out double lastInterval)
         {
@@ -59,7 +59,7 @@ namespace SiliFish.DynamicUnits
             }
             //review bursts to remove the wide intervals that doesn't fit
             List<BurstOrSpike> burstsOrSpikesFiltered = [];
-            foreach(BurstOrSpike burst in  burstsOrSpikes)
+            foreach (BurstOrSpike burst in burstsOrSpikes)
             {
                 List<double> intervals = [];
                 if (burst.SpikeCount <= 2)
@@ -72,9 +72,9 @@ namespace SiliFish.DynamicUnits
                     }
                     double maxInterval = intervals.Max();
                     double avgInterval = (intervals.Sum() - maxInterval) / intervals.Count;
-                    /*URGENT if (maxInterval > avgInterval * 10) //split into 2 or 3 bursts
+                    if (maxInterval > avgInterval * 10) //split into 2 or 3 bursts
                     {
-                        int ind = 0;
+                        /*URGENT int ind = 0;
                         BurstOrSpike b1 = new();
                         b1.SpikeTimeList.Add(burst.SpikeTimeList[0]);
                         burstsOrSpikesFiltered.Add(b1);
@@ -92,8 +92,9 @@ namespace SiliFish.DynamicUnits
                             }
                         }
                     }
-                    else*/
+                    else{*/
                         burstsOrSpikesFiltered.Add(burst);
+                    }
                 }
             }
             return burstsOrSpikesFiltered;

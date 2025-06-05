@@ -1,15 +1,15 @@
-﻿using SiliFish.Extensions;
+﻿using SiliFish.Definitions;
+using SiliFish.Extensions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Junction;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Web;
-using SiliFish.ModelUnits.Junction;
-using SiliFish.Definitions;
-using System.Drawing;
 
 namespace SiliFish.Services
 {
@@ -34,7 +34,7 @@ namespace SiliFish.Services
                 "";
             string p1 = interPool.SourcePool;
             string p2 = interPool.TargetPool;
-            if (string.Compare(p1, p2)<0)
+            if (string.Compare(p1, p2) < 0)
                 (p1, p2) = (p2, p1);
             double curv = interPool.SourcePool == interPool.TargetPool ? 0.7 : 0;
             if (LinkCounter.ContainsKey((p1, p2)))
@@ -45,7 +45,7 @@ namespace SiliFish.Services
             else
                 LinkCounter[(p1, p2)] = 1;
 
-            string curvInfo = curv>0 ? $",curv: {curv}" : "";
+            string curvInfo = curv > 0 ? $",curv: {curv}" : "";
             string conductance = interPool.MinConductance == interPool.MaxConductance ?
                 interPool.MinConductance.ToString("0.######") :
                 $"{interPool.MinConductance:0.######} -  {interPool.MaxConductance:0.######}";
@@ -147,7 +147,7 @@ namespace SiliFish.Services
             {
                 foreach (var item in PoolCoordinates)
                 {
-                    HiddenPoolCoordinates.TryAdd(item.Key, item.Value);                    
+                    HiddenPoolCoordinates.TryAdd(item.Key, item.Value);
                 }
                 PoolCoordinates.Clear();
                 foreach (CellPool pool in pools)
@@ -308,7 +308,7 @@ namespace SiliFish.Services
             html.Replace("__POOLS__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
             if (grayedOutPools != null && grayedOutPools.Any())
             {
-                html.Replace("__GRAYED_OUT_POOLS__", string.Join(",", grayedOutPools.Select(p => '"'+p.CellGroup+'"').Distinct().ToList()) ?? null);
+                html.Replace("__GRAYED_OUT_POOLS__", string.Join(",", grayedOutPools.Select(p => '"' + p.CellGroup + '"').Distinct().ToList()) ?? null);
             }
             else
                 html.Replace("__GRAYED_OUT_POOLS__", "");
@@ -348,7 +348,7 @@ namespace SiliFish.Services
             if (pools == null || pools.Count == 0)
                 return null;
             StringBuilder html = InitializeHTML(model, offline);
-            FillData(html,model, pools, null, refresh, width, height, showGap, showChem, offline);
+            FillData(html, model, pools, null, refresh, width, height, showGap, showChem, offline);
             SetColorsAndShapes(pools, html);
             AddSpine(model, html);
             return html.ToString();

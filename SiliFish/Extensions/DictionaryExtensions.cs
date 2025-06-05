@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace SiliFish.Extensions
             {
                 dictionary.Remove(key);
             }
-            catch {  }
+            catch { }
             return ret;
         }
         public static double ReadDoubleAndRemoveKey(this Dictionary<string, object> dictionary, string key, double defaultValue = default)
@@ -89,7 +88,7 @@ namespace SiliFish.Extensions
             {
                 if (dictionary.TryGetValue(key, out var val))
                 {
-                        var v = val.GenerateNNumbers(1, val.HundredPercent, ordered: false)[0];
+                    var v = val.GenerateNNumbers(1, val.HundredPercent, ordered: false)[0];
                     return (T)Convert.ChangeType(v, typeof(T));
                 }
                 return defaultValue;
@@ -169,7 +168,7 @@ namespace SiliFish.Extensions
                     bool similar = false;
                     if (value.UniqueValue == dictionary[key].UniqueValue)
                         similar = true;
-                    diff.Add(new Difference( key+(similar?" (similar)":""), s1, s2));
+                    diff.Add(new Difference(key + (similar ? " (similar)" : ""), s1, s2));
                 }
             }
             if (checkReverse)

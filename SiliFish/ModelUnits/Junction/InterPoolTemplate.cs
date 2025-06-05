@@ -21,7 +21,7 @@ namespace SiliFish.ModelUnits.Junction
         private string sourcePool, targetPool;
         private string coreType;
         private Dictionary<string, object> parameters;
-        
+
         #endregion
 
         #region Properties
@@ -120,7 +120,7 @@ namespace SiliFish.ModelUnits.Junction
         [JsonIgnore, Browsable(false)]
         public static new List<string> ColumnNames { get; } =
             ListBuilder.Build<string>("Name", "Source", "Target",
-                "Axon Reach Mode", "Conn. Type", "Core Type" ,
+                "Axon Reach Mode", "Conn. Type", "Core Type",
                 Enumerable.Range(1, JunctionCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
                 "Dist. Mode",
                 CellReach.ColumnNames,
@@ -209,7 +209,7 @@ namespace SiliFish.ModelUnits.Junction
                 parameters[key] = value;
             }
         }
-        
+
 
         [JsonIgnore, Browsable(false)]
         private List<string> csvExportCoreValues
@@ -298,7 +298,7 @@ namespace SiliFish.ModelUnits.Junction
                 differences.AddRange(diff.Select(d => new Difference(Name + " Parameters", d.Item + d.Parameter, d.Value1, d.Value2)));
             if (Active != ipt.Active)
                 differences.Add(new Difference(Name, "Active", Active, ipt.Active));
-            if (TimeLine_ms.ToString() !=  ipt.TimeLine_ms.ToString())
+            if (TimeLine_ms.ToString() != ipt.TimeLine_ms.ToString())
                 differences.Add(new Difference(Name, "TimeLine", TimeLine_ms, ipt.TimeLine_ms));
             if (differences.Count != 0)
                 return differences;
@@ -331,21 +331,21 @@ namespace SiliFish.ModelUnits.Junction
             }
             return errors.Count == preErrorCount && warnings.Count == preWarningCount;
         }
-    public override string GeneratedName()
+        public override string GeneratedName()
         {
             return $"{(!string.IsNullOrEmpty(SourcePool) ? SourcePool : "__")}-->{(!string.IsNullOrEmpty(TargetPool) ? TargetPool : "__")}";
         }
 
         public void MultiplyConductance(double mult)
         {
-                Parameters["Conductance"].Multiply(mult);
+            Parameters["Conductance"].Multiply(mult);
         }
         internal void BackwardCompatibility()
         {
             if (string.IsNullOrEmpty(coreType))
             {
                 if (JunctionType == JunctionType.Gap)
-                    coreType = nameof(SimpleGap); 
+                    coreType = nameof(SimpleGap);
                 else
                     coreType = nameof(SimpleSyn);
             }

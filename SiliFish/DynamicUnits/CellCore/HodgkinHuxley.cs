@@ -49,7 +49,7 @@ namespace SiliFish.DynamicUnits
             Cm = 1; //the membrane capacitance
             Vr = -65;
             base.Initialize();
-    }
+        }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) = base.GetSuggestedMinMaxValues();

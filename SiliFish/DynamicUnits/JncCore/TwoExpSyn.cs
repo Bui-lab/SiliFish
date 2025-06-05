@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class TwoExpSyn: ChemSynapseCore
+    public class TwoExpSyn : ChemSynapseCore
     {
         private double iSyn = 0; //the momentary current value
         private double tLastSignificantSpike = -1;
@@ -17,7 +17,7 @@ namespace SiliFish.DynamicUnits
         public double TauDFast { get; set; }
         public double TauDSlow { get; set; }
         public double TauR { get; set; }
-        
+
         [JsonIgnore, Browsable(false)]
         public override double ISyn => iSyn;
 
@@ -61,12 +61,12 @@ namespace SiliFish.DynamicUnits
         }
         public override double GetNextVal(double _, double vPost, List<double> spikeArrivalTimes, double tCurrent, DynamicsParam settings, bool excitatory)
         {
-            if (!settings.AllowReverseCurrent && (excitatory && vPost>ERev || !excitatory && vPost < ERev))
+            if (!settings.AllowReverseCurrent && (excitatory && vPost > ERev || !excitatory && vPost < ERev))
             {
                 //iSyn = 0;
                 return iSyn;
             }
-                
+
             double g_t = 0;
 
             double threshold = Math.Max(tLastSignificantSpike, tCurrent - settings.ThresholdMultiplier * (TauR + TauDFast + TauDSlow));

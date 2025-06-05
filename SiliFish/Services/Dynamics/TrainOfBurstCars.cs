@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using SiliFish.DynamicUnits;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
-using SiliFish.DynamicUnits;
 
 namespace SiliFish.Services.Dynamics
 {
@@ -45,7 +44,7 @@ namespace SiliFish.Services.Dynamics
             BurstCarList.Sort(new BurstIdComparer());
             for (int i = 1; i < BurstCarList.Count; i++)
             {
-                BurstCarList[i].DelayStart = BurstCarList[i].BurstOrSpike.Start - BurstCarList[i-1].BurstOrSpike.Start;
+                BurstCarList[i].DelayStart = BurstCarList[i].BurstOrSpike.Start - BurstCarList[i - 1].BurstOrSpike.Start;
                 BurstCarList[i].DelayCenter = BurstCarList[i].BurstOrSpike.Center - BurstCarList[i - 1].BurstOrSpike.Center;
                 BurstCarList[i].DelayMedian = BurstCarList[i].BurstOrSpike.WeightedCenter - BurstCarList[i - 1].BurstOrSpike.WeightedCenter;
             }

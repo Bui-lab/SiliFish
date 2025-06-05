@@ -59,7 +59,7 @@ namespace SiliFish.Definitions
         public static List<string> TempFiles = [];
         public static void AddTempFile(string fileName)
         {
-            if (string.IsNullOrEmpty(fileName) || TempFiles.Contains(fileName)) 
+            if (string.IsNullOrEmpty(fileName) || TempFiles.Contains(fileName))
                 return;
             TempFiles.Add(fileName);
         }
@@ -113,12 +113,12 @@ namespace SiliFish.Definitions
         [Description("The maximum value between two numbers to consider them equal."), Category("Const")]
         public double Epsilon { get { return GlobalSettings.Epsilon; } set { GlobalSettings.Epsilon = value; } }
 
-        [Description("The minimum value consider it noise rather than a change in membrane potential."), 
+        [Description("The minimum value consider it noise rather than a change in membrane potential."),
             DisplayName("Memb. Pot. Noise"),
             Category("Const")]
         public double VNoise { get { return GlobalSettings.VNoise; } set { GlobalSettings.VNoise = value; } }
 
-        [Description("The maximum memory usage (in GB) allowed before the user is given the option to turn off junction level current tracking."), 
+        [Description("The maximum memory usage (in GB) allowed before the user is given the option to turn off junction level current tracking."),
             DisplayName("Memory warning limit"),
             Category("Const")]
         public double MemoryWarningLimit { get { return GlobalSettings.MemoryWarningLimit; } set { GlobalSettings.MemoryWarningLimit = value; } }
@@ -142,7 +142,7 @@ namespace SiliFish.Definitions
         #endregion
 
         #region Display
-        [Description("The maximum number of items that will be listed on the architecture lists. This number is obsolote when a single cell is selected."), 
+        [Description("The maximum number of items that will be listed on the architecture lists. This number is obsolote when a single cell is selected."),
             DisplayName("Max number of units to list"),
             Category("Display")]
         public int MaxNumberOfUnitsToList { get { return GlobalSettings.MaxNumberOfUnitsToList; } set { GlobalSettings.MaxNumberOfUnitsToList = value; } }
@@ -248,7 +248,7 @@ namespace SiliFish.Definitions
             DisplayName("Rheobase Limit"),
             Category("Dynamics")]
         public int RheobaseLimit { get { return GlobalSettings.RheobaseLimit; } set { GlobalSettings.RheobaseLimit = value; } }
-        
+
         [Description("The rheobase multipliers displayed on 'Cellular Dynamics' user interface."),
             DisplayName("Rheobase multipliers"),
             Category("Dynamics")]
@@ -287,7 +287,7 @@ namespace SiliFish.Definitions
         public int GeneticAlgorithmExhaustiveSolutionCount { get { return GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount; } set { GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount = value; } }
         #endregion
 
-        
+
         public void Save()
         {
             string fileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\global.settings";

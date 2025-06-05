@@ -14,7 +14,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Cells
 {
-    public class CellPool: CellPoolTemplate
+    public class CellPool : CellPoolTemplate
     {
         [JsonIgnore]
         public RunningModel Model { get; set; }
@@ -62,7 +62,7 @@ namespace SiliFish.ModelUnits.Cells
             PlotType = "CellPool";
         }
 
-        public CellPool(CellPool cellPool):base(cellPool) 
+        public CellPool(CellPool cellPool) : base(cellPool)
         {
             PlotType = "CellPool";
             Cells = [];
@@ -135,8 +135,8 @@ namespace SiliFish.ModelUnits.Cells
 
         public override List<Difference> DiffersFrom(ModelUnitBase other)
         {
-            if (other is not CellPool ocp) 
-                return [new Difference("Incompatible classes", $"{ID}({GetType()}", $"{other.ID}{other.GetType()}")]; 
+            if (other is not CellPool ocp)
+                return [new Difference("Incompatible classes", $"{ID}({GetType()}", $"{other.ID}{other.GetType()}")];
             List<Difference> differences = base.DiffersFrom(other) ?? [];
             List<Difference> diffs = ListDiffersFrom(Cells.Select(c => c as ModelUnitBase).ToList(),
                 ocp.Cells.Select(c => c as ModelUnitBase).ToList());
@@ -332,16 +332,16 @@ namespace SiliFish.ModelUnits.Cells
             return subList;
         }
 
-   
+
         public void GenerateCells()
         {
             int n = NumOfCells;
             bool neuron = CellType == CellType.Neuron;
-            
+
             ModelDimensions MD = Model.ModelDimensions;
             List<int> somites = BodyLocation == BodyLocation.SupraSpinal ?
                 [0] :
-                PerSomiteOrTotal == CountingMode.PerSomite ? 
+                PerSomiteOrTotal == CountingMode.PerSomite ?
                 Util.ParseRange(SomiteRange, defMin: 1, defMax: MD.NumberOfSomites) :
                 [-1];
 
@@ -432,7 +432,7 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region Junction Functions
-        public void ReachToCellPoolViaGapJunction(CellPool target, 
+        public void ReachToCellPoolViaGapJunction(CellPool target,
             InterPoolTemplate template,
             TimeLine timeline)
         {
@@ -486,7 +486,7 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
-        public void ReachToCellPoolViaChemSynapse(CellPool target, 
+        public void ReachToCellPoolViaChemSynapse(CellPool target,
             InterPoolTemplate template,
             TimeLine timeline)
         {
@@ -547,12 +547,12 @@ namespace SiliFish.ModelUnits.Cells
         public bool HasJunctions(bool gap = true, bool chemin = true, bool chemout = true)
         {
             if (!HasCells()) return false;
-            return Cells.Any(c=>c.HasJunctions(gap, chemin, chemout));
+            return Cells.Any(c => c.HasJunctions(gap, chemin, chemout));
         }
 
         public void DeleteJunctions(bool gap = true, bool chemin = true, bool chemout = true)
         {
-            foreach (Cell c in  Cells)
+            foreach (Cell c in Cells)
                 c.DeleteJunctions(gap, chemin, chemout);
         }
 
@@ -593,7 +593,7 @@ namespace SiliFish.ModelUnits.Cells
             if (!TargetSomite.StartsWith("All"))
                 somites = Util.ParseRange(TargetSomite, 1, Model.ModelDimensions.NumberOfSomites);
             if (!TargetCell.StartsWith("All"))
-                seqs = Util.ParseRange(TargetCell, 1, this.Cells.Max(c=>c.Sequence));
+                seqs = Util.ParseRange(TargetCell, 1, this.Cells.Max(c => c.Sequence));
 
             foreach (Cell cell in GetCells()
                 .Where(c => (somites.Count == 0 || somites.Contains(c.Somite)) && (seqs.Count == 0 || seqs.Contains(c.Sequence))))

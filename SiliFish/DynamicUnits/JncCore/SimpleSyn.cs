@@ -1,17 +1,15 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.DynamicUnits.JncCore;
 using SiliFish.ModelUnits.Parameters;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Text.Json.Serialization;
 
 //Modified from the code written by Yann Roussel and Tuan Bui
 
 namespace SiliFish.DynamicUnits
 {
-    public class SimpleSyn: ChemSynapseCore
+    public class SimpleSyn : ChemSynapseCore
     {
         private double ISynA = 0; //the momentary current value
         private double ISynB = 0; //the momentary current value
@@ -34,13 +32,13 @@ namespace SiliFish.DynamicUnits
         { }
 
         public SimpleSyn(Dictionary<string, double> paramExternal)
-            :base()
+            : base()
         {
             SetParameters(paramExternal);
         }
 
         public SimpleSyn(SimpleSyn copyFrom)
-            :base(copyFrom)
+            : base(copyFrom)
         {
         }
         public override void InitForSimulation(double deltaT, ref int uniqueID)

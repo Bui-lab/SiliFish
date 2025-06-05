@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SiliFish.DynamicUnits
 {
-    public class ContractibleCellCore: CellCore
+    public class ContractibleCellCore : CellCore
     {
         [Description("Vm when tension is half of Tmax/2")]
         public double Va { get; set; }

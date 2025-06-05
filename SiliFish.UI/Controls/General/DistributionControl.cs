@@ -53,7 +53,7 @@ namespace SiliFish.UI.Controls
                     Constant_NoDistribution cd = new();
                     ddDistribution.Text = cd.Discriminator;
                 }
-                else 
+                else
                 {
                     UniformDistribution ud = new();
                     ddDistribution.Text = ud.Discriminator;

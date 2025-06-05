@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class SingleExpSyn: ChemSynapseCore
+    public class SingleExpSyn : ChemSynapseCore
     {
         private double iSyn = 0; //the momentary current value
 
@@ -30,13 +30,13 @@ namespace SiliFish.DynamicUnits
         { }
 
         public SingleExpSyn(Dictionary<string, double> paramExternal)
-            :base()
+            : base()
         {
             SetParameters(paramExternal);
         }
 
         public SingleExpSyn(SimpleSyn copyFrom)
-            :base(copyFrom)
+            : base(copyFrom)
         {
         }
         public override void InitForSimulation(double deltaT, ref int uniqueID)

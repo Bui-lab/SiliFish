@@ -95,7 +95,7 @@ namespace SiliFish.DataTypes
             {
                 Direction = lastbeatDirection,
                 BeatStart = lastBeatStart,
-                BeatPeak = e,  
+                BeatPeak = e,
                 BeatEnd = e
             });
             lastBeatStart = -1;
@@ -157,13 +157,13 @@ namespace SiliFish.DataTypes
                     Beat curBeat = beats[i];
                     while (beatCounter < window && j >= 0)
                     {
-                        if (beats[j].Direction == curBeat.Direction) 
+                        if (beats[j].Direction == curBeat.Direction)
                         {
                             beatCounter++;
                             startIndex = j;
-                            if (curBeat.Direction == SagittalPlane.Left) 
+                            if (curBeat.Direction == SagittalPlane.Left)
                                 leftCounter++;
-                            else 
+                            else
                                 rightCounter++;
                         }
                         j--;
@@ -184,7 +184,7 @@ namespace SiliFish.DataTypes
                         j++;
                     }
                     keys[i] = beats[i].BeatPeak;
-                    values[i] = Math.Max(leftCounter, rightCounter) * 1000 /(beats[endIndex].BeatPeak - beats[startIndex].BeatPeak);
+                    values[i] = Math.Max(leftCounter, rightCounter) * 1000 / (beats[endIndex].BeatPeak - beats[startIndex].BeatPeak);
                 }
                 return (keys, values);
             }
@@ -304,7 +304,6 @@ namespace SiliFish.DataTypes
                     episode.StartBeat(t, direction);
                     episode.EndBeat(beat_end);
                     episodes.AddEpisode(episode);
-
                 }
                 else if (last_t > 0)
                 {

@@ -1,5 +1,4 @@
-﻿using SiliFish.Definitions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
 
@@ -7,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits.JncCore
 {
-    public class SimpleGap: ElecSynapseCore
+    public class SimpleGap : ElecSynapseCore
     {
         private double IGap1to2 = 0; //the momentary current value
         private double IGap2to1 = 0; //the momentary current value
@@ -26,13 +25,13 @@ namespace SiliFish.DynamicUnits.JncCore
         { }
 
         public SimpleGap(Dictionary<string, double> paramExternal)
-            :base()
+            : base()
         {
             SetParameters(paramExternal);
         }
 
         public SimpleGap(SimpleGap copyFrom)
-            :base(copyFrom)
+            : base(copyFrom)
         {
         }
         public override void InitForSimulation(double deltaT, ref int uniqueID)
@@ -54,7 +53,7 @@ namespace SiliFish.DynamicUnits.JncCore
         {
             IGap1to2 = Conductance * VoltageDiffFrom1To2;
             IGap2to1 = Conductance * VoltageDiffFrom2To1;
-            return ISyn; 
+            return ISyn;
         }
     }
 

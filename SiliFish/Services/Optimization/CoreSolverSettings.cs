@@ -42,7 +42,7 @@ namespace SiliFish.Services.Optimization
             set
             {
                 fitnessFunctions = [];
-                
+
                 foreach (object item in value)
                 {
                     if (item is JsonElement element)

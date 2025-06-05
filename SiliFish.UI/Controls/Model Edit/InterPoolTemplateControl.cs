@@ -1,18 +1,12 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits.JncCore;
-using SiliFish.Extensions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
-using SiliFish.Repositories;
 using SiliFish.UI.EventArguments;
 using SiliFish.UI.Extensions;
-using System.Windows.Forms;
-using static OfficeOpenXml.ExcelErrorValue;
-using Extensions;
 
 namespace SiliFish.UI.Controls
 {

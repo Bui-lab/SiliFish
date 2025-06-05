@@ -1,6 +1,5 @@
 ﻿using SiliFish.Database;
 using SiliFish.DataTypes;
-using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.Services;
@@ -66,8 +65,8 @@ namespace SiliFish.Repositories
                     EpisodeRecord episodeRecord = new(episodeCounter++, simRecordId, episode);
                     dataContext.Add(episodeRecord);
                 }
-                dataContext.SaveChanges(); 
-                
+                dataContext.SaveChanges();
+
                 int cellCounter = 0;
                 int cellCount = simulation.Model.GetCells().Count;
                 foreach (Cell cell in simulation.Model.GetCells())

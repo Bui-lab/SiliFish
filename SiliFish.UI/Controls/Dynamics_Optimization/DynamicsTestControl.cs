@@ -4,7 +4,6 @@ using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Repositories;
 using SiliFish.Services;

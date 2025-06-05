@@ -12,7 +12,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 {
     internal class PlotGeneratorStimuli : PlotGeneratorOfCells
     {
-        public PlotGeneratorStimuli(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq, 
+        public PlotGeneratorStimuli(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
             List<Cell> cells, PlotSelectionInterface plotSelection) :
             base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
         {
@@ -63,11 +63,11 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         yMax = cellGroup.Max(c => c.MaxStimulusValue());
                         Util.SetYRange(ref yMin, ref yMax);
                     }
-                if (yMultiData.Count == 1)
-                {
-                    yData = yMultiData.FirstOrDefault();
-                    yMultiData = null;
-                }
+                    if (yMultiData.Count == 1)
+                    {
+                        yData = yMultiData.FirstOrDefault();
+                        yMultiData = null;
+                    }
                     string csvData = columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray());
                     Chart chart = new()
                     {
@@ -78,10 +78,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         yMin = yMin,
                         yMax = yMax,
                         xMin = timeArray[iStart],
-                    xMax = timeArray[iEnd] + 1,
-                    xData = timeArray[iStart..iEnd],
-                    yData = yData,
-                    yMultiData = yMultiData
+                        xMax = timeArray[iEnd] + 1,
+                        xData = timeArray[iStart..iEnd],
+                        yData = yData,
+                        yMultiData = yMultiData
                     };
                     if (!AddChart(chart))
                         return;

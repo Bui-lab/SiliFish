@@ -25,7 +25,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 
             PlotGeneratorCurrentsOfCells plotGeneratorCurrent = new(plotGenerator, timeArray, iStart, iEnd, 1,
                  cells, plotSelection,
-                 includeGap: GlobalSettings.FullDynamics_ShowGapCurrent, 
+                 includeGap: GlobalSettings.FullDynamics_ShowGapCurrent,
                  includeChemIn: GlobalSettings.FullDynamics_ShowChemInCurrent,
                  includeChemOut: GlobalSettings.FullDynamics_ShowChemOutCurrent);
             plotGeneratorCurrent.CreateCharts(charts);

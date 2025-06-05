@@ -1,16 +1,13 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.Extensions;
 using SiliFish.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Text;
 using System.Web;
-using SiliFish.Extensions;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using OfficeOpenXml.Drawing.Chart;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Drawing.Printing;
 
 namespace SiliFish.Services.Plotting
 {
@@ -159,10 +156,10 @@ namespace SiliFish.Services.Plotting
         }
 
 
-        public static string Plot(string Title, List<Chart> charts, int width = 480, int height = 240, 
+        public static string Plot(string Title, List<Chart> charts, int width = 480, int height = 240,
             bool showZeroValues = false, bool optimizedForPrinting = false)
         {
-            string PlotHTML = PlotCharts(Title, charts, width, height, 
+            string PlotHTML = PlotCharts(Title, charts, width, height,
                 synchronized: true, showZeroValues, optimizedForPrinting: optimizedForPrinting);
             return PlotHTML;
         }
@@ -170,7 +167,7 @@ namespace SiliFish.Services.Plotting
 
         public static string PlotLineCharts(List<Chart> chartsData,
             string mainTitle, int width = 480, int height = 240,
-            bool synchronized=true, bool showZeroValues=false)
+            bool synchronized = true, bool showZeroValues = false)
         {
             List<Chart> charts = [.. chartsData];
             string PlotHTML = PlotCharts(title: mainTitle, charts, width, height, synchronized, showZeroValues);

@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Repositories
 {
-    public class DatabaseDumper:IDisposable
+    public class DatabaseDumper : IDisposable
     {
         private readonly string dbName;
-        private readonly ConcurrentQueue<object> Queue=[];
+        private readonly ConcurrentQueue<object> Queue = [];
         private bool isDisposed;
         private readonly CancellationTokenSource cancellationTokenSource = new();
 
@@ -41,7 +41,7 @@ namespace SiliFish.Repositories
                         break;
                     if (nextToDump is IEnumerable dumps)
                     {
-                        foreach(var item in dumps)
+                        foreach (var item in dumps)
                             dataContext.Add(item);
                     }
                     else
@@ -55,7 +55,7 @@ namespace SiliFish.Repositories
             }
         }
         public DatabaseDumper(string dbName)
-        { 
+        {
             this.dbName = dbName;
             _ = Task.Run(RunLoop);
         }

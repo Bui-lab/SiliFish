@@ -33,7 +33,7 @@ namespace SiliFish.DynamicUnits
         public override double Vreset { get => c; set => c = value; }
 
         [JsonIgnore, Browsable(false)]
-        public override double Vthreshold { get => (c + Vmax)/2; }
+        public override double Vthreshold { get => (c + Vmax) / 2; }
         protected override void Initialize()
         {
             V = Vr;

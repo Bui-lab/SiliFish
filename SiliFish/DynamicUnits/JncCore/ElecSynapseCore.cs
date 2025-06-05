@@ -63,14 +63,14 @@ namespace SiliFish.DynamicUnits.JncCore
             warnings ??= [];
             int preCount = errors.Count + warnings.Count;
             if (Conductance < GlobalSettings.Epsilon)
-                errors.Add($"Electrical synapse: Conductance has 0 value.");            
+                errors.Add($"Electrical synapse: Conductance has 0 value.");
             return errors.Count + warnings.Count == preCount;
         }
         public static bool CheckValues(ref List<string> errors, ref List<string> warnings, string coreType, Dictionary<string, double> param)
         {
             errors ??= [];
             warnings ??= [];
-            int preCount = errors.Count + warnings.Count;     
+            int preCount = errors.Count + warnings.Count;
             ChemSynapseCore core = ChemSynapseCore.CreateCore(coreType, param);
             core.CheckValues(ref errors, ref warnings);
             return errors.Count + warnings.Count == preCount;

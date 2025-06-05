@@ -15,7 +15,7 @@ namespace SiliFish.Repositories
             Match version = versionRegex.Match(json);
             if (!version.Success)//Version is added on 2.2.3
             {
-                json = json.Replace("V_", "V");;//change V_r, V_t, V_max to Vr, Vt, Vmax
+                json = json.Replace("V_", "V"); ;//change V_r, V_t, V_max to Vr, Vt, Vmax
             }
             Regex paramRegex = new("\"ParamValues\": {(\\s+.*[^}]*?)}");
             MatchCollection parMatch = paramRegex.Matches(json);

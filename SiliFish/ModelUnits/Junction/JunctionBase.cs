@@ -1,7 +1,6 @@
 ﻿using SiliFish.Database;
 using SiliFish.DataTypes;
 using SiliFish.DynamicUnits.JncCore;
-using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
@@ -30,7 +29,7 @@ namespace SiliFish.ModelUnits.Junction
 
 
         [JsonIgnore, Browsable(false)]
-        public double[] InputCurrent 
+        public double[] InputCurrent
         {
             get
             {
@@ -112,7 +111,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             double cleared = (inputCurrent?.Length ?? 0) * sizeof(double);
             inputCurrent = null;
-            return cleared;            
+            return cleared;
         }
 
         public virtual void InitForSimulation(RunParam runParam, ref int _)
@@ -127,9 +126,9 @@ namespace SiliFish.ModelUnits.Junction
                 inputCurrent = null;
         }
 
-        public virtual (int source,int target) GetCellIndices()
+        public virtual (int source, int target) GetCellIndices()
         {
-            throw new NotImplementedException();            
+            throw new NotImplementedException();
         }
     }
 }

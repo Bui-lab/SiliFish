@@ -56,17 +56,17 @@ namespace SiliFish.Services.Plotting.PlotSelection
         {
             if (obj is not PlotSelectionMultiCells multiCells)
             {
-                return false;                
+                return false;
             }
             if (SagittalPlane != multiCells.SagittalPlane ||
                 SomiteSelection != multiCells.SomiteSelection ||
                 NSomite != multiCells.NSomite ||
                 CellSelection != multiCells.CellSelection ||
-                NCell!= multiCells.NCell ||
-                CombineCells!= multiCells.CombineCells ||
-                CombinePools!= multiCells.CombinePools ||
+                NCell != multiCells.NCell ||
+                CombineCells != multiCells.CombineCells ||
+                CombinePools != multiCells.CombinePools ||
                 CombineJunctions != multiCells.CombineJunctions ||
-                CombineSomites!= multiCells.CombineSomites)
+                CombineSomites != multiCells.CombineSomites)
                 return false;
             return true;
         }
@@ -77,8 +77,8 @@ namespace SiliFish.Services.Plotting.PlotSelection
             if (combineSomites || combinePools)
                 combineCells = true;
             return cells.OrderBy(c => c.CellGroup)
-                .ThenBy(c => !combineSomites? c.Somite : 1)
-                .ThenBy(c => !combineCells ? c.Sequence :1)
+                .ThenBy(c => !combineSomites ? c.Somite : 1)
+                .ThenBy(c => !combineCells ? c.Sequence : 1)
                 .ThenByDescending(c => c.PositionLeftRight)
                 .GroupBy(c =>
                 !combinePools && !combineSomites && !combineCells ? $"{c.ID}" ://Each cell seperate
@@ -89,6 +89,6 @@ namespace SiliFish.Services.Plotting.PlotSelection
                                     c.ID); //Each cell is separate
         }
 
-        
+
     }
 }

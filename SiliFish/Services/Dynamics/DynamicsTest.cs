@@ -12,7 +12,7 @@ namespace SiliFish.Services.Dynamics
 {
     public class DynamicsTest
     {
-        public static (double[] TimeArray, double[] I) GenerateStimulus(StimulusSettings stimulusSettings, 
+        public static (double[] TimeArray, double[] I) GenerateStimulus(StimulusSettings stimulusSettings,
             double statEnd_ms, double dt, Random random)
         {
             int endTime = (int)Math.Round(statEnd_ms / dt);
@@ -33,7 +33,7 @@ namespace SiliFish.Services.Dynamics
             double[] I = stim.GetValues(endTime);
             return (TimeArray, I);
         }
-        public static List<Chart> DeltaTAnalysis(string coreType, Dictionary<string, double> parameters, StimulusSettings stimulusSettings, 
+        public static List<Chart> DeltaTAnalysis(string coreType, Dictionary<string, double> parameters, StimulusSettings stimulusSettings,
             double statEnd_ms, double[] dtValues, Random random)
         {
             try
@@ -42,7 +42,7 @@ namespace SiliFish.Services.Dynamics
                 string param = "Delta t (ms)";
                 foreach (double dt in dtValues)
                 {
-                    (double[] TimeArray,double[] I) = GenerateStimulus(stimulusSettings, statEnd_ms, dt, random);
+                    (double[] TimeArray, double[] I) = GenerateStimulus(stimulusSettings, statEnd_ms, dt, random);
                     CellCore core = CellCore.CreateCore(coreType, parameters, dt);
                     DynamicsStats stat = core.DynamicsTest(I);
                     charts.Add(new Chart
@@ -64,8 +64,8 @@ namespace SiliFish.Services.Dynamics
             }
         }
 
-        public static List<Chart> FiringAnalysis(string coreType, 
-            Dictionary<string, double> parameters, string param, 
+        public static List<Chart> FiringAnalysis(string coreType,
+            Dictionary<string, double> parameters, string param,
             NumberRangeDefinition rangeDefinition,
             StimulusSettings stimulusSettings,
             double statEnd_ms, double dt, Random random)
@@ -90,9 +90,9 @@ namespace SiliFish.Services.Dynamics
             }
             return charts;
         }
-        
+
         public static List<Chart> RheobaseAnalysis(string coreType,
-            Dictionary<string, double> parameters, 
+            Dictionary<string, double> parameters,
             double maxRheobase, int maxDuration,
             NumberRangeDefinition rangeDefinition,
             double dt)
@@ -102,7 +102,7 @@ namespace SiliFish.Services.Dynamics
 
             foreach (string param in parameters.Keys)//change one parameter at a time
             {
-                double[] values = Util.GenerateValues(parameters[param], rangeDefinition); 
+                double[] values = Util.GenerateValues(parameters[param], rangeDefinition);
 
                 double[] rheos = core.RheobaseSensitivityAnalysis(param, values, dt, maxRheobase, sensitivity: Math.Pow(0.1, 3), infinity: maxDuration);
                 charts.Add(new Chart
@@ -119,6 +119,6 @@ namespace SiliFish.Services.Dynamics
             }
             return charts;
         }
-        
+
     }
 }

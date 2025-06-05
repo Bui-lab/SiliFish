@@ -9,10 +9,10 @@ namespace SiliFish.Helpers
     public static class JsonUtil
     {
         public static JsonSerializerOptions SerializerOptions = new()
-            {
-                Converters = { new ColorJsonConverter() },
-                WriteIndented = true
-            };
+        {
+            Converters = { new ColorJsonConverter() },
+            WriteIndented = true
+        };
         public static string ToJson(object content)
         {
             string jsonstring = JsonSerializer.Serialize(content, SerializerOptions);
@@ -24,7 +24,7 @@ namespace SiliFish.Helpers
             {
                 return JsonSerializer.Deserialize(jsonstring, content, SerializerOptions);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return null;
             }

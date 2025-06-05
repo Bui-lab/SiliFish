@@ -359,7 +359,7 @@ namespace SiliFish.UI.Controls
             listBox.SelectedIndices.Clear();
             for (int i = 0; i < listBox.Items.Count; i++)
             {
-                if (items.Contains(listBox.Items[i].ToString()) || 
+                if (items.Contains(listBox.Items[i].ToString()) ||
                     (listBox.Items[i] is ModelUnitBase ub && items.Contains(ub.ID)))
                 {
                     listBox.SetSelected(i, true);

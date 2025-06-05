@@ -118,7 +118,7 @@ namespace SiliFish.UI.Controls.Display
                     Const.InhibitoryNeurons
                 ];
             if (runningModel == null || runningModel.CellPools.Count == 0) return;
-            if (StickToNeurons) 
+            if (StickToNeurons)
                 itemList.AddRange([.. runningModel.NeuronPools.Where(cp => cp.Active).Select(p => p.CellGroup).OrderBy(p => p)]);
             else
                 itemList.AddRange([.. runningModel.CellPools.Where(cp => cp.Active).Select(p => p.CellGroup).OrderBy(p => p)]);
@@ -213,7 +213,7 @@ namespace SiliFish.UI.Controls.Display
         }
         public void TurnOnSingleCellOrSomite()
         {
-            foreach(Control control in pMain.Controls) 
+            foreach (Control control in pMain.Controls)
                 control.Enabled = false;
             if (runningModel.ModelDimensions.NumberOfSomites > 0)
             {
@@ -305,7 +305,7 @@ namespace SiliFish.UI.Controls.Display
                     PoolsFull != null && PoolsFull.Count != 0 ? PoolsFull.Max(p => p.GetMaxCellSomite()) :
                     CellsFull != null && CellsFull.Count != 0 ? CellsFull.Max(c => c.Somite) :
                     Pools != null && Pools.Count != 0 ? Pools.Max(p => p.GetMaxCellSomite()) :
-                    Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Somite) : 
+                    Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Somite) :
                     runningModel.CellPools.Max(p => p.GetMaxCellSomite());
 
                 eCellSelection.Maximum =

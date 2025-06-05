@@ -11,12 +11,12 @@ namespace SiliFish.ModelUnits.Stim
     {
         public List<Stimulus> ListOfStimulus { get; set; } = [];
 
-             [JsonIgnore]
+        [JsonIgnore]
         public double MinValue { get { return ListOfStimulus.Count != 0 ? ListOfStimulus.Min(s => s.MinValue) : 0; } }
         [JsonIgnore]
         public double MaxValue { get { return ListOfStimulus.Count != 0 ? ListOfStimulus.Max(s => s.MaxValue) : 0; } }
         [JsonIgnore]
-        public bool HasStimulus { get { return ListOfStimulus.Count != 0; } }       
+        public bool HasStimulus { get { return ListOfStimulus.Count != 0; } }
         public Stimuli()
         {
         }

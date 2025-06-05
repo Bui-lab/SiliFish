@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using OfficeOpenXml;
+﻿using OfficeOpenXml;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
@@ -17,7 +17,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using static OfficeOpenXml.ExcelErrorValue;
 
 namespace SiliFish.Repositories
 {
@@ -417,10 +416,12 @@ namespace SiliFish.Repositories
 
         #region CSV Functions
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization", 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization",
             Justification = "ToArray exists to be ready for future DBMemory feature")]
-        public static bool SaveDataToFile(RunningModel model, string filename)
+        public static List<string> SaveDataToFile(RunningModel model, string filename)
         {
+            List<string> savedFiles = [];
+
             try
             {
                 bool jncTracking = model.Settings.JunctionLevelTracking;
@@ -428,12 +429,17 @@ namespace SiliFish.Repositories
                 Dictionary<string, double[]> Vdata_list = [];
                 Dictionary<string, double[]> Gapdata_list = [];
                 Dictionary<string, double[]> Syndata_list = [];
+                Dictionary<string, double[]> Spikedata_list = [];
+                Dictionary<string, double[]> Burstdata_list = [];
                 foreach (CellPool pool in model.NeuronPools.Union(model.MusclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
                 {
-                    //pool.GetCells().Select(c => Vdata_list.TryAdd(c.ID, c.V));
                     foreach (Cell c in pool.GetCells())
                     {
                         Vdata_list.Add(c.ID, c.V.ToArray());
+                        if (c.SpikeTrain.Count != 0)
+                        {
+                            Spikedata_list.Add(c.ID, c.SpikeTrain.Select(i => i * model.DeltaT).ToArray());
+                        }
                         if (jncTracking)
                         {
                             c.GapJunctions.Where(jnc => jnc.Cell2 == c).ToList().ForEach(jnc => Gapdata_list.TryAdd(jnc.ID, jnc.InputCurrent));
@@ -449,25 +455,30 @@ namespace SiliFish.Repositories
                     }
 
                 }
+                SaveModelDynamicsToCSV(filename: filename, Time: model.TimeArray, Values: Vdata_list);
+                savedFiles.Add(filename);
+                if (Spikedata_list.Count != 0)
+                {
+                    string spikesFilename = Path.ChangeExtension(filename, "Spikes.csv");
+                    SaveModelDynamicsToCSV(filename: spikesFilename, Values: Spikedata_list);
+                    savedFiles.Add(spikesFilename);
+                }
                 if (jncTracking)
                 {
-                    string Vfilename = Path.ChangeExtension(filename, "V.csv");
-                    SaveModelDynamicsToCSV(filename: Vfilename, Time: model.TimeArray, Values: Vdata_list);
-                    string Gapfilename = Path.ChangeExtension(filename, "Gap.csv");
-                    string Synfilename = Path.ChangeExtension(filename, "Syn.csv");
-                    SaveModelDynamicsToCSV(filename: Gapfilename, Time: model.TimeArray, Values: Gapdata_list);
-                    SaveModelDynamicsToCSV(filename: Synfilename, Time: model.TimeArray, Values: Syndata_list);
+                    string gapFilename = Path.ChangeExtension(filename, "Gap.csv");
+                    string synFilename = Path.ChangeExtension(filename, "Syn.csv");
+                    SaveModelDynamicsToCSV(filename: gapFilename, Time: model.TimeArray, Values: Gapdata_list);
+                    SaveModelDynamicsToCSV(filename: synFilename, Time: model.TimeArray, Values: Syndata_list);
+                    savedFiles.Add(gapFilename);
+                    savedFiles.Add(synFilename);
                 }
-                else
-                {
-                    SaveModelDynamicsToCSV(filename: filename, Time: model.TimeArray, Values: Vdata_list);
-                }
-                return true;
+                
+                return savedFiles;
             }
             catch (Exception ex)
             {
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
+                return savedFiles;
             }
         }
 
@@ -486,6 +497,37 @@ namespace SiliFish.Repositories
                 {
                     string row = Time[t].ToString() + ',' +
                         string.Join(',', Values.Select(item => item.Value[t].ToString(GlobalSettings.PlotDataFormat)));
+                    sw.WriteLine(row);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+
+        public static bool SaveModelDynamicsToCSV(string filename, Dictionary<string, double[]> Values)
+        {
+            try
+            {
+                if (filename == null || Values == null)
+                    return false;
+
+                using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
+                using StreamWriter sw = new(fs);
+                sw.WriteLine(string.Join(',', Values.Keys));
+                int maxCount = 0;
+                foreach (var item in Values)
+                {
+                    if (item.Value.Length > maxCount)
+                        maxCount = item.Value.Length;
+                }
+
+                for (int i = 0; i < maxCount; i++)
+                {
+                    string row = string.Join(',', Values.Select(item => item.Value.Length > i ? item.Value[i].ToString(GlobalSettings.PlotDataFormat) : ""));
                     sw.WriteLine(row);
                 }
                 return true;
@@ -629,7 +671,7 @@ namespace SiliFish.Repositories
                             }
                         }
                     }
-                    else 
+                    else
                     {
                         foreach (Stimulus stim in rm.GetStimuli().Select(stim => stim as Stimulus).ToList())
                         {
@@ -1055,7 +1097,7 @@ namespace SiliFish.Repositories
                         iter = 1;
                     }
                 }
-                else 
+                else
                 {
                     modelTemplate.RemoveJunctionsOf(null, gap, chemin, chemout);
                     while (iter < contents.Length)
@@ -1415,7 +1457,7 @@ namespace SiliFish.Repositories
                             contents.Insert(0, "ID (Read only)");
 
                         if (!contents.Equivalent(InterPoolBase.ColumnNames))
-                           return false;
+                            return false;
                         int jncTypeInd = InterPoolBase.ColumnNames.IndexOf("Junction Type");
                         int colCount = contents.Count;
                         if (sheetIndex == 0)

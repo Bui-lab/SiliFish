@@ -42,7 +42,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     CsvData = csvData,
                     Title = $"Tail Movement",
                     yLabel = "Y-Coor.",
-                    Colors = [ Color.Red ],
+                    Colors = [Color.Red],
                     xMin = Time[0],
                     xMax = Time[^1] + 1,
                     yMin = yValues.Min() - 1,
@@ -151,7 +151,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         };
                         if (!AddChart(chart)) return;
                     }
-                    
+
                     //Beat/Episode
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatsPerEpisode, tStart, tEnd);
                     title = "Time,Tail Beat/Episode";

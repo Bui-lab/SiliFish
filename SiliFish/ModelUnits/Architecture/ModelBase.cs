@@ -1,5 +1,4 @@
-﻿using OfficeOpenXml;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
@@ -25,8 +24,8 @@ namespace SiliFish.ModelUnits.Architecture
         public string ModelDescription { get; set; }
 
         public ModelDimensions ModelDimensions { get; set; } = new();
-        public ModelSettings Settings 
-        { 
+        public ModelSettings Settings
+        {
             get => settings;
             set
             {
@@ -61,7 +60,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             List<Difference> differences = [];
             if (Version != other.Version)
-                differences.Add(new Difference("Version",Version, other.Version));
+                differences.Add(new Difference("Version", Version, other.Version));
             if (ModelName != other.ModelName)
                 differences.Add(new Difference("Name", ModelName, other.ModelName));
             if (ModelDescription != other.ModelDescription)
@@ -79,7 +78,7 @@ namespace SiliFish.ModelUnits.Architecture
 
             return differences;
         }
-        public virtual bool CheckValues(ref List<string> errors, ref List<string> warnings) 
+        public virtual bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
             errors ??= [];
             warnings ??= [];

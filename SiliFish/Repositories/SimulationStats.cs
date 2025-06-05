@@ -1,12 +1,7 @@
-﻿using GeneticSharp;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Storage.Json;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using SiliFish.Services.Dynamics;
@@ -16,8 +11,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Xml.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiliFish.Repositories
 {
@@ -33,7 +26,7 @@ namespace SiliFish.Repositories
                 double dt = simulation.RunParam.DeltaT;
                 int counter = 0;
                 var stims = model.StimulusTemplates.GroupBy(s => (s.TimeLine_ms.Start, s.TimeLine_ms.End));
-                
+
                 for (int stimCounter = 0; stimCounter < stims.Count(); stimCounter++)
                 {
                     var grStim = stims.ElementAt(stimCounter);
@@ -128,11 +121,11 @@ namespace SiliFish.Repositories
                                 SpikeDynamics.GenerateSpikeStats(model.DynamicsParam, dt, c, iStart, iEnd);
                             dyn?.DefineSpikingPattern();
                             if (dyn != null && dyn.SpikeList.Count != 0)
-                                cellValues.AddRange([   
+                                cellValues.AddRange([
                                     dyn.SpikeList.Count.ToString(GlobalSettings.PlotDataFormat),
                                     (dyn.SpikeList[0]*dt).ToString(GlobalSettings.PlotDataFormat),
                                     (dyn.SpikeList[^1]*dt).ToString(GlobalSettings.PlotDataFormat),
-                                    dyn.SpikeFrequency_Overall.ToString(GlobalSettings.PlotDataFormat) 
+                                    dyn.SpikeFrequency_Overall.ToString(GlobalSettings.PlotDataFormat)
                                     ]);
                             else
                                 cellValues.AddRange(["0", "", "", "0"]);
@@ -179,7 +172,7 @@ namespace SiliFish.Repositories
                     {
                         List<string> cellValues =
                         [
-                            .. new List<string>() { 
+                            .. new List<string>() {
                                 (++counter).ToString(),
                                 cell.CellGroup,
                                 cell.PositionLeftRight.ToString(),
@@ -200,12 +193,12 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static (List<List<XYDataSet>> , List<string>, List<Color>) GenerateSpikeRasterDataSet(Simulation simulation, 
+        public static (List<List<XYDataSet>>, List<string>, List<Color>) GenerateSpikeRasterDataSet(Simulation simulation,
             List<Cell> cells = null, int spikeStart = 0, int spikeEnd = -1)
         {
             try
             {
-                List<List<XYDataSet>> fullSet= [];
+                List<List<XYDataSet>> fullSet = [];
                 List<Color> colors = [];
                 List<string> IDs = [];
                 cells ??= simulation.Model.GetCells();
@@ -222,7 +215,7 @@ namespace SiliFish.Repositories
                             IDs.Add(cell.CellPool.ID);
                             firstPass = false;
                         }
-                        List<double> spikeTimes = cell.SpikeTrain.Where(s => s >= spikeStart && s <= spikeEnd).Select(s=>s * simulation.RunParam.DeltaT).ToList();
+                        List<double> spikeTimes = cell.SpikeTrain.Where(s => s >= spikeStart && s <= spikeEnd).Select(s => s * simulation.RunParam.DeltaT).ToList();
                         dataSets.Add(new XYDataSet(cell.ID, spikeTimes, Enumerable.Repeat(rowCounter, spikeTimes.Count)));
                         rowCounter++;
                     }

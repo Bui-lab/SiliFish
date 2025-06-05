@@ -12,12 +12,12 @@ namespace SiliFish.Definitions
 
     public enum SimulationState
     {
-        [Display(Name = "Not Started")] 
-        NotStarted, 
-        Initializing, 
-        Cancelled, 
+        [Display(Name = "Not Started")]
+        NotStarted,
+        Initializing,
+        Cancelled,
         Interrupted,
-        Running, 
+        Running,
         Finalizing,
         [Display(Name = "Saving to temporary database")]
         DataDump,
@@ -116,15 +116,15 @@ namespace SiliFish.Definitions
     public enum JunctionType { NotSet, Synapse, Gap, NMJ }
     public enum StimulusMode { Step, Gaussian, Ramp, Sinusoidal, Pulse }
     public enum NeuronClass { NotSet, Glycinergic, GABAergic, Glutamatergic, Cholinergic, Modulatory, Mixed }
-    public enum CellOutputMode { NotSet, Excitatory, Inhibitory, Modulatory, Electrical, Cholinergic}
+    public enum CellOutputMode { NotSet, Excitatory, Inhibitory, Modulatory, Electrical, Cholinergic }
 
     public enum UnitOfMeasure
     {
-        [Display(Name = "mV/pA/GΩ/pF/nS"), 
-            Description("Voltage: mV; Current: pA; Resistance: GΩ; Capacitance: pF; Conductance: nS")] 
+        [Display(Name = "mV/pA/GΩ/pF/nS"),
+            Description("Voltage: mV; Current: pA; Resistance: GΩ; Capacitance: pF; Conductance: nS")]
         milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens,
-        [Display(Name = "mV/nA/MΩ/nF/µS"), 
-            Description("Voltage: mV; Current: nA; Resistance: MΩ; Capacitance: nF; Conductance: µS")] 
+        [Display(Name = "mV/nA/MΩ/nF/µS"),
+            Description("Voltage: mV; Current: nA; Resistance: MΩ; Capacitance: nF; Conductance: µS")]
         milliVolt_nanoAmpere_MegaOhm_nanoFarad_microSiemens
     }
 

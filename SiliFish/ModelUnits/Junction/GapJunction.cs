@@ -1,20 +1,20 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.Helpers;
-using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Architecture;
-using SiliFish.ModelUnits.Parameters;
-using System;
-using System.Text.Json.Serialization;
-using SiliFish.Services;
-using System.Reflection;
-using System.Collections.Generic;
 using SiliFish.DynamicUnits.JncCore;
+using SiliFish.Helpers;
+using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Parameters;
+using SiliFish.Services;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Junction
 {
-    public class GapJunction: JunctionBase
+    public class GapJunction : JunctionBase
     {
         //public bool Bidirectional = true;//currently unidirectional or different conductance gap junctions are not handled
         /// <summary>
@@ -26,7 +26,7 @@ namespace SiliFish.ModelUnits.Junction
         /// The number of time units (dt) it will take for the current to travel from cell2 to cell1
         /// Calculated at the begining of simulation
         /// </summary>
-        private int duration2; 
+        private int duration2;
         private double VoltageDiffFrom1To2 = 0; //momentary voltage difference that causes outgoing current
         private double VoltageDiffFrom2To1 = 0; //momentary voltage difference that causes incoming current
         public Cell Cell1;
@@ -51,11 +51,16 @@ namespace SiliFish.ModelUnits.Junction
 
 
         [JsonIgnore]
-        public override string ID { get { return 
-                    (Core as ElecSynapseCore).bidirectional?
+        public override string ID
+        {
+            get
+            {
+                return
+                    (Core as ElecSynapseCore).bidirectional ?
                     $"{Cell1.ID}  ↔ {Cell2.ID}" :
                     $"{Cell1.ID}  → {Cell2.ID}";
-            } }
+            }
+        }
 
         [JsonIgnore]
         public override string Tooltip
@@ -84,7 +89,7 @@ namespace SiliFish.ModelUnits.Junction
                 Cell1.ID, Cell2.ID,
                 JunctionType.Gap, Core.SynapseType,
                 csvExportCoreValues,
-                DistanceMode, 
+                DistanceMode,
                 FixedDuration_ms, Delay_ms, Duration_ms,
                 Active,
                 TimeLine_ms?.ExportValues());
@@ -125,7 +130,7 @@ namespace SiliFish.ModelUnits.Junction
                 throw;
             }
         }
-        
+
 
         public GapJunction()
         { }
@@ -161,7 +166,7 @@ namespace SiliFish.ModelUnits.Junction
             Source ??= Cell1.ID;
             if (!Cell1.GapJunctions.Contains(this))
                 Cell1.GapJunctions.Add(this);
-            
+
             Cell2 = model.GetCell(Target);
             if (!Cell2.GapJunctions.Contains(this))
                 Cell2.GapJunctions.Add(this);

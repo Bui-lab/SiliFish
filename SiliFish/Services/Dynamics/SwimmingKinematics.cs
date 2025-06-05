@@ -1,11 +1,11 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.ModelUnits.Cells;
+using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Cells;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SiliFish.Extensions;
 
 namespace SiliFish.Services.Dynamics
 {
@@ -118,7 +118,7 @@ namespace SiliFish.Services.Dynamics
         }
         public static SwimmingEpisodes GetSwimmingEpisodesUsingMuscleCells(Simulation simulation)
         {
-            if (simulation == null || !simulation.SimulationRun) 
+            if (simulation == null || !simulation.SimulationRun)
                 return null;
             RunningModel model = simulation.Model;
             model.SwimmingEpisodes ??= new(simulation, GenerateSpineCoordinates(simulation, 0, model.TimeArray.Length - 1));
@@ -141,7 +141,7 @@ namespace SiliFish.Services.Dynamics
             leftSpikes.Sort();
             rightSpikes.Sort();
 
-            SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodesByMNSpikes(model.TimeArray, model.DynamicsParam, simulation.RunParam.DeltaT, 
+            SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodesByMNSpikes(model.TimeArray, model.DynamicsParam, simulation.RunParam.DeltaT,
                 leftSpikes, rightSpikes, episodeBreak);
             double[] range = new double[model.TimeArray.Length - iSkip];
             foreach (SwimmingEpisode episode in Episodes.Episodes)

@@ -15,13 +15,13 @@ namespace SiliFish.Services.Optimization
         public string ErrorMessage;
         public override bool Equals(object obj)
         {
-            if (obj is not CoreSolverOutput cso) 
+            if (obj is not CoreSolverOutput cso)
                 return false;
             if (Values.Count != cso.Values.Count)
                 return false;
             foreach (KeyValuePair<string, double> kvp in Values)
             {
-                if(!cso.Values.ContainsKey(kvp.Key)) 
+                if (!cso.Values.ContainsKey(kvp.Key))
                     return false;
                 if (Math.Abs(cso.Values[kvp.Key] - kvp.Value) > double.Epsilon)
                     return false;
@@ -54,12 +54,12 @@ namespace SiliFish.Services.Optimization
         /// The algorithm does not always return the best solution, if the next generation's solution is not as well.
         /// bestestchromosome is kept as a bookmark, and returns the best available solution at the end. 
         /// </summary>
-        IChromosome bestestChromosome = null; 
+        IChromosome bestestChromosome = null;
 
         private string errorMessage;
 
         [JsonIgnore]
-        public string ProgressText 
+        public string ProgressText
         {
             get
             {
@@ -83,7 +83,7 @@ namespace SiliFish.Services.Optimization
         public int Progress
         {
             get
-             {
+            {
                 if (Algorithm == null) return 0;
                 if (Algorithm.Termination is OrTermination)
                 {
@@ -95,7 +95,7 @@ namespace SiliFish.Services.Optimization
                 if (Algorithm.Termination is GenerationNumberTermination gnt)
                     return (int)(100 * Algorithm.GenerationsNumber / gnt.ExpectedGenerationNumber);
                 if (Algorithm.Termination is TimeEvolvingTermination tet)
-                    return (int)(100*Algorithm.TimeEvolving/tet.MaxTime);
+                    return (int)(100 * Algorithm.TimeEvolving / tet.MaxTime);
                 if (Algorithm.Termination is FitnessStagnationTermination fst)
                     return -1;// fst.GetNumberOfStagnantGenerations() / fst.ExpectedStagnantGenerationsNumber;
                 if (Algorithm.Termination is FitnessThresholdTermination ftt)
@@ -157,11 +157,11 @@ namespace SiliFish.Services.Optimization
 
         public CoreSolver()
         { }
-        
+
 
         private void InitializeOptimization()
         {
-            Selection = (SelectionBase)Activator.CreateInstance(Type.GetType(Settings.SelectionType+AssemblySuffix));
+            Selection = (SelectionBase)Activator.CreateInstance(Type.GetType(Settings.SelectionType + AssemblySuffix));
             Crossover = (CrossoverBase)Activator.CreateInstance(Type.GetType(Settings.CrossOverType + AssemblySuffix));
             Mutation = (MutationBase)Activator.CreateInstance(Type.GetType(Settings.MutationType + AssemblySuffix));
             Reinsertion = (ReinsertionBase)Activator.CreateInstance(Type.GetType(Settings.ReinsertionType + AssemblySuffix));
@@ -195,11 +195,11 @@ namespace SiliFish.Services.Optimization
                     return;
                 }
             }
-            if (Candidates.Count < GlobalSettings.GeneticAlgorithmSolutionCount) 
+            if (Candidates.Count < GlobalSettings.GeneticAlgorithmSolutionCount)
                 Candidates.Add(chromosome);
             else if (Candidates.Min(c => c.Fitness.Value) < latestFitness)
             {
-                FloatingPointChromosome toRemove = Candidates.First(c=>c.Fitness.Value <= Candidates.Min(c => c.Fitness.Value) + double.Epsilon);
+                FloatingPointChromosome toRemove = Candidates.First(c => c.Fitness.Value <= Candidates.Min(c => c.Fitness.Value) + double.Epsilon);
                 Candidates.Remove(toRemove);
                 Candidates.Add(chromosome);
             }
@@ -247,7 +247,7 @@ namespace SiliFish.Services.Optimization
                 }
                 return (results, errMessage);
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 return (null, e.Message);
             }

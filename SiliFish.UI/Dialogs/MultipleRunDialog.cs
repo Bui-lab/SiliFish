@@ -9,10 +9,10 @@ namespace SiliFish.UI.Dialogs
         public MultipleRunDialog(bool runTimeStats, RunParam runParam)
         {
             InitializeComponent();
-            if (runTimeStats) 
+            if (runTimeStats)
                 lMessage.Text = "The simulations will be run with the same settings sequentially multiple times and time related information will be listed. \r\n" +
                     "Only the last simulation results will be available.";
-            else 
+            else
                 lMessage.Text = "The simulations will be run with the same settings in parallel (hardware permitting) " +
                     "and full information will be saved to the output folder or database.";
             RunParam = runParam;

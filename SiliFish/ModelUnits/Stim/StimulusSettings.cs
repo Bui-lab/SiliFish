@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Stim
 {
-    public class StimulusSettings: IDataExporterImporter
+    public class StimulusSettings : IDataExporterImporter
     {
         public StimulusMode Mode { get; set; }
         //mode = Gaussian: value1 and value2 are mean and SD 
@@ -27,7 +27,7 @@ namespace SiliFish.ModelUnits.Stim
 
         public List<string> ExportValues()
         {
-            return ListBuilder.Build<string>(Mode,Value1,Value2,Frequency);
+            return ListBuilder.Build<string>(Mode, Value1, Value2, Frequency);
         }
         public void ImportValues(List<string> values)
         {

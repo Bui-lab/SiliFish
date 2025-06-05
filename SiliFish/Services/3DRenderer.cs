@@ -1,14 +1,14 @@
-﻿using SiliFish.Extensions;
+﻿using SiliFish.Definitions;
+using SiliFish.Extensions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Junction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
-using SiliFish.ModelUnits.Junction;
-using SiliFish.Definitions;
 
 namespace SiliFish.Services
 {
@@ -46,7 +46,7 @@ namespace SiliFish.Services
             //y is negated because closer to us is left, minus
             //z is negated because more dorsal is considered as 0
             double newX = (x - XMin) * XYZMult - XOffset;
-            double newY = SingleDimension ? (y * columnIndex2D) * XYZMult:
+            double newY = SingleDimension ? (y * columnIndex2D) * XYZMult :
                 (y - YMin) * XYZMult;
             double newZ = (z - ZMin) * XYZMult;
             return (newX, -newZ, -newY);
@@ -106,8 +106,8 @@ namespace SiliFish.Services
             return string.Join(",", links);
         }
 
-        public string RenderIn3D(RunningModel model, List<CellPool> pools, string somiteRange, 
-            int width, int _, 
+        public string RenderIn3D(RunningModel model, List<CellPool> pools, string somiteRange,
+            int width, int _,
             bool showGap, bool showChem, bool offline)
         {
             if (pools == null || pools.Count == 0)
@@ -136,9 +136,9 @@ namespace SiliFish.Services
             }
 
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
-            
+
             html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title));
-            
+
             ((XMin, double maxX), (YMin, double maxY), (ZMin, double maxZ), int YRange1D) = model.GetSpatialRange();
 
             double xRange = maxX - XMin;
@@ -179,11 +179,11 @@ namespace SiliFish.Services
             html.Replace("__NODES__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
             html.Replace("__NODE_SIZE__", nodesize.ToString("0.##"));
 
-            
+
             List<string> gapChemLinks = [];
             pools.ForEach(pool => gapChemLinks.Add(CreateLinkDataPoints(pool, gap: true, chem: true, -1, MD.NumberOfSomites)));
             html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !String.IsNullOrEmpty(s))));
-            
+
             double spinalposX = MD.SupraSpinalRostralCaudalDistance;
             double spinalposY = MD.SpinalBodyPosition + MD.SpinalDorsalVentralDistance / 2;
             double spinalposZ = 0;

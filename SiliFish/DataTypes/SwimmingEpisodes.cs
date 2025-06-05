@@ -6,7 +6,9 @@ using System.Linq;
 
 namespace SiliFish.DataTypes
 {
-    public enum EpisodeStats { EpisodeDuration, BeatsPerEpisode, BeatFreq, RollingFreq, 
+    public enum EpisodeStats
+    {
+        EpisodeDuration, BeatsPerEpisode, BeatFreq, RollingFreq,
         EpisodeMeanAmplitude, EpisodeMedianAmplitude, EpisodeMaxAmplitude
     }
     public class SwimmingEpisodes
@@ -21,15 +23,15 @@ namespace SiliFish.DataTypes
 
         public List<SwimmingEpisode> Episodes { get => episodes; }
 
-        public SwimmingEpisodes() 
-        { 
+        public SwimmingEpisodes()
+        {
         }
         public SwimmingEpisodes(Simulation simulation, Dictionary<string, Coordinate[]> dictionary)
         {
             spineCoordinates = dictionary;
             this.simulation = simulation;
             GenerateEpisodes();
-            GenerateEpisodeStats();          
+            GenerateEpisodeStats();
 
         }
         private void GenerateEpisodes()
@@ -117,7 +119,7 @@ namespace SiliFish.DataTypes
                 List<double> amplitudes = [];
                 foreach (int i in times)
                     amplitudes.Add(Math.Abs(coordinates[i].X));
-                
+
                 amplitudes.Sort();
                 double mean = amplitudes.Average();
                 double median = amplitudes[amplitudes.Count / 2];
@@ -181,8 +183,8 @@ namespace SiliFish.DataTypes
             double[] values = mode == "median" ? episodes.Select(e => e.MedianAmplitude).ToArray() :
                 mode == "max" ? episodes.Select(e => e.MaxAmplitude).ToArray() :
                 episodes.Select(e => e.MeanAmplitude).ToArray();
-                
-            return (episodes.Select(e => e.Start).ToArray(),values);
+
+            return (episodes.Select(e => e.Start).ToArray(), values);
         }
         private (double[] xValues, double[] yValues) GetXYValues(EpisodeStats stat)
         {
@@ -204,7 +206,7 @@ namespace SiliFish.DataTypes
             (double[] xValuesFull, double[] yValuesFull) = GetXYValues(stat);
             int len = xValuesFull.Count(x => x > tStart && x <= tEnd);
             if (len == 0)
-               len = xValuesFull.Any(x => x < tStart) ? 1 : 0;
+                len = xValuesFull.Any(x => x < tStart) ? 1 : 0;
             double[] xValues = new double[len];
             double[] yValues = new double[len];
             int counter = 0;

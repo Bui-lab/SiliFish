@@ -29,7 +29,7 @@ namespace SiliFish.Repositories
         public bool Interrupted { get; set; }
 
 
-        public double GetProgress() => SimulationList?.Sum(s => s.GetProgress())/numSimulations ?? 0;
+        public double GetProgress() => SimulationList?.Sum(s => s.GetProgress()) / numSimulations ?? 0;
         public string GetStatus()
         {
             string state = string.Empty;

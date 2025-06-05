@@ -1,6 +1,4 @@
-﻿using SiliFish.ModelUnits;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,7 +20,7 @@ namespace SiliFish.Helpers
             string pattern = @"(^|,)'(\d+)-(\d+)($|,)";
             MatchCollection matches = Regex.Matches(line, pattern);
 
-            foreach (Match match in matches.OrderByDescending(m=>m.Index))
+            foreach (Match match in matches.OrderByDescending(m => m.Index))
             {
                 if (match.Value.StartsWith('\''))
                     line = line.Remove(match.Index, 1);

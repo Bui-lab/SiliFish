@@ -29,10 +29,10 @@ namespace SiliFish.Helpers
             if (File.Exists(fileName))
                 File.Delete(fileName);
             ExcelPackage package = new(fileName);
-            return package;    
+            return package;
         }
 
-        public static bool CreateWorkSheet(ExcelWorkbook workbook, string sheetName, List<string> columnNames, 
+        public static bool CreateWorkSheet(ExcelWorkbook workbook, string sheetName, List<string> columnNames,
             List<IDataExporterImporter> objList, List<string> errorList)
         {
             try
@@ -67,7 +67,7 @@ namespace SiliFish.Helpers
             }
         }
 
-        public static bool AddWorksheet(ExcelPackage package, string sheetName, 
+        public static bool AddWorksheet(ExcelPackage package, string sheetName,
             List<string> columnNames, List<List<string>> values, List<string> errorList)
         {
             try

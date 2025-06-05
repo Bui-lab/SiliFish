@@ -4,7 +4,7 @@ namespace SiliFish.UI.Controls.General
 {
     public partial class SimulationSettingsControl : UserControl
     {
-        public int iMax =>(int)(eTimeEnd.Value / edt.Value);
+        public int iMax => (int)(eTimeEnd.Value / edt.Value);
 
         public SimulationSettingsControl()
         {

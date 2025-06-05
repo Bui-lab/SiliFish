@@ -49,7 +49,7 @@ namespace SiliFish.UI.Controls
                 linkLoadPool.Enabled = !createdCellPool;
                 linkSavePool.Enabled = !createdCellPool;
                 eDescription.ReadOnly = createdCellPool;
-                
+
                 poolBase = value ?? new();
                 WriteDataToControl();
             }

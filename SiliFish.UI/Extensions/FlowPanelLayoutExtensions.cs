@@ -33,7 +33,7 @@ namespace Extensions
             }
         }
 
-        public static void CreateNumericUpDownControlsForDictionary(this FlowLayoutPanel flowPanel, 
+        public static void CreateNumericUpDownControlsForDictionary(this FlowLayoutPanel flowPanel,
             Dictionary<string, double> ParamDict, Dictionary<string, string> DescDict,
             ToolTip toolTip)
         {
@@ -50,7 +50,7 @@ namespace Extensions
                         Text = key,
                         Height = 23,
                         Width = 8 * maxLen + 5,
-                        TextAlign = ContentAlignment.BottomLeft,                      
+                        TextAlign = ContentAlignment.BottomLeft,
                         TabIndex = tabIndex++
                     };
                     flowPanel.Controls.Add(lbl);

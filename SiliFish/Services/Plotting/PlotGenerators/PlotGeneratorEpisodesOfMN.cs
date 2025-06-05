@@ -79,7 +79,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         yData = yValues
                     };
                     if (!AddChart(chart)) return;
-                }                
+                }
                 //Episode Duration
                 if (plotType == PlotType.EpisodesMN)
                 {

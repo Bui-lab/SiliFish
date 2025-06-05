@@ -54,7 +54,7 @@ namespace SiliFish.DynamicUnits
             }
             else
             {
-                double Cdv = -(V - Vr - SSF * Math.Exp((V - Vt)/SSF))/Rm + Stim;
+                double Cdv = -(V - Vr - SSF * Math.Exp((V - Vt) / SSF)) / Rm + Stim;
                 double vNew = V + Cdv * deltaT / Cm;
                 V = vNew;
             }

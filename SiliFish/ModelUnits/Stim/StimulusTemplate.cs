@@ -1,7 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Helpers;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -79,7 +78,7 @@ namespace SiliFish.ModelUnits.Stim
                 return differences;
             return null;
         }
-         
+
         public override string ToString()
         {
             string timeline = TimeLine_ms != null && !TimeLine_ms.IsBlank() ? TimeLine_ms.ToString() : "";
@@ -93,7 +92,7 @@ namespace SiliFish.ModelUnits.Stim
 
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
-            ListBuilder.Build<string>("Name", "TargetPool", "TargetSomite", "TargetCell", "LeftRight", "DelayPerSomite", "DelaySagittal", "Active",  StimulusSettings.ColumnNames, TimeLine.ColumnNames);
+            ListBuilder.Build<string>("Name", "TargetPool", "TargetSomite", "TargetCell", "LeftRight", "DelayPerSomite", "DelaySagittal", "Active", StimulusSettings.ColumnNames, TimeLine.ColumnNames);
 
         public List<string> ExportValues()
         {
@@ -120,7 +119,7 @@ namespace SiliFish.ModelUnits.Stim
 
         public List<StimulusTemplate> CreateSpreadedCopy()
         {
-            List<StimulusTemplate> spreaded=[];
+            List<StimulusTemplate> spreaded = [];
             if (TimeLine_ms.IsBlank())
             {
                 StimulusTemplate st = (StimulusTemplate)CreateCopy();

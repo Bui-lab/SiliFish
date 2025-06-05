@@ -1,8 +1,6 @@
 using Controls;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
 using SiliFish.Database;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
@@ -17,7 +15,6 @@ using SiliFish.UI.Dialogs;
 using SiliFish.UI.EventArguments;
 using SiliFish.UI.Services;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace SiliFish.UI
 {
@@ -346,7 +343,13 @@ namespace SiliFish.UI
                 return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                ModelFile.SaveDataToFile(runningModel, saveFileCSV.FileName);
+                List<string> savedFiles = ModelFile.SaveDataToFile(runningModel, saveFileCSV.FileName);
+                if (savedFiles.Count == 0)
+                    MessageBox.Show("There has been an error in saving the data files. Please make sure you have any space on your drive.", 
+                        "Warning", MessageBoxButtons.OK);
+                else 
+                    MessageBox.Show($"File(s) {string.Join(", ", savedFiles)} are saved", "Information", MessageBoxButtons.OK);
+
             }
         }
 
@@ -635,7 +638,7 @@ namespace SiliFish.UI
                 timerRun.Enabled = true;
                 return true;
             }
-            catch (Exception exc) 
+            catch (Exception exc)
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
                 return false;
@@ -647,7 +650,7 @@ namespace SiliFish.UI
             Invoke(SaveSimulationResultsToDBEnd);
         }
 
-        private void abortSaveSimulationAction() 
+        private void abortSaveSimulationAction()
         {
             Invoke(SaveSimulationResultsToDBAborted);
         }

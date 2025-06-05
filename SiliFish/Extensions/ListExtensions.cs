@@ -9,7 +9,7 @@ namespace SiliFish.Extensions
         {
             if (thisList?.Count != secondList?.Count)
                 return false;
-            for (int i = 0;  i< thisList?.Count; i++)
+            for (int i = 0; i < thisList?.Count; i++)
             {
                 if (!thisList[i].Equals(secondList[i])) return false;
 
@@ -54,9 +54,9 @@ namespace SiliFish.Extensions
         public static (double, (double, double)) MedianAndIQR(this List<double> thisList)
         {
             if (thisList == null || thisList.Count == 0)
-                return (0, (0,0));
+                return (0, (0, 0));
             double median;
-            List<double> sortedList = thisList.OrderBy(x=>x).ToList();
+            List<double> sortedList = thisList.OrderBy(x => x).ToList();
             int count = sortedList.Count;
             if (count % 2 == 0)
                 median = (sortedList[count / 2 - 1] + sortedList[count / 2]) / 2.0;
@@ -64,7 +64,7 @@ namespace SiliFish.Extensions
                 median = sortedList[count / 2];
             double Q1 = sortedList[count / 4];
             double Q3 = sortedList[3 * count / 4];
-            return (median, (Q1, Q3));  
+            return (median, (Q1, Q3));
         }
     }
 }

@@ -66,16 +66,19 @@ namespace SiliFish.DynamicUnits
         private double? rheobase;
 
         [Browsable(false)]
-        public double Rheobase { get
+        public double Rheobase
+        {
+            get
             {
                 rheobase ??= CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
                 return (double)rheobase;
             }
 
-            set => rheobase = value; }
+            set => rheobase = value;
+        }
 
         [JsonIgnore, Browsable(false)]
-        public virtual double VMomentary{ get => V; }
+        public virtual double VMomentary { get => V; }
         [JsonIgnore, Browsable(false)]
         public virtual double VSpikeThreshold { get => Vthreshold; }//to determine whether there is a spike or not
 
@@ -88,7 +91,7 @@ namespace SiliFish.DynamicUnits
 
         [JsonIgnore, Browsable(false)]
         public virtual double Vthreshold { get; set; }
-        
+
         [JsonIgnore, Browsable(false)]
         public virtual double Vreset { get => Vr; set => Vr = value; }
 
@@ -194,7 +197,7 @@ namespace SiliFish.DynamicUnits
             {
                 GetNextVal(I[tIndex], ref spike);
                 dyn.VList[tIndex] = V;
-                if (spike) 
+                if (spike)
                     dyn.SpikeList.Add(tIndex);
                 UpdateAdditionalDynamicStats(dyn, tIndex);
             }

@@ -9,7 +9,7 @@ namespace SiliFish.DynamicUnits.JncCore
     [JsonDerivedType(typeof(SimpleSyn), typeDiscriminator: "simplesyn")]
     [JsonDerivedType(typeof(SimpleGap), typeDiscriminator: "simplegap")]
     [JsonDerivedType(typeof(UnidirectionalGap), typeDiscriminator: "unidirectionalgap")]
-    public class JunctionCore: BaseCore
+    public class JunctionCore : BaseCore
     {
         public static int CoreParamMaxCount = 10;
         public double Conductance { get; set; }
@@ -24,7 +24,7 @@ namespace SiliFish.DynamicUnits.JncCore
 
         [JsonIgnore, Browsable(false)]
         public virtual string Identifier => throw new NotImplementedException();
-        
+
         public double DeltaT;
 
         public virtual void InitForSimulation(double deltaT, ref int uniqueID)

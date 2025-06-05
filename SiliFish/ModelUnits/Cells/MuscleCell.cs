@@ -30,20 +30,20 @@ namespace SiliFish.ModelUnits.Cells
                     return clrf.R;
                 return 0;
             }
-        }        
-        
+        }
+
         [JsonIgnore]
         public double[] RelativeTension { get { return (Core as ContractibleCellCore).CalculateRelativeTension(V); } }
         [JsonIgnore]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization",
             Justification = "ToArray exists to be ready for future DBMemory feature")]
-        public double[] Tension 
-        { 
-            get 
+        public double[] Tension
+        {
+            get
             {
                 tension ??= (Core as ContractibleCellCore).CalculateTension(V.ToArray());
                 return tension;
-            } 
+            }
         }
         public override double RestingMembranePotential { get { return (Core?.Vr) ?? 0; } }
 
@@ -114,7 +114,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             if (other is not MuscleCell oc)
                 return [new Difference("Incompatible classes", $"{ID}({GetType()}", $"{other.ID}{other.GetType()}")];
-            
+
             List<Difference> differences = base.DiffersFrom(other) ?? [];
             List<Difference> diffs = ListDiffersFrom(EndPlates.Select(c => c as ModelUnitBase).ToList(),
                 oc.EndPlates.Select(c => c as ModelUnitBase).ToList());

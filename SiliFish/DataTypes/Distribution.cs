@@ -41,7 +41,7 @@ namespace SiliFish.DataTypes
         public static bool FlickerOff = false;
 
         public bool Angular { get; set; } = false;
-        
+
         [JsonIgnore]
         public virtual string Discriminator => "None";
         public bool Absolute { get; set; } = true;
@@ -68,7 +68,7 @@ namespace SiliFish.DataTypes
             }
         }
         [JsonIgnore]
-        public string RangeStr 
+        public string RangeStr
         {
             get
             {
@@ -92,8 +92,8 @@ namespace SiliFish.DataTypes
 
         public virtual void Multiply(double d)
         {
-            RangeStart*= d;
-            RangeEnd*= d;
+            RangeStart *= d;
+            RangeEnd *= d;
         }
         public Distribution()
         {
@@ -151,11 +151,11 @@ namespace SiliFish.DataTypes
                 else return null;
             }
             Dictionary<string, string> keyValuePairs = [];
-            foreach (string value in values) 
+            foreach (string value in values)
             {
                 string[] keyAndValue = value.Split(':');
                 if (keyAndValue.Length != 2) throw new Exception("Distribution Cell CSV invalid format");
-                keyValuePairs.Add(keyAndValue[0].Trim(), keyAndValue[1].Trim());  
+                keyValuePairs.Add(keyAndValue[0].Trim(), keyAndValue[1].Trim());
             }
             string discriminator = keyValuePairs["Discriminator"];
             Distribution dist = (Distribution)Activator.CreateInstance(GetTypeOfDiscriminator(discriminator));
@@ -263,7 +263,7 @@ namespace SiliFish.DataTypes
         [JsonIgnore, Browsable(false)]
         public override string CSVCellExportValues
         {
-            get => Absolute? UniqueValue.ToString() : base.CSVCellExportValues;
+            get => Absolute ? UniqueValue.ToString() : base.CSVCellExportValues;
         }
         public Constant_NoDistribution()
         { }
@@ -307,7 +307,7 @@ namespace SiliFish.DataTypes
         [JsonIgnore]
         public override string Discriminator => "Equally Spaced";
 
-           public double NoiseStdDev { get; set; } = 0;
+        public double NoiseStdDev { get; set; } = 0;
         public override double UniqueValue
         {
             get { return (RangeStart + RangeEnd) / 2; }
@@ -437,7 +437,7 @@ namespace SiliFish.DataTypes
             double mean1 = Mean * HundredPercent / 100;
             double stdDev1 = Stddev * HundredPercent / 100;
             double mean2 = Mean2 * HundredPercent / 100;
-            double stdDev2= Stddev2 * HundredPercent / 100;
+            double stdDev2 = Stddev2 * HundredPercent / 100;
             double[] arr = Random.Bimodal(mean1, stdDev1, mean2, stdDev2, Mode1Weight, n, LowerLimit, UpperLimit);
             if (ordered)
                 return [.. arr.Order()];

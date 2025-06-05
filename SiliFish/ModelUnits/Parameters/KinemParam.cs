@@ -14,17 +14,17 @@ namespace SiliFish.ModelUnits.Parameters
         [Description("Natural oscillation frequency"), DisplayName("w0"), Category("Swim Dynamics")]
         public double w0 { get; set; } = 2.5; //20Hz = 125.6
 
-        [Description("If set to false, membrane potential values are used for animation.") , 
+        [Description("If set to false, membrane potential values are used for animation."),
             DisplayName("Use Muscle Tension"), Category("Swim Dynamics")]
         public bool UseMuscleTension { get; set; } = false;
 
         [Description("Used if 'Use Muscle Tension' is set to false. " +
-            "If non-zero, (α + β * R) is used as 'Conversion Coefficient')"), 
+            "If non-zero, (α + β * R) is used as 'Conversion Coefficient')"),
             DisplayName("Alpha"), Category("Swim Dynamics")]
         public double Alpha { get; set; } = 0;
 
         [Description("Used if 'Use Muscle Tension' is set to false. " +
-            "If non-zero, (α + β * R) is used as 'Conversion Coefficient')"), 
+            "If non-zero, (α + β * R) is used as 'Conversion Coefficient')"),
             DisplayName("Beta"), Category("Swim Dynamics")]
         public double Beta { get; set; } = 0;
 
@@ -36,19 +36,19 @@ namespace SiliFish.ModelUnits.Parameters
             "Coefficient to convert muscle tension to driving force for the oscillation"), DisplayName("Tension Conversion Coef"), Category("Swim Dynamics")]
         public double ConvCoefTension { get; set; } = 0.1;
 
-        [Description("The distance considered as a move from the center line. Used only for tail based episode calculation."), 
+        [Description("The distance considered as a move from the center line. Used only for tail based episode calculation."),
             DisplayName("Boundary"), Category("Swim Dynamics")]
         public double Boundary { get; set; } = 0.5;
 
         //same as the time range that will be looked ahead to detect motion
-        
+
         [Description("In ms. The duration required considered to be an episode break."), DisplayName("Episode Break"), Category("Swim Dynamics")]
         public int EpisodeBreak { get; set; } = 100;
 
         #endregion
 
         [Browsable(false)]
-        public double ConvCoef => UseMuscleTension ? ConvCoefTension: ConvCoefPotential;
+        public double ConvCoef => UseMuscleTension ? ConvCoefTension : ConvCoefPotential;
 
         public KinemParam() { }
 

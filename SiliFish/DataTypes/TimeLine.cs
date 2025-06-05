@@ -1,6 +1,5 @@
 ﻿using SiliFish.Extensions;
 using SiliFish.ModelUnits;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -52,11 +51,11 @@ namespace SiliFish.DataTypes
             {
                 if (string.IsNullOrEmpty(period))
                     continue;
-                (double i, double j) = period.ParseRange(defStart:0, defEnd:-1);
+                (double i, double j) = period.ParseRange(defStart: 0, defEnd: -1);
                 Periods.Add((i, j));
             }
         }
-  
+
         public TimeLine()
         { }
 
@@ -87,14 +86,14 @@ namespace SiliFish.DataTypes
         }
         public void AddOffset(double delay_ms)
         {
-            if (delay_ms < double.Epsilon) 
+            if (delay_ms < double.Epsilon)
                 return;
             if (Periods.Count == 0)
                 Periods.Add((delay_ms, -1));
-            else 
+            else
                 Periods = Periods.Select(p => (p.start + delay_ms, p.end == -1 ? p.end : p.end + delay_ms)).ToList();
         }
-        public void MultiplyBy (double multiplier)
+        public void MultiplyBy(double multiplier)
         {
             Periods = Periods.Select(p => (p.start * multiplier, p.end == -1 ? p.end : p.end * multiplier)).ToList();
         }

@@ -61,7 +61,7 @@ namespace SiliFish.Services.Plotting.PlotSelection
                 if (!tags1[i].Equals(tags2[i]))
                     return false;
             }
-            return true;           
+            return true;
         }
         public void AddUnit(ModelUnitBase unit)
         {

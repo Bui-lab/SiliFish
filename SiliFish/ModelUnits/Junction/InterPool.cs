@@ -7,13 +7,13 @@ namespace SiliFish.ModelUnits.Junction
     /// <summary>
     /// Used to list junctions between cell pools
     /// </summary>
-    public class InterPool: ModelUnitBase
+    public class InterPool : ModelUnitBase
     {
         public IEnumerable<JunctionBase> Junctions { get; private set; }
 
         public string SourcePool, TargetPool;
-        public int CountJunctions { get{ return Junctions.Count(); }}
-        public double MinConductance { get {  return Junctions.Min(j=>j.Core?.Conductance??0); } }
+        public int CountJunctions { get { return Junctions.Count(); } }
+        public double MinConductance { get { return Junctions.Min(j => j.Core?.Conductance ?? 0); } }
         public double MaxConductance { get { return Junctions.Max(j => j.Core?.Conductance ?? 0); } }
 
         public override bool Active

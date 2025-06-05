@@ -57,24 +57,24 @@ namespace SiliFish.ModelUnits.Parameters
             Category("Firing Patterns")]
         public double TonicPadding { get; set; } = 1;
 
-        [Description("In ms. The duration to be used as a break while calculating spiking frequency."), 
-            DisplayName("Spike Break"), 
+        [Description("In ms. The duration to be used as a break while calculating spiking frequency."),
+            DisplayName("Spike Break"),
             Category("Firing Patterns")]
         public double SpikeBreak { get; set; } = 10;
-        
-        [Description("In ms. The duration to be used as a break while calculating bursting frequency."), 
-            DisplayName("Burst Break"), 
+
+        [Description("In ms. The duration to be used as a break while calculating bursting frequency."),
+            DisplayName("Burst Break"),
             Category("Firing Patterns")]
         public int BurstBreak { get; set; } = 100;
 
         #endregion
         #region RC Spike Trains
-        [Description("In ms. The max duration in between two bursts of successive somites to be considered the same train of bursts."), 
+        [Description("In ms. The max duration in between two bursts of successive somites to be considered the same train of bursts."),
             DisplayName("RC Positive Delay"),
             Category("RC Spike Trains")]
         public double RCPositiveDelay { get; set; } = 10;
 
-        [Description("In ms. The max negative duration in between two bursts of successive somites to be considered the same train of bursts."), 
+        [Description("In ms. The max negative duration in between two bursts of successive somites to be considered the same train of bursts."),
             DisplayName("RC Negative Delay"),
             Category("RC Spike Trains")]
         public double RCNegativeDelay { get; set; } = -3;

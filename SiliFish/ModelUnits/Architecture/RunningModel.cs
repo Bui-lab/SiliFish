@@ -25,7 +25,7 @@ namespace SiliFish.ModelUnits.Architecture
         public double DeltaT { get; private set; }
         public int SkipDuration { get; private set; }
         public int MaxTime { get; private set; }
-        public Random randomNumGenerator { get; private set; } 
+        public Random randomNumGenerator { get; private set; }
 
         protected bool db_mode = false;
         protected double[] Time;
@@ -75,7 +75,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         [Browsable(false)]
         [JsonIgnore]
-        public List<CellPool> MotoNeuronPools 
+        public List<CellPool> MotoNeuronPools
         {
             get
             {
@@ -84,7 +84,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         [Browsable(false)]
         [JsonIgnore]
-        public List<CellPool> InterNeuronPools 
+        public List<CellPool> InterNeuronPools
         {
             get
             {
@@ -263,7 +263,7 @@ namespace SiliFish.ModelUnits.Architecture
         public RunningModel CreateCopy()
         {
             string jsonstring = JsonSerializer.Serialize(this, JsonUtil.SerializerOptions);
-            RunningModel newModel =  (RunningModel)ModelFile.ReadFromJson(jsonstring, out List<string> issues);
+            RunningModel newModel = (RunningModel)ModelFile.ReadFromJson(jsonstring, out List<string> issues);
             if (issues?.Count > 0)
                 ExceptionHandler.ExceptionHandling("Running Model copy creation unsuccessful", new Exception(string.Join(";", issues)));
             newModel.StimulusTemplates = StimulusTemplates;
@@ -332,7 +332,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             try
             {
-                foreach(Cell cell in GetCells().Where(c=>c.Stimuli!=null && c.Stimuli.HasStimulus))
+                foreach (Cell cell in GetCells().Where(c => c.Stimuli != null && c.Stimuli.HasStimulus))
                 {
                     List<Stimulus> stimList = cell.Stimuli.ListOfStimulus.Where(s => s.Settings.Mode is StimulusMode.Sinusoidal or StimulusMode.Pulse).ToList();
                     foreach (Stimulus stim in stimList)
@@ -368,7 +368,7 @@ namespace SiliFish.ModelUnits.Architecture
                     double descGap = descendingGapList.Count != 0 ?
                         descendingGapList.Max(jnc => Util.Distance(jnc.Cell1.Coordinate, jnc.Cell2.Coordinate, jnc.DistanceMode)) : 0;
                     double descChem = 0;
-                    if ( cell is Neuron neuron)
+                    if (cell is Neuron neuron)
                     {
                         List<ChemicalSynapse> descendingChemList = neuron.Terminals.Where(jnc => cell.Coordinate.X < jnc.PostCell.Coordinate.X).ToList();
                         if (descendingChemList.Count != 0)
@@ -587,7 +587,7 @@ namespace SiliFish.ModelUnits.Architecture
             cell?.DeleteJunctions(gap, chemin, chemout);
             if (cp == null && cell == null)
             {
-                foreach(CellPool cellPool in CellPools)
+                foreach (CellPool cellPool in CellPools)
                 {
                     cellPool.DeleteJunctions(gap, chemin, chemout);
                 }
@@ -691,7 +691,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             int gapJunctions = CellPools.SelectMany(p => p.Cells).Sum((Cell c) => c.GapJunctions.Count);
             int chemJunctions = CellPools.SelectMany(p => p.Cells).Sum(c => ((c as MuscleCell)?.EndPlates.Count ?? 0) + ((c as Neuron)?.Synapses.Count ?? 0));
-            return gapJunctions/2 + chemJunctions; //gap junctions are counted twice
+            return gapJunctions / 2 + chemJunctions; //gap junctions are counted twice
         }
 
         public virtual int GetMemoryRequirementPerDeltaT()
@@ -700,7 +700,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public virtual (int RollingWindow, int Capacity) CheckMemory()
         {
-            double maxDuration = CellPools.SelectMany(p=>p.Cells).Max(c => c.TimeDistance());
+            double maxDuration = CellPools.SelectMany(p => p.Cells).Max(c => c.TimeDistance());
             int rollingWindow = (int)Math.Ceiling(maxDuration / (100 * DeltaT)) * 100;
             GCMemoryInfo memoryInfo = GC.GetGCMemoryInfo();
             long availableMemory = memoryInfo.TotalAvailableMemoryBytes - memoryInfo.MemoryLoadBytes;
@@ -744,7 +744,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             List<CellPool> pools = null;
 
-            if (cellSelection is PlotSelectionUnits unitsSelection)                
+            if (cellSelection is PlotSelectionUnits unitsSelection)
             {
                 if (unitsSelection.Units?.FirstOrDefault() is Cell)
                 {

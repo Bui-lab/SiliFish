@@ -316,7 +316,7 @@ namespace SiliFish.Services.Dynamics
                 InterBurstCluster = new(centroid2);
                 return false;
             }
-            if (centroid2 < centroid1 * oneClusterMultiplier)//single cluster
+            if (centroid2 < centroid1 * oneClusterMultiplier || centroid1 == centroid2)//single cluster
             {
                 BurstCluster = new(centroid1);
                 return false;
@@ -334,8 +334,8 @@ namespace SiliFish.Services.Dynamics
                     InterBurstCluster.AddMember(d);
                 center = (BurstCluster.centroid + InterBurstCluster.centroid) / 2;
             }
-            if (InterBurstCluster.centroid < BurstCluster.centroid * oneClusterMultiplier 
-                || 
+            if (InterBurstCluster.centroid < BurstCluster.centroid * oneClusterMultiplier
+                ||
                 BurstCluster.clusterMax * BurstCluster.clusterMax / BurstCluster.clusterMin > InterBurstCluster.centroid)//single cluster
             {
                 BurstCluster.MergeCluster(InterBurstCluster);
@@ -528,7 +528,6 @@ namespace SiliFish.Services.Dynamics
                 MaxBurstInterval_UpperRange = 0;
             }
 
-
             burstsOrSpikes = BurstOrSpike.SpikesToBursts(DynamicsParams, dt, SpikeList, out double lastInterval);
             if (double.IsNaN(lastInterval))
                 lastInterval = quiescence;
@@ -549,10 +548,10 @@ namespace SiliFish.Services.Dynamics
             "Enter 0 or a negative number to consider all of the spikes."),
             DisplayName("Spike Train Spike Count"),
             Category("Dynamics - Two Exp Syn")]
-        public int SpikeTrainSpikeCount 
-        { 
-            get { return DynamicsStats.DynamicsParams.SpikeTrainSpikeCount; } 
-            set { DynamicsStats.DynamicsParams.SpikeTrainSpikeCount = value; } 
+        public int SpikeTrainSpikeCount
+        {
+            get { return DynamicsStats.DynamicsParams.SpikeTrainSpikeCount; }
+            set { DynamicsStats.DynamicsParams.SpikeTrainSpikeCount = value; }
         }
 
         [Description("To increase performance of the simulation, the spikes earlier than " +
@@ -665,7 +664,7 @@ namespace SiliFish.Services.Dynamics
             set { DynamicsStats.DynamicsParams.RCNegativeDelay = value; }
         }
         #endregion
-       
+
     }
 
 }

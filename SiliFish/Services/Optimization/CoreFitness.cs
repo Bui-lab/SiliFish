@@ -49,13 +49,13 @@ namespace SiliFish.Services.Optimization
             Dictionary<double, DynamicsStats> stats = [];
             foreach (double current in currentValues)
             {
-                DynamicsStats stat = core.DynamicsTest(current, infinity: GlobalSettings.RheobaseInfinity, dt: 0.1, warmup:warmup, includePostStimulus: includePostStimulus);
+                DynamicsStats stat = core.DynamicsTest(current, infinity: GlobalSettings.RheobaseInfinity, dt: 0.1, warmup: warmup, includePostStimulus: includePostStimulus);
                 stats.Add(current, stat);
             }
 
             foreach (FitnessFunction function in fitnessFunctions)
             {
-                if (function.RheobaseBased && rheobase <= 0) 
+                if (function.RheobaseBased && rheobase <= 0)
                     continue;
                 double current = function.CurrentValueOrRheobaseMultiplier * (function.RheobaseBased ? rheobase : 1);
                 DynamicsStats stat = stats[current];

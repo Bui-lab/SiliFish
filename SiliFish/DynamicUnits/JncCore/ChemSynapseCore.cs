@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace SiliFish.DynamicUnits.JncCore
 {
-    public class ChemSynapseCore: JunctionCore
+    public class ChemSynapseCore : JunctionCore
     {
         #region Static members and functions
         private static readonly Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
@@ -73,7 +73,7 @@ namespace SiliFish.DynamicUnits.JncCore
             int preCount = errors.Count + warnings.Count;
             ChemSynapseCore core = CreateCore(coreType, param);
             core.CheckValues(ref errors, ref warnings);
-            return errors.Count  + warnings.Count == preCount;
+            return errors.Count + warnings.Count == preCount;
         }
         public virtual double GetNextVal(double vPreSynapse, double vPost, List<double> spikeArrivalTimes, double tCurrent, DynamicsParam settings, bool excitatory)
         {

@@ -60,7 +60,8 @@ namespace SiliFish.ModelUnits.Cells
                         return CellOutputMode.Modulatory;
                     case NeuronClass.Mixed:
                         return CellOutputMode.NotSet;
-                };
+                }
+                ;
                 return CellOutputMode.NotSet;
             }
         }
@@ -156,8 +157,8 @@ namespace SiliFish.ModelUnits.Cells
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
             ListBuilder.Build<string>("Cell Pool ID (Read only)", "CellGroup", "CellType", "NTMode",
-                "BodyLocation", "PositionLeftRight", "NumOfCells", "PerSomiteOrTotal", "SomiteRange","2DRendSpread",
-                SpatialDistribution.ColumnNames, 
+                "BodyLocation", "PositionLeftRight", "NumOfCells", "PerSomiteOrTotal", "SomiteRange", "2DRendSpread",
+                SpatialDistribution.ColumnNames,
                 "Descending Axon", "Ascending Axon",
                 "Conduction Velocity", "CoreType", "Rheobase (output only/sample)",
                 Enumerable.Range(1, CellCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
@@ -227,7 +228,7 @@ namespace SiliFish.ModelUnits.Cells
             if (iter < values.Count)
                 TimeLine_ms.ImportValues([values[iter++]]);
         }
-    
+
 
         public CellPoolTemplate()
         {
@@ -258,11 +259,11 @@ namespace SiliFish.ModelUnits.Cells
 
         private double GetSampleRheobase()
         {
-            if (Parameters==null) return 0.0; 
+            if (Parameters == null) return 0.0;
             Dictionary<string, double> dparams = Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
-            CellCore core = CellCore.CreateCore(CoreType, dparams, dt_run:0.1);
+            CellCore core = CellCore.CreateCore(CoreType, dparams, dt_run: 0.1);
             return core?.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1) ?? 0;
-           
+
         }
 
         public override List<Difference> DiffersFrom(ModelUnitBase other)
@@ -282,7 +283,7 @@ namespace SiliFish.ModelUnits.Cells
             if (Color != cpt.Color)
                 differences.Add(new Difference(ID, "Color", Color, cpt.Color));
             if (!Parameters.SameAs(cpt.Parameters, out List<Difference> diff))
-                differences.AddRange(diff.Select(d=> new Difference(ID + " Parameters", d.Item + d.Parameter, d.Value1, d.Value2))); 
+                differences.AddRange(diff.Select(d => new Difference(ID + " Parameters", d.Item + d.Parameter, d.Value1, d.Value2)));
             if (BodyLocation != cpt.BodyLocation)
                 differences.Add(new Difference(ID, "BodyLocation", BodyLocation, cpt.BodyLocation));
             if (PositionLeftRight != cpt.PositionLeftRight)
@@ -355,7 +356,7 @@ namespace SiliFish.ModelUnits.Cells
             {
                 List<InterPoolTemplate> ascIPT = model.InterPoolTemplates
                     .Where(ipt => ipt.SourcePool == CellGroup && ipt.CellReach.Ascending).ToList();
-                double ascending = ascIPT!=null &&  ascIPT.Count != 0 ? ascIPT.Max(ipt => ipt.CellReach.MaxAscReach) : double.NaN;
+                double ascending = ascIPT != null && ascIPT.Count != 0 ? ascIPT.Max(ipt => ipt.CellReach.MaxAscReach) : double.NaN;
                 if (!double.IsNaN(ascending))
                     AscendingAxonLength = new Constant_NoDistribution(ascending);
             }

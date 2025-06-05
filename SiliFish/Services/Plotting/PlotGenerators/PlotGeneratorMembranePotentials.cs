@@ -48,7 +48,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     List<int> spikeTrains = cell.SpikeTrain?.Where(s => s >= iStart && s <= iEnd).ToList();
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                     {
-                        string value = cell.V?[iStart + i].ToString(GlobalSettings.PlotDataFormat) ?? ""; 
+                        string value = cell.V?[iStart + i].ToString(GlobalSettings.PlotDataFormat) ?? "";
                         data[i] += value + ",";
                         if (GlobalSettings.MembranePotential_ShowSpike)
                         {
