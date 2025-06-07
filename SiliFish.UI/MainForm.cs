@@ -169,7 +169,6 @@ namespace SiliFish.UI
         {
             progressBarRun.Visible = visible;
             lProgress.Visible = visible;
-            linkExportOutput.Visible = !visible;
         }
         private void completeRunsAction(List<Simulation> simulations, int completion)
         {
@@ -183,9 +182,8 @@ namespace SiliFish.UI
             timerRun.Enabled = false;
             progressBarRun.Value = progressBarRun.Maximum;
             SetProgressVisibility(false);
-            if (completion < 0)//cancelled
-                linkExportOutput.Visible = false;
-            btnRun.Text = "Run";
+            btnStart.Visible = true;
+            btnPause.Visible = btnResume.Visible = btnStop.Visible = false;
             if (completion < 0)
             {
                 lRunTime.Text = $"Last run cancelled\r\n" +
@@ -283,7 +281,10 @@ namespace SiliFish.UI
                 }
             }
 
-            btnRun.Text = "Stop Run";
+            btnStart.Visible = false;
+            btnResume.Visible = false;
+            btnPause.Visible = true;
+            btnStop.Visible = true;
             return true;
         }
 
@@ -292,23 +293,14 @@ namespace SiliFish.UI
             modelSimulator = new(runningModel, runParam, numSimulations, parallelRun, completeRunsAction);
             modelSimulator.Run();
         }
-
-        private void btnRun_Click(object sender, EventArgs e)
+        private void PauseSimulation()
         {
-            if (btnRun.Text == "Stop Run")
-            {
-                bool interrupt = modelSimulator.GetProgress() > GlobalSettings.ProgressLimitToDiscard / 100;
-                string msg = $"Do you want to stop the stimulation?\r\n" +
-                    (interrupt ? "You can access the values till the point it was executed." :
-                    "You will lose all the simulation data.");
-                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                    return;
-                if (interrupt)
-                    modelSimulator?.InterruptRun();
-                else
-                    modelSimulator?.CancelRun();
-                return;
-            }
+            modelSimulator?.InterruptRun();
+            btnPause.Visible = btnStart.Visible = false;
+            btnResume.Visible = btnStop.Visible = true;
+        }
+        private void btnStart_Click(object sender, EventArgs e)
+        {
             if (modelSimulator?.ModelRun ?? false)
             {
                 if (MessageBox.Show("Do you want to run the stimulation? Old simulation values will be lost.", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
@@ -319,6 +311,40 @@ namespace SiliFish.UI
             numSimulations = 1;
             parallelRun = false;
             RunSimulationFromModel();
+        }
+        private void btnPause_Click(object sender, EventArgs e)
+        {
+            PauseSimulation();
+        }
+        private void btnResume_Click(object sender, EventArgs e)
+        {
+            if (modelSimulator == null)
+                return;
+            timerRun.Enabled = true;
+            SetProgressVisibility(true);
+            progressBarRun.Value = (int)(modelSimulator.GetProgress() * progressBarRun.Maximum);
+            lProgress.Text = $"Progress: {modelSimulator.GetStatus()}...";
+            modelSimulator.ResumeRun();
+            btnResume.Visible = btnStart.Visible = false;
+            btnPause.Visible = btnStop.Visible = true;
+        }
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            bool interrupt = modelSimulator.GetProgress() > GlobalSettings.ProgressLimitToDiscard / 100;
+            string msg = $"Do you want to stop the stimulation?\r\n" +
+                (interrupt ? "You can access the values till the point it was executed." :
+                "You will lose all the simulation data.");
+            if (MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+            if (interrupt && !modelSimulator.Interrupted)
+                PauseSimulation();
+            else
+                modelSimulator?.CancelRun();
+
+            btnPause.Visible = btnResume.Visible = false;
+            btnStart.Visible = true;
+            btnStop.Visible = false;
+            return;
         }
 
         private void timerRun_Tick(object sender, EventArgs e)
@@ -332,24 +358,6 @@ namespace SiliFish.UI
             {
                 progressBarRun.Value = (int)(modelSimulator.GetProgress() * progressBarRun.Maximum);
                 lProgress.Text = $"Progress: {modelSimulator.GetStatus()}...";
-            }
-        }
-        private void linkExportOutput_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            string msg = "Exporting the output may take a while depending on the duration of the simulation and the number of cells." +
-                " The resulting files can also be large. You may want to consider exporting partial data exporting indivusal plots instead." +
-                " Do you still want to continue with the full export?";
-            if (MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNo) != DialogResult.Yes)
-                return;
-            if (saveFileCSV.ShowDialog() == DialogResult.OK)
-            {
-                List<string> savedFiles = ModelFile.SaveDataToFile(runningModel, saveFileCSV.FileName);
-                if (savedFiles.Count == 0)
-                    MessageBox.Show("There has been an error in saving the data files. Please make sure you have any space on your drive.", 
-                        "Warning", MessageBoxButtons.OK);
-                else 
-                    MessageBox.Show($"File(s) {string.Join(", ", savedFiles)} are saved", "Information", MessageBoxButtons.OK);
-
             }
         }
 
@@ -631,7 +639,7 @@ namespace SiliFish.UI
 
                 if (!tableExists) return false;
                 simulationDBWriter = new(dataContext.DbFileName, modelSimulator, completeSaveSimulationAction, abortSaveSimulationAction);
-                btnRun.Enabled = false;
+                btnStart.Enabled = btnResume.Enabled = btnPause.Enabled = btnStop.Enabled = false;
                 UseWaitCursor = true;
                 progressBarRun.Value = 0;
                 SetProgressVisibility(true);
@@ -660,7 +668,7 @@ namespace SiliFish.UI
             timerRun.Enabled = false;
             progressBarRun.Value = progressBarRun.Maximum;
             SetProgressVisibility(false);
-            btnRun.Enabled = true;
+            btnStart.Enabled = btnResume.Enabled = btnPause.Enabled = btnStop.Enabled = false;
             string savedSimulations = $"\r\nSimulation id(s): {string.Join(',', simulationDBWriter.SimulationIds)}";
             string savedModels = string.Join(',', simulationDBWriter.ModelJsons);
             if (!string.IsNullOrEmpty(savedModels))
@@ -676,7 +684,7 @@ namespace SiliFish.UI
             timerRun.Enabled = false;
             progressBarRun.Value = progressBarRun.Maximum;
             SetProgressVisibility(false);
-            btnRun.Enabled = true;
+            btnStart.Enabled = btnResume.Enabled = btnPause.Enabled = btnStop.Enabled = true;
             MessageBox.Show($"There was a problem in saving the simulation to {new SFDataContext().DbFileName}");
             simulationDBWriter = null;
         }
@@ -890,11 +898,42 @@ namespace SiliFish.UI
                 }
             }
         }
+
+        private void miToolsStatsMembranePotentials_Click(object sender, EventArgs e)
+        {
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                if (SimulationFile.SaveMembranePotentials(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                {
+                    string filename = saveFileCSV.FileName;
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
+                }
+            }
+        }
+
+        private void miToolsStatsCurrents_Click(object sender, EventArgs e)
+        {
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                if (SimulationFile.SaveCurrents(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                {
+                    string filename = saveFileCSV.FileName;
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
+                }
+            }
+        }
         private void miToolsStatsFull_Click(object sender, EventArgs e)
         {
             if (!StatsWarning()) return;
             if (saveFileExcel.ShowDialog() == DialogResult.OK)
             {
+                MessageBox.Show("Membrane potential and (if tracked) current information will be saved as seperate csv files for file maintainability.", "Information");
                 if (SimulationFile.SaveFullStats(modelSimulator.LastSimulation, saveFileExcel.FileName))
                 {
                     string folder = Path.GetDirectoryName(saveFileExcel.FileName);
@@ -1011,5 +1050,7 @@ namespace SiliFish.UI
         {
             this.Close();
         }
+
+
     }
 }

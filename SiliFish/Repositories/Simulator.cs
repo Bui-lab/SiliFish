@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Permissions;
 using System.Threading;
 
 namespace SiliFish.Repositories
@@ -16,7 +17,6 @@ namespace SiliFish.Repositories
         private RunningModel runningModel = runningModel;
         private RunParam runParam = runParam;
         private int numSimulations = numSimulations;
-        private int runSimulations = 0;
         private bool parallelRun = parallelRun;
         private string runmode => parallelRun ? "parallel" : "series";
         private DateTime startTime, endTime;
@@ -83,15 +83,31 @@ namespace SiliFish.Repositories
             finally
             {
                 ModelRun = true;//is set to true even if a single simulation is completed
-                if (++runSimulations == numSimulations)
-                {
-                    endTime = DateTime.Now;
-                    if (simulation.state == SimulationState.Completed)
-                        simulationCompletionAction?.Invoke(SimulationList, 1/*Completed*/);
-                }
+                endTime = DateTime.Now;
+                if (simulation.state == SimulationState.Completed)
+                    simulationCompletionAction?.Invoke(SimulationList, 1/*Completed*/);
+               
             }
         }
 
+        private void ResumeSingleSimulation(Simulation simulation)
+        {
+            try
+            {
+                simulation.ResumeSimulation(this);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+            }
+            finally
+            {
+                ModelRun = true;//is set to true even if a single simulation is completed
+                endTime = DateTime.Now;
+                if (simulation.state == SimulationState.Completed)
+                    simulationCompletionAction?.Invoke(SimulationList, 1/*Completed*/);
+            }
+        }
         public void Run()
         {
             try
@@ -103,7 +119,6 @@ namespace SiliFish.Repositories
 
                 ModelRun = false;
                 SimulationList = [];
-                runSimulations = 0;
                 //Run multiple simulations with a different seed each time - for model statistics
                 if (parallelRun)
                 {
@@ -160,7 +175,26 @@ namespace SiliFish.Repositories
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
-
+        public void ResumeRun()
+        {
+            try
+            {
+                Interrupted = false;
+                foreach(Simulation simulation in SimulationList)
+                {
+                    if (simulation.SimulationInterrupted)
+                    {
+                        simulation.SimulationInterrupted = false;
+                        Thread thread = new(() => ResumeSingleSimulation(simulation));
+                        thread.Start();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+            }
+        }
         public void UpdateNameAndDecription(string modelName, string modelDescription)
         {
             runningModel.ModelName = modelName;

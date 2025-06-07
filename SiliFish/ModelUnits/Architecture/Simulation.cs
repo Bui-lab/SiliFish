@@ -152,6 +152,36 @@ namespace SiliFish.ModelUnits.Architecture
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
-
+        public virtual void ResumeSimulation(Simulator simulator)
+        {
+            try
+            {
+                state = SimulationState.Running;
+                if (SimulationCancelled)
+                {
+                    state = SimulationState.Cancelled;
+                    return;
+                }
+                int lastProgress = iProgress;
+                foreach (var index in Enumerable.Range(lastProgress, iMax - lastProgress - 1))
+                {
+                    iProgress = index;
+                    if (SimulationCancelled || SimulationInterrupted)
+                    {
+                        state = SimulationCancelled ? SimulationState.Cancelled : SimulationState.Interrupted;
+                        break;
+                    }
+                    CalculateCellularOutputs(index);
+                    CalculateMembranePotentialsFromCurrents(index);
+                }
+                FinalizeSimulation();
+                while (state != SimulationState.Completed && state != SimulationState.Interrupted && state != SimulationState.Cancelled)
+                    _ = Task.Delay(100);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+            }
+        }
     }
 }

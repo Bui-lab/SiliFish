@@ -4,6 +4,7 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
 namespace SiliFish.Repositories
@@ -68,7 +69,35 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static bool SaveFullStats(Simulation simulation, string filename)
+        public static bool SaveMembranePotentials(Simulation simulation, string filename)
+        {
+            try
+            {
+                (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateMembranePotentialsForCSV(simulation);
+                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+        public static bool SaveCurrents(Simulation simulation, string filename)
+        {
+            try
+            {
+                (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateCurrentsForCSV(simulation);
+                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+        public static bool SaveFullStats(Simulation simulation, string filename, bool singleFile = false)
         {
             try
             {
@@ -100,6 +129,31 @@ namespace SiliFish.Repositories
                 (columnNames, values) = SimulationStats.GenerateEpisodes(simulation);
                 ExcelUtil.AddWorksheet(package, "Episodes", columnNames, values, errorList);
 
+                if (simulation.SimulationRun)
+                {
+                    (columnNames, values) = SimulationStats.GenerateMembranePotentialsForCSV(simulation);
+                    if (singleFile)
+                        ExcelUtil.AddWorksheet(package, "Membrane Potentials", columnNames, values, errorList);
+                    else
+                    {
+                        filename = Path.ChangeExtension(filename, ".csv");
+                        string path = FileUtil.AppendToFileName(filename, "_MembranePotentials");
+                        FileUtil.SaveToCSVFile(path, columnNames, values);
+                    }
+                    if (simulation.Model.Settings.JunctionLevelTracking)
+                    {
+                        (columnNames, values) = SimulationStats.GenerateCurrentsForCSV(simulation);
+                        if (singleFile)
+                            ExcelUtil.AddWorksheet(package, "Currents", columnNames, values, errorList);
+                        else
+                        {
+                            filename = Path.ChangeExtension(filename, ".csv");
+                            string path = FileUtil.AppendToFileName(filename, "_Currents");
+                            FileUtil.SaveToCSVFile(path, columnNames, values);
+                        }
+                    }
+                }
+            
                 package.Save();
                 return true;
             }

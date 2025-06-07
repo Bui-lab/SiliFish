@@ -45,6 +45,8 @@ namespace SiliFish.UI
             miFileSep2 = new ToolStripSeparator();
             miFileNewModel = new ToolStripMenuItem();
             miFileClearModel = new ToolStripMenuItem();
+            miFileSep3 = new ToolStripSeparator();
+            miFileExit = new ToolStripMenuItem();
             mTools = new ToolStripMenuItem();
             miToolsCompareModel = new ToolStripMenuItem();
             miToolsSep1 = new ToolStripSeparator();
@@ -55,6 +57,8 @@ namespace SiliFish.UI
             miToolsStatsSpikeCounts = new ToolStripMenuItem();
             miToolsStatsSpikes = new ToolStripMenuItem();
             miToolsStatsEpisodes = new ToolStripMenuItem();
+            miToolsStatsMembranePotentials = new ToolStripMenuItem();
+            miToolsStatsCurrents = new ToolStripMenuItem();
             miToolsSep3 = new ToolStripSeparator();
             miToolsStatsFull = new ToolStripMenuItem();
             miToolsMultipleRun = new ToolStripMenuItem();
@@ -72,12 +76,14 @@ namespace SiliFish.UI
             btnGenerateModel = new Button();
             linkLabel4 = new LinkLabel();
             pSimulation = new Panel();
-            simulationSettings = new Controls.General.SimulationSettingsControl();
+            btnResume = new Button();
+            btnStart = new Button();
+            btnStop = new Button();
+            btnPause = new Button();
+            simulationSettings = new SiliFish.UI.Controls.General.SimulationSettingsControl();
             lProgress = new Label();
             lRunTime = new Label();
-            linkExportOutput = new LinkLabel();
             progressBarRun = new ProgressBar();
-            btnRun = new Button();
             lSimulationSettings = new Label();
             modelOutputControl = new ModelOutputControl();
             timerRun = new System.Windows.Forms.Timer(components);
@@ -94,8 +100,6 @@ namespace SiliFish.UI
             pDistinguisherBottom = new Panel();
             saveFileExcel = new SaveFileDialog();
             openFileExcel = new OpenFileDialog();
-            miFileSep3 = new ToolStripSeparator();
-            miFileExit = new ToolStripMenuItem();
             pTop.SuspendLayout();
             menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
@@ -209,11 +213,23 @@ namespace SiliFish.UI
             miFileClearModel.Text = "&Clear Model";
             miFileClearModel.Click += miFileClearModel_Click;
             // 
+            // miFileSep3
+            // 
+            miFileSep3.Name = "miFileSep3";
+            miFileSep3.Size = new Size(267, 6);
+            // 
+            // miFileExit
+            // 
+            miFileExit.Name = "miFileExit";
+            miFileExit.Size = new Size(270, 22);
+            miFileExit.Text = "E&xit";
+            miFileExit.Click += miFileExit_Click;
+            // 
             // mTools
             // 
             mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsSep2, miToolsGenerateStatsData, miToolsMultipleRun, miToolsRunTimeStats, miToolsSepStats, miToolsSettings, miToolsMemoryFlush });
             mTools.Name = "mTools";
-            mTools.Size = new Size(46, 19);
+            mTools.Size = new Size(47, 19);
             mTools.Text = "Tools";
             // 
             // miToolsCompareModel
@@ -242,7 +258,7 @@ namespace SiliFish.UI
             // 
             // miToolsGenerateStatsData
             // 
-            miToolsGenerateStatsData.DropDownItems.AddRange(new ToolStripItem[] { miToolsStatsSpikeStats, miToolsStatsSpikeCounts, miToolsStatsSpikes, miToolsStatsEpisodes, miToolsSep3, miToolsStatsFull });
+            miToolsGenerateStatsData.DropDownItems.AddRange(new ToolStripItem[] { miToolsStatsSpikeStats, miToolsStatsSpikeCounts, miToolsStatsSpikes, miToolsStatsEpisodes, miToolsStatsMembranePotentials, miToolsStatsCurrents, miToolsSep3, miToolsStatsFull });
             miToolsGenerateStatsData.Name = "miToolsGenerateStatsData";
             miToolsGenerateStatsData.Size = new Size(207, 22);
             miToolsGenerateStatsData.Text = "Generate Stats Data";
@@ -274,6 +290,20 @@ namespace SiliFish.UI
             miToolsStatsEpisodes.Size = new Size(188, 22);
             miToolsStatsEpisodes.Text = "Episodes";
             miToolsStatsEpisodes.Click += miToolsStatsEpisodes_Click;
+            // 
+            // miToolsStatsMembranePotentials
+            // 
+            miToolsStatsMembranePotentials.Name = "miToolsStatsMembranePotentials";
+            miToolsStatsMembranePotentials.Size = new Size(188, 22);
+            miToolsStatsMembranePotentials.Text = "Membrane Potentials";
+            miToolsStatsMembranePotentials.Click += miToolsStatsMembranePotentials_Click;
+            // 
+            // miToolsStatsCurrents
+            // 
+            miToolsStatsCurrents.Name = "miToolsStatsCurrents";
+            miToolsStatsCurrents.Size = new Size(188, 22);
+            miToolsStatsCurrents.Text = "Currents";
+            miToolsStatsCurrents.Click += miToolsStatsCurrents_Click;
             // 
             // miToolsSep3
             // 
@@ -330,21 +360,21 @@ namespace SiliFish.UI
             // miViewOutputFolder
             // 
             miViewOutputFolder.Name = "miViewOutputFolder";
-            miViewOutputFolder.Size = new Size(180, 22);
+            miViewOutputFolder.Size = new Size(148, 22);
             miViewOutputFolder.Text = "Output Folder";
             miViewOutputFolder.Click += miViewOutputFolder_Click;
             // 
             // miViewTempFolder
             // 
             miViewTempFolder.Name = "miViewTempFolder";
-            miViewTempFolder.Size = new Size(180, 22);
+            miViewTempFolder.Size = new Size(148, 22);
             miViewTempFolder.Text = "Temp Folder";
             miViewTempFolder.Click += miViewTempFolder_Click;
             // 
             // miViewAbout
             // 
             miViewAbout.Name = "miViewAbout";
-            miViewAbout.Size = new Size(180, 22);
+            miViewAbout.Size = new Size(148, 22);
             miViewAbout.Text = "About";
             miViewAbout.Click += miViewAbout_Click;
             // 
@@ -425,18 +455,80 @@ namespace SiliFish.UI
             // pSimulation
             // 
             pSimulation.BackColor = Color.FromArgb(236, 239, 241);
+            pSimulation.Controls.Add(btnResume);
+            pSimulation.Controls.Add(btnStart);
+            pSimulation.Controls.Add(btnStop);
+            pSimulation.Controls.Add(btnPause);
             pSimulation.Controls.Add(simulationSettings);
             pSimulation.Controls.Add(lProgress);
             pSimulation.Controls.Add(lRunTime);
-            pSimulation.Controls.Add(linkExportOutput);
             pSimulation.Controls.Add(progressBarRun);
-            pSimulation.Controls.Add(btnRun);
             pSimulation.Controls.Add(lSimulationSettings);
             pSimulation.Dock = DockStyle.Bottom;
             pSimulation.Location = new Point(0, 504);
             pSimulation.Name = "pSimulation";
             pSimulation.Size = new Size(543, 165);
             pSimulation.TabIndex = 1;
+            // 
+            // btnResume
+            // 
+            btnResume.BackColor = Color.FromArgb(96, 125, 139);
+            btnResume.Font = new Font("Segoe UI", 14F);
+            btnResume.ForeColor = Color.White;
+            btnResume.Location = new Point(8, 104);
+            btnResume.Name = "btnResume";
+            btnResume.Size = new Size(60, 33);
+            btnResume.TabIndex = 41;
+            btnResume.Text = "⏸▶";
+            toolTip.SetToolTip(btnResume, "Resume Simulation");
+            btnResume.UseVisualStyleBackColor = false;
+            btnResume.Visible = false;
+            btnResume.Click += btnResume_Click;
+            // 
+            // btnStart
+            // 
+            btnStart.BackColor = Color.FromArgb(96, 125, 139);
+            btnStart.Font = new Font("Segoe UI", 14F);
+            btnStart.ForeColor = Color.White;
+            btnStart.Location = new Point(8, 104);
+            btnStart.Name = "btnStart";
+            btnStart.Size = new Size(60, 33);
+            btnStart.TabIndex = 40;
+            btnStart.Text = "▶";
+            toolTip.SetToolTip(btnStart, "Run Simulation");
+            btnStart.UseVisualStyleBackColor = false;
+            btnStart.Click += btnStart_Click;
+            // 
+            // btnStop
+            // 
+            btnStop.BackColor = Color.FromArgb(96, 125, 139);
+            btnStop.Enabled = true;
+            btnStop.Font = new Font("Segoe UI", 14F);
+            btnStop.ForeColor = Color.White;
+            btnStop.Location = new Point(65, 104);
+            btnStop.Name = "btnStop";
+            btnStop.Size = new Size(44, 33);
+            btnStop.TabIndex = 39;
+            btnStop.Text = "⏹";
+            toolTip.SetToolTip(btnStop, "Stop Simulation");
+            btnStop.UseVisualStyleBackColor = false;
+            btnStop.Visible = false;
+            btnStop.Click += btnStop_Click;
+            // 
+            // btnPause
+            // 
+            btnPause.BackColor = Color.FromArgb(96, 125, 139);
+            btnPause.Font = new Font("Segoe UI", 14F);
+            btnPause.ForeColor = Color.White;
+            btnPause.Location = new Point(8, 104);
+            btnPause.Name = "btnPause";
+            btnPause.Size = new Size(60, 33);
+            btnPause.TabIndex = 38;
+            btnPause.Text = "⏸";
+            toolTip.SetToolTip(btnPause, "Pause Simulation");
+            btnPause.UseVisualStyleBackColor = false;
+            btnPause.Visible = false;
+            btnPause.Click += btnPause_Click;
             // 
             // simulationSettings
             // 
@@ -448,7 +540,7 @@ namespace SiliFish.UI
             // lProgress
             // 
             lProgress.AutoSize = true;
-            lProgress.Location = new Point(82, 114);
+            lProgress.Location = new Point(115, 113);
             lProgress.Name = "lProgress";
             lProgress.Size = new Size(55, 15);
             lProgress.TabIndex = 36;
@@ -464,20 +556,6 @@ namespace SiliFish.UI
             lRunTime.Size = new Size(387, 94);
             lRunTime.TabIndex = 31;
             // 
-            // linkExportOutput
-            // 
-            linkExportOutput.AutoSize = true;
-            linkExportOutput.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportOutput.Location = new Point(80, 114);
-            linkExportOutput.Name = "linkExportOutput";
-            linkExportOutput.Size = new Size(82, 15);
-            linkExportOutput.TabIndex = 27;
-            linkExportOutput.TabStop = true;
-            linkExportOutput.Text = "Export Output";
-            toolTip.SetToolTip(linkExportOutput, "Exports membrane potential values of all cells, and currents passing through every junction throughout the simulation to multiple CSV files.");
-            linkExportOutput.Visible = false;
-            linkExportOutput.LinkClicked += linkExportOutput_LinkClicked;
-            // 
             // progressBarRun
             // 
             progressBarRun.Dock = DockStyle.Bottom;
@@ -486,20 +564,6 @@ namespace SiliFish.UI
             progressBarRun.Size = new Size(543, 23);
             progressBarRun.TabIndex = 26;
             progressBarRun.Visible = false;
-            // 
-            // btnRun
-            // 
-            btnRun.BackColor = Color.FromArgb(96, 125, 139);
-            btnRun.FlatAppearance.BorderColor = Color.LightGray;
-            btnRun.FlatStyle = FlatStyle.Flat;
-            btnRun.ForeColor = Color.White;
-            btnRun.Location = new Point(11, 110);
-            btnRun.Name = "btnRun";
-            btnRun.Size = new Size(63, 23);
-            btnRun.TabIndex = 9;
-            btnRun.Text = "Run";
-            btnRun.UseVisualStyleBackColor = false;
-            btnRun.Click += btnRun_Click;
             // 
             // lSimulationSettings
             // 
@@ -592,18 +656,6 @@ namespace SiliFish.UI
             // 
             openFileExcel.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
             // 
-            // miFileSep3
-            // 
-            miFileSep3.Name = "miFileSep3";
-            miFileSep3.Size = new Size(267, 6);
-            // 
-            // miFileExit
-            // 
-            miFileExit.Name = "miFileExit";
-            miFileExit.Size = new Size(270, 22);
-            miFileExit.Text = "E&xit";
-            miFileExit.Click += miFileExit_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -642,13 +694,11 @@ namespace SiliFish.UI
         private SplitContainer splitMain;
         private Panel pSimulation;
         private Label lSimulationSettings;
-        private Button btnRun;
         private ProgressBar progressBarRun;
         private System.Windows.Forms.Timer timerRun;
         private SaveFileDialog saveFileHTML;
         private SaveFileDialog saveFileJson;
         private OpenFileDialog openFileJson;
-        private LinkLabel linkExportOutput;
         private SaveFileDialog saveFileCSV;
         private ToolTip toolTip;
         private SaveFileDialog saveFileText;
@@ -702,5 +752,11 @@ namespace SiliFish.UI
         private ToolStripMenuItem miToolsMemoryFlush;
         private ToolStripSeparator miFileSep3;
         private ToolStripMenuItem miFileExit;
+        private ToolStripMenuItem miToolsStatsMembranePotentials;
+        private ToolStripMenuItem miToolsStatsCurrents;
+        private Button btnStart;
+        private Button btnStop;
+        private Button btnPause;
+        private Button btnResume;
     }
 }

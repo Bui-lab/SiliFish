@@ -322,5 +322,99 @@ namespace SiliFish.Repositories
             }
             return (CellSpikes, CellPoolSpikes);
         }
+    
+        public static (List<string>, List<List<string>>) GenerateMembranePotentialsForCSV(Simulation simulation)
+        {
+            try
+            {
+                List<string> columnNames = ["Time"];
+                List<List<string>> values = [];
+
+                // Convert the TimeArray (double[]) to a List<string> and add it as the first column
+                List<string> timeColumn = simulation.Model.TimeArray.Select(t => t.ToString(GlobalSettings.PlotDataFormat)).ToList();
+                values.Add(timeColumn);
+
+                foreach (CellPool pool in simulation.Model.CellPools.Where(cp => cp.Active))
+                {
+                    foreach (Cell cell in pool.GetCells().Where(c => c.Active))
+                    {
+                        columnNames.Add(cell.ID);
+                        values.Add(cell.V.Select(v => v.ToString(GlobalSettings.PlotDataFormat)).ToList());
+                    }
+                }
+                var transposed = Enumerable.Range(0, values.Max(row => row.Count))
+                    .Select(i => values.Select(row => row.ElementAtOrDefault(i) ?? "").ToList())
+                    .ToList();
+                return (columnNames, transposed);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return (null, null);
+            }
+        }
+
+        public static (List<string>, List<List<string>>) GenerateCurrentsForCSV(Simulation simulation)
+        {
+            try
+            {
+                List<string> columnNames = ["Time"];
+                List<List<string>> values = [];
+
+                // Convert the TimeArray (double[]) to a List<string> and add it as the first column
+                List<string> timeColumn = simulation.Model.TimeArray.Select(t => t.ToString(GlobalSettings.PlotDataFormat)).ToList();
+                values.Add(timeColumn);
+                int uniqueIDCounter = 0;
+                foreach (CellPool pool in simulation.Model.CellPools.Where(cp => cp.Active))
+                {
+                    foreach (Cell cell in pool.GetCells().Where(c => c.Active))
+                    {
+                        foreach (var jnc in cell.GapJunctions.Where(j => j.Cell1 == cell))
+                        {
+                            string uniqueID = $"Gap " + jnc.ID;
+                            if (columnNames.Contains(uniqueID))
+                                uniqueID = $"Gap {jnc.ID}**{++uniqueIDCounter}"; // Ensure unique ID if it already exists
+                            columnNames.Add(uniqueID);
+                            values.Add(jnc.InputCurrent.Select(v => v.ToString(GlobalSettings.PlotDataFormat)).ToList());
+                        }
+                        if (cell is MuscleCell)
+                        {
+                            foreach (var jnc in (cell as MuscleCell).EndPlates)
+                            {
+                                string uniqueID = $"EP " + jnc.ID;
+                                if (columnNames.Contains(uniqueID))
+                                    uniqueID = $"EP {jnc.ID}**{++uniqueIDCounter}"; 
+                                columnNames.Add(uniqueID);
+                                values.Add(jnc.InputCurrent.Select(v => v.ToString(GlobalSettings.PlotDataFormat)).ToList());
+                            }
+                        }
+                        else if (cell is Neuron)
+                        {
+                            foreach (var jnc in (cell as Neuron).Synapses)
+                            {
+                                string uniqueID = $"Syn " + jnc.ID;
+                                if (columnNames.Contains(uniqueID))
+                                    uniqueID = $"Syn {jnc.ID}**{++uniqueIDCounter}";
+                                columnNames.Add(uniqueID);
+                                values.Add(jnc.InputCurrent.Select(v => v.ToString(GlobalSettings.PlotDataFormat)).ToList());
+                            }
+                        }
+                    }
+                }
+                var transposed = Enumerable.Range(0, values.Max(row => row.Count))
+                    .Select(i => values.Select(row => row.ElementAtOrDefault(i) ?? "").ToList())
+                    .ToList();
+                return (columnNames, transposed);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return (null, null);
+            }
+        }
     }
 }
+
+
+/*          }
+*/
