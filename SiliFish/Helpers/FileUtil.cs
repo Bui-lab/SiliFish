@@ -2,7 +2,9 @@
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -34,7 +36,7 @@ namespace SiliFish.Helpers
 
 
 
-        public static void SaveToFile(string path, string content)
+        public static FileInfo SaveToFile(string path, string content)
         {
             string filename = Path.GetFileName(path);
             string newfilename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
@@ -43,6 +45,7 @@ namespace SiliFish.Helpers
             path = string.Join("_", path.Split(Path.GetInvalidPathChars()));
 
             File.WriteAllText(path, content);
+            return new FileInfo(path);
         }
 
         public static void SaveToCSVFile(string filename, List<string> ColumnNames, List<List<string>> Values)

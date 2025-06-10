@@ -462,10 +462,7 @@ namespace SiliFish.UI.Controls
                 if (ModelFile.SaveCellPoolsToCSV(saveFileCSV.FileName, Model, SelectedUnits))
                 {
                     string filename = saveFileCSV.FileName;
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);                     
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
+                    UtilWindows.DisplaySavedFile(filename);
                 }
                 else
                     MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
@@ -739,12 +736,7 @@ namespace SiliFish.UI.Controls
                     else
                         saved = ModelFile.SaveCellsToCSV(filename, runningModel, null);//full model
                     if (saved)
-                    {
-                        if (GlobalSettings.ShowFileFolderAfterSave)
-                            FileUtil.ShowFile(filename);
-                        else
-                            MessageBox.Show($"File {filename} is saved.", "Information");
-                    }
+                        UtilWindows.DisplaySavedFile(filename);
                     else
                         MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
                 }
@@ -1142,12 +1134,8 @@ namespace SiliFish.UI.Controls
             {
                 if (ModelFile.SaveJunctionsToCSV(saveFileCSV.FileName, Model, units, gap, chemin, chemout))
                 {
-                    string filename = saveFileCSV.FileName; 
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
-
+                    string filename = saveFileCSV.FileName;
+                    UtilWindows.DisplaySavedFile(filename);
                 }
                 else
                     MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
@@ -1537,11 +1525,8 @@ namespace SiliFish.UI.Controls
             {
                 if (ModelFile.SaveStimulusToCSV(saveFileCSV.FileName, Model, selectedUnits))
                 {
-                    string filename = saveFileCSV.FileName; 
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
+                    string filename = saveFileCSV.FileName;
+                    UtilWindows.DisplaySavedFile(filename);
                 }
                 else
                     MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");

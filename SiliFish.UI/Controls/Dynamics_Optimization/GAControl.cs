@@ -5,6 +5,7 @@ using SiliFish.Helpers;
 using SiliFish.Repositories;
 using SiliFish.Services.Optimization;
 using SiliFish.UI.EventArguments;
+using SiliFish.UI.Services;
 using System.Data;
 
 namespace SiliFish.UI.Controls
@@ -641,11 +642,7 @@ namespace SiliFish.UI.Controls
                     sw.WriteLine(string.Join(",", ++iter, string.Join(",", bp.Parameters.Values), bp.Fitness, rheobase));
                 }
                 string filename = saveFileCSV.FileName;
-                if (GlobalSettings.ShowFileFolderAfterSave)
-                    FileUtil.ShowFile(filename);
-                else
-                    MessageBox.Show($"File {filename} is saved.", "Information");
-
+                UtilWindows.DisplaySavedFile(filename);
             }
         }
     }

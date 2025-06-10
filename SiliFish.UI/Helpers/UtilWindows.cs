@@ -1,11 +1,30 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.UI.Services;
+using System.Diagnostics;
 
 namespace SiliFish.UI
 {
     public class UtilWindows
     {
+        public static void DisplaySavedFile(string filename)
+        {
+            if (GlobalSettings.ShowFileFolderAfterSave)
+            {
+                FileInfo fileInfo = new(filename);
+                double fileLength = fileInfo.Length / (1024 * 1024); // in MB
+                if (fileLength > GlobalSettings.FileSizeWarningLimit)
+                {
+                    MessageBox.Show($"File {filename} is saved.", "Information");
+                    Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", Path.GetDirectoryName(filename));
+                }
+                else
+                    FileUtil.ShowFile(filename); 
+            }
+            else
+                MessageBox.Show($"File {filename} is saved.", "Information");
+        }
         public static void SaveImage(SaveFileDialog saveFileDialog, Image img)
         {
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
@@ -24,11 +43,7 @@ namespace SiliFish.UI
                     FileUtil.SaveToFile(saveFileCSV.FileName, text);
                     saved = true;
                     string filename = saveFileCSV.FileName;
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
-
+                    UtilWindows.DisplaySavedFile(filename);
                 }
                 catch (Exception exc)
                 {

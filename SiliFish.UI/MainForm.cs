@@ -468,11 +468,7 @@ namespace SiliFish.UI
                     this.Text = $"SiliFish {Path.GetFileNameWithoutExtension(saveFileExcel.FileName)}";
                     modelControl.ModelUpdated = false;
                     string filename = saveFileExcel.FileName;
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
-
+                    UtilWindows.DisplaySavedFile(filename);
                     return true;
                 }
                 return false;
@@ -845,10 +841,7 @@ namespace SiliFish.UI
                 if (SimulationFile.SaveSpikeCounts(modelSimulator.LastSimulation, saveFileCSV.FileName))
                 {
                     string filename = saveFileCSV.FileName;
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
+                    UtilWindows.DisplaySavedFile(filename);
                 }
             }
         }
@@ -860,10 +853,7 @@ namespace SiliFish.UI
                 string filename = saveFileCSV.FileName;
                 if (SimulationFile.SaveSpikeFreqStats(modelSimulator.LastSimulation, filename))
                 {
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
+                    UtilWindows.DisplaySavedFile(filename);
                 }
             }
         }
@@ -876,10 +866,7 @@ namespace SiliFish.UI
                 if (SimulationFile.SaveSpikes(modelSimulator.LastSimulation, saveFileCSV.FileName))
                 {
                     string filename = saveFileCSV.FileName;
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
+                    UtilWindows.DisplaySavedFile(filename);
                 }
             }
         }
@@ -891,10 +878,7 @@ namespace SiliFish.UI
                 if (SimulationFile.SaveEpisodes(modelSimulator.LastSimulation, saveFileCSV.FileName))
                 {
                     string filename = saveFileCSV.FileName;
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
+                    UtilWindows.DisplaySavedFile(filename);
                 }
             }
         }
@@ -906,25 +890,21 @@ namespace SiliFish.UI
                 if (SimulationFile.SaveMembranePotentials(modelSimulator.LastSimulation, saveFileCSV.FileName))
                 {
                     string filename = saveFileCSV.FileName;
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
+                    UtilWindows.DisplaySavedFile(filename);
                 }
             }
         }
 
         private void miToolsStatsCurrents_Click(object sender, EventArgs e)
         {
+            //TODO create a class similar to SimulationDBWriter and use it to save all the stats info
+            //to be able to use the progress bar or to be able to cancel the saving
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
                 if (SimulationFile.SaveCurrents(modelSimulator.LastSimulation, saveFileCSV.FileName))
                 {
                     string filename = saveFileCSV.FileName;
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
+                    UtilWindows.DisplaySavedFile(filename);
                 }
             }
         }

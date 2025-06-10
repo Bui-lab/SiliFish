@@ -429,10 +429,7 @@ namespace SiliFish.UI.Controls
                     string filename = saveFileJson.FileName;
                     File.WriteAllText(filename, json);
                     fileSaved = true;
-                    if (GlobalSettings.ShowFileFolderAfterSave)
-                        FileUtil.ShowFile(filename);
-                    else
-                        MessageBox.Show($"File {filename} is saved.", "Information");
+                    UtilWindows.DisplaySavedFile(filename);
                 }
             }
             catch (Exception exc)
