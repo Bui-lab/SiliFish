@@ -17,6 +17,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml;
 
 namespace SiliFish.ModelUnits.Architecture
 {
@@ -836,7 +837,6 @@ namespace SiliFish.ModelUnits.Architecture
             return cleared;
         }
 
-
         public virtual bool InitForSimulation(RunParam runParam, ref SimulationDBLink dbLink, Random random)
         {
             try
@@ -877,6 +877,20 @@ namespace SiliFish.ModelUnits.Architecture
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
                 return false;
             }
+        }
+
+        public virtual bool ResumeSimulation(RunParam runParam)
+        {
+            SwimmingEpisodes = null;
+
+            foreach (CellPool neurons in neuronPools)
+                foreach (Neuron neuron in neurons.GetCells().Cast<Neuron>())
+                    neuron.ResumeSimulation(runParam);
+
+            foreach (CellPool muscleCells in musclePools)
+                foreach (MuscleCell mc in muscleCells.GetCells().Cast<MuscleCell>())
+                    mc.ResumeSimulation(runParam);
+            return true;
         }
         /// <summary>
         /// Extra steps required after simulation if DB is used for memory

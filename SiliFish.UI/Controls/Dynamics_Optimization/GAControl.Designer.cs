@@ -38,11 +38,6 @@
             pMinMax = new Panel();
             linkSuggestMinMax = new LinkLabel();
             dgFitnessFunctions = new DataGridView();
-            colFFMode = new DataGridViewTextBoxColumn();
-            colFFWeight = new DataGridViewTextBoxColumn();
-            colFFFunction = new DataGridViewTextBoxColumn();
-            colFFEdit = new DataGridViewLinkColumn();
-            colFFDelete = new DataGridViewLinkColumn();
             pFitnessFunctions = new Panel();
             linkAddFitnessFunction = new LinkLabel();
             btnCalculateFitness = new Button();
@@ -82,6 +77,12 @@
             saveFileJson = new SaveFileDialog();
             toolTip = new ToolTip(components);
             saveFileCSV = new SaveFileDialog();
+            colFFMode = new DataGridViewTextBoxColumn();
+            colFFWeight = new DataGridViewTextBoxColumn();
+            colFFFunction = new DataGridViewTextBoxColumn();
+            colFFPartial = new DataGridViewCheckBoxColumn();
+            colFFEdit = new DataGridViewLinkColumn();
+            colFFDelete = new DataGridViewLinkColumn();
             ((System.ComponentModel.ISupportInitialize)splitGA).BeginInit();
             splitGA.Panel1.SuspendLayout();
             splitGA.Panel2.SuspendLayout();
@@ -204,7 +205,7 @@
             linkSuggestMinMax.LinkColor = Color.FromArgb(64, 64, 64);
             linkSuggestMinMax.Location = new Point(6, 9);
             linkSuggestMinMax.Name = "linkSuggestMinMax";
-            linkSuggestMinMax.Size = new Size(137, 15);
+            linkSuggestMinMax.Size = new Size(136, 15);
             linkSuggestMinMax.TabIndex = 0;
             linkSuggestMinMax.TabStop = true;
             linkSuggestMinMax.Text = "Suggest Min/Max Values";
@@ -215,7 +216,7 @@
             dgFitnessFunctions.AllowUserToAddRows = false;
             dgFitnessFunctions.AllowUserToDeleteRows = false;
             dgFitnessFunctions.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgFitnessFunctions.Columns.AddRange(new DataGridViewColumn[] { colFFMode, colFFWeight, colFFFunction, colFFEdit, colFFDelete });
+            dgFitnessFunctions.Columns.AddRange(new DataGridViewColumn[] { colFFMode, colFFWeight, colFFFunction, colFFPartial, colFFEdit, colFFDelete });
             dgFitnessFunctions.Dock = DockStyle.Fill;
             dgFitnessFunctions.Location = new Point(0, 29);
             dgFitnessFunctions.Name = "dgFitnessFunctions";
@@ -225,39 +226,6 @@
             dgFitnessFunctions.CellContentClick += dgFitnessFunctions_CellContentClick;
             dgFitnessFunctions.CellDoubleClick += dgFitnessFunctions_CellDoubleClick;
             dgFitnessFunctions.CellEndEdit += dgFitnessFunctions_CellEndEdit;
-            // 
-            // colFFMode
-            // 
-            colFFMode.HeaderText = "Mode";
-            colFFMode.Name = "colFFMode";
-            colFFMode.ReadOnly = true;
-            // 
-            // colFFWeight
-            // 
-            colFFWeight.HeaderText = "Weight";
-            colFFWeight.Name = "colFFWeight";
-            // 
-            // colFFFunction
-            // 
-            colFFFunction.HeaderText = "Function";
-            colFFFunction.Name = "colFFFunction";
-            colFFFunction.ReadOnly = true;
-            // 
-            // colFFEdit
-            // 
-            colFFEdit.HeaderText = "";
-            colFFEdit.MinimumWidth = 50;
-            colFFEdit.Name = "colFFEdit";
-            colFFEdit.Text = "Edit";
-            colFFEdit.UseColumnTextForLinkValue = true;
-            // 
-            // colFFDelete
-            // 
-            colFFDelete.HeaderText = "";
-            colFFDelete.MinimumWidth = 50;
-            colFFDelete.Name = "colFFDelete";
-            colFFDelete.Text = "Delete";
-            colFFDelete.UseColumnTextForLinkValue = true;
             // 
             // pFitnessFunctions
             // 
@@ -324,7 +292,7 @@
             linkExportExhOptRes.LinkColor = Color.FromArgb(64, 64, 64);
             linkExportExhOptRes.Location = new Point(6, 350);
             linkExportExhOptRes.Name = "linkExportExhOptRes";
-            linkExportExhOptRes.Size = new Size(212, 15);
+            linkExportExhOptRes.Size = new Size(210, 15);
             linkExportExhOptRes.TabIndex = 55;
             linkExportExhOptRes.TabStop = true;
             linkExportExhOptRes.Text = "Export Exhaustive Optimization Results";
@@ -401,7 +369,7 @@
             cbTargetFitness.AutoSize = true;
             cbTargetFitness.Location = new Point(6, 16);
             cbTargetFitness.Name = "cbTargetFitness";
-            cbTargetFitness.Size = new Size(97, 19);
+            cbTargetFitness.Size = new Size(98, 19);
             cbTargetFitness.TabIndex = 46;
             cbTargetFitness.Text = "Target Fitness";
             cbTargetFitness.UseVisualStyleBackColor = true;
@@ -441,7 +409,7 @@
             cbMaxGeneration.AutoSize = true;
             cbMaxGeneration.Location = new Point(6, 41);
             cbMaxGeneration.Name = "cbMaxGeneration";
-            cbMaxGeneration.Size = new Size(110, 19);
+            cbMaxGeneration.Size = new Size(109, 19);
             cbMaxGeneration.TabIndex = 48;
             cbMaxGeneration.Text = "Max Generation";
             cbMaxGeneration.UseVisualStyleBackColor = true;
@@ -466,7 +434,7 @@
             lGATerminationParameter.AutoSize = true;
             lGATerminationParameter.Location = new Point(6, 93);
             lGATerminationParameter.Name = "lGATerminationParameter";
-            lGATerminationParameter.Size = new Size(76, 15);
+            lGATerminationParameter.Size = new Size(77, 15);
             lGATerminationParameter.TabIndex = 40;
             lGATerminationParameter.Text = "Term. Param.";
             lGATerminationParameter.Visible = false;
@@ -603,7 +571,7 @@
             lGAMinMaxChromosome.AutoSize = true;
             lGAMinMaxChromosome.Location = new Point(6, 264);
             lGAMinMaxChromosome.Name = "lGAMinMaxChromosome";
-            lGAMinMaxChromosome.Size = new Size(142, 15);
+            lGAMinMaxChromosome.Size = new Size(141, 15);
             lGAMinMaxChromosome.TabIndex = 34;
             lGAMinMaxChromosome.Text = "Min/Max Chromosome #";
             // 
@@ -660,6 +628,44 @@
             // saveFileCSV
             // 
             saveFileCSV.Filter = "CSV files(*.csv)|*.csv";
+            // 
+            // colFFMode
+            // 
+            colFFMode.HeaderText = "Mode";
+            colFFMode.Name = "colFFMode";
+            colFFMode.ReadOnly = true;
+            // 
+            // colFFWeight
+            // 
+            colFFWeight.HeaderText = "Weight";
+            colFFWeight.Name = "colFFWeight";
+            // 
+            // colFFFunction
+            // 
+            colFFFunction.HeaderText = "Function";
+            colFFFunction.Name = "colFFFunction";
+            colFFFunction.ReadOnly = true;
+            // 
+            // colFFPartial
+            // 
+            colFFPartial.HeaderText = "Partial";
+            colFFPartial.Name = "colFFPartial";
+            // 
+            // colFFEdit
+            // 
+            colFFEdit.HeaderText = "";
+            colFFEdit.MinimumWidth = 50;
+            colFFEdit.Name = "colFFEdit";
+            colFFEdit.Text = "Edit";
+            colFFEdit.UseColumnTextForLinkValue = true;
+            // 
+            // colFFDelete
+            // 
+            colFFDelete.HeaderText = "";
+            colFFDelete.MinimumWidth = 50;
+            colFFDelete.Name = "colFFDelete";
+            colFFDelete.Text = "Delete";
+            colFFDelete.UseColumnTextForLinkValue = true;
             // 
             // GAControl
             // 
@@ -733,15 +739,16 @@
         private CheckBox cbMaxGeneration;
         private ToolTip toolTip;
         private DataGridView dgFitnessFunctions;
-        private DataGridViewTextBoxColumn colFFMode;
-        private DataGridViewTextBoxColumn colFFWeight;
-        private DataGridViewTextBoxColumn colFFFunction;
-        private DataGridViewLinkColumn colFFEdit;
-        private DataGridViewLinkColumn colFFDelete;
         private Button btnOptimizeExhaustive;
         private Button btnOptimizeNext;
         private Button btnOptimizePrev;
         private LinkLabel linkExportExhOptRes;
         private SaveFileDialog saveFileCSV;
+        private DataGridViewTextBoxColumn colFFMode;
+        private DataGridViewTextBoxColumn colFFWeight;
+        private DataGridViewTextBoxColumn colFFFunction;
+        private DataGridViewCheckBoxColumn colFFPartial;
+        private DataGridViewLinkColumn colFFEdit;
+        private DataGridViewLinkColumn colFFDelete;
     }
 }

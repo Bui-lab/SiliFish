@@ -40,6 +40,7 @@ namespace SiliFish.Definitions
         public static bool FullDynamics_ShowChemOutCurrent = true;
         public static bool FullDynamics_ShowStimulus = true;
         public static bool MembranePotential_ShowSpike = true;
+        public static string Plotting_BodyMidRange = "0-0"; //default is all somites
 
         public static int MaxNumberOfUnitsToList = 100;
         public static int MaxNumberOfUnitsToRender = 50_000;
@@ -233,6 +234,12 @@ namespace SiliFish.Definitions
             DisplayName("Show spikes"),
             Category("Plotting")]
         public bool MembranePotential_ShowSpike { get { return GlobalSettings.MembranePotential_ShowSpike; } set { GlobalSettings.MembranePotential_ShowSpike = value; } }
+
+
+        [Description("The range of somites to be plotted when Body Mid Range is selected."),
+            DisplayName("Body Mid Range"),
+            Category("Plotting")]
+        public string Plotting_BodyMidRange { get { return GlobalSettings.Plotting_BodyMidRange; } set { GlobalSettings.Plotting_BodyMidRange = value; } }
 
 
 

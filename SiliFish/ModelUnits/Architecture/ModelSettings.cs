@@ -10,29 +10,8 @@ namespace SiliFish.ModelUnits.Architecture
 {
     public class ModelSettings
     {
-        #region Simulation
-        [Description("In ms - the default simulation duration."),
-            DisplayName("Simulation Duration"),
-            Category("Simulation")]
-        public int SimulationEndTime { get; set; } = 1000;
 
-        [Description("In ms - the default duration to skip."),
-            DisplayName("Simulation Skip Duration"),
-            Category("Simulation")]
-        public int SimulationSkipTime { get; set; } = 0;
-
-        [Description("In ms - the default time unit."),
-            DisplayName("Default δt"),
-            Category("Simulation")]
-        public double SimulationDeltaT { get; set; } = 0.1;
-
-        [Description("Whether junction level current tracking is on or off. For larger models turning it off is recommended."),
-            DisplayName("Junction level current tracking"),
-            Category("Simulation")]
-        public bool JunctionLevelTracking { get; set; } = false;
-
-        #endregion
-
+        #region Randomization
         [Description("If set to false, any single value will be set as the center of the distribution without any randomization."),
             DisplayName("Flicker Off"),
             Category("Randomization")]
@@ -42,11 +21,15 @@ namespace SiliFish.ModelUnits.Architecture
             DisplayName("Random Seed"),
             Category("Randomization")]
         public int Seed { get; set; } = 0;
+        #endregion
 
+        #region Constants
 
         [Category("Constant values")]
         public UnitOfMeasure UoM { get; set; } = UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens;//Used from data structures that don't have direct access to the model
+        #endregion
 
+        #region Default Values
         [Browsable(false), Category("Default values")]
         public string DefaultNeuronCore { get; set; } = typeof(Izhikevich_9P).Name;
         [Browsable(false), Category("Default values")]
@@ -78,11 +61,7 @@ namespace SiliFish.ModelUnits.Architecture
         [Description("Default reversal potential of ACh."),
             Category("Default Values")]
         public double E_ach { get; set; } = 120;
-
-        [Description("The range of somites to be plotted when Body Mid Range is selected."),
-            DisplayName("Body Mid Range"),
-            Category("Plotting")]
-        public string Plotting_BodyMidRange { get; set; } = "0-10";
+        #endregion
 
         public ModelSettings Clone()
         {
@@ -101,16 +80,6 @@ namespace SiliFish.ModelUnits.Architecture
             return paramExternal;
         }
 
-        public RunParam GetRunParam()
-        {
-            RunParam param = new()
-            {
-                SkipDuration = SimulationSkipTime,
-                MaxTime = SimulationEndTime,
-                DeltaT = SimulationDeltaT,
-                TrackJunctionCurrent = JunctionLevelTracking
-            };
-            return param;
-        }
+
     }
 }

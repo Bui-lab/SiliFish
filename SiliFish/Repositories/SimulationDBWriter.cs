@@ -7,6 +7,7 @@ using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace SiliFish.Repositories
@@ -38,7 +39,8 @@ namespace SiliFish.Repositories
                                            simulation.Start,
                                            simulation.End,
                                            $"{simulation.Description} {modelSimulator.Description}",
-                                           modelSimulator.RunParamDescription);
+                                           modelSimulator.RunParamDescription,
+                                           model.KinemParam.Description);
                 dataContext.Add(sim);
                 dataContext.SaveChanges();
                 SimulationIds.Add(sim.Id);
@@ -64,8 +66,26 @@ namespace SiliFish.Repositories
                 {
                     EpisodeRecord episodeRecord = new(episodeCounter++, simRecordId, episode);
                     dataContext.Add(episodeRecord);
+
+                    for (int i = 0; i < episode.RollingBeatFrequency.Keys.Length; i++)
+                    {
+                        double key = episode.RollingBeatFrequency.Keys[i];
+                        double value = episode.RollingBeatFrequency.Values[i];
+                        RollingTBFRecord rollingTBFRecord = new(simRecordId, key, value);
+                        dataContext.Add(rollingTBFRecord);
+                    }
                 }
                 dataContext.SaveChanges();
+
+                double[] y_axis = episodes.TailTipCoordinates.Select(coordinate=>coordinate.Y).ToArray();
+                int minLength = Math.Min(model.TimeArray.Length, y_axis.Length);
+                for (int i = 0; i < minLength; i++)
+                {
+                    TailMovementRecord tailMovementRecord = new(simRecordId, model.TimeArray[i], y_axis[i]);
+                    dataContext.Add(tailMovementRecord);
+                }
+                dataContext.SaveChanges();
+
 
                 int cellCounter = 0;
                 int cellCount = simulation.Model.GetCells().Count;

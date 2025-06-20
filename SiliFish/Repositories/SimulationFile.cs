@@ -140,7 +140,7 @@ namespace SiliFish.Repositories
                         string path = FileUtil.AppendToFileName(filename, "_MembranePotentials");
                         FileUtil.SaveToCSVFile(path, columnNames, values);
                     }
-                    if (simulation.Model.Settings.JunctionLevelTracking)
+                    if (simulation.Model.SimulationSettings.JunctionLevelTracking)
                     {
                         (columnNames, values) = SimulationStats.GenerateCurrentsForCSV(simulation);
                         if (singleFile)

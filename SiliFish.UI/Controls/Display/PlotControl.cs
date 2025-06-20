@@ -97,7 +97,7 @@ namespace SiliFish.UI.Controls
             if (model == null) return;
             this.simulation = simulation;
             this.model = model;
-            timeRangePlot.EndTime = model.Settings.SimulationEndTime;
+            timeRangePlot.EndTime = model.SimulationSettings.SimulationEndTime;
             cellSelectionPlot.RunningModel = model;
             PopulatePlotTypes();
             GetLastPlotSettings();
@@ -514,7 +514,7 @@ namespace SiliFish.UI.Controls
                     return false;
             }
             if (!MainForm.currentPlotWarning &&
-                !model.Settings.JunctionLevelTracking && (PlotType.GetGroup() == "current" || PlotType == PlotType.FullDyn))
+                !model.SimulationSettings.JunctionLevelTracking && (PlotType.GetGroup() == "current" || PlotType == PlotType.FullDyn))
             {
                 MainForm.currentPlotWarning = true;
                 string msg = $"Plotting current information (including Full Dynamics) will require to regenerate " +

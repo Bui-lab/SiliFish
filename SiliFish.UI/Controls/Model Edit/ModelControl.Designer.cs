@@ -40,7 +40,9 @@
             btnLoadModelJSON = new Button();
             btnDisplayModelJSON = new Button();
             tSettings = new TabPage();
-            propSettings = new PropertyGrid();
+            splitPropSettings = new SplitContainer();
+            propModelSettings = new PropertyGrid();
+            propSimulationSettings = new PropertyGrid();
             pSettingsTop = new Panel();
             ddDefaultMuscleCellCore = new ComboBox();
             lDefaultMuscleCore = new Label();
@@ -100,6 +102,10 @@
             tJson.SuspendLayout();
             pModelJSONTop.SuspendLayout();
             tSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitPropSettings).BeginInit();
+            splitPropSettings.Panel1.SuspendLayout();
+            splitPropSettings.Panel2.SuspendLayout();
+            splitPropSettings.SuspendLayout();
             pSettingsTop.SuspendLayout();
             tKinematics.SuspendLayout();
             pKinematicsDescription.SuspendLayout();
@@ -252,7 +258,7 @@
             // 
             // tSettings
             // 
-            tSettings.Controls.Add(propSettings);
+            tSettings.Controls.Add(splitPropSettings);
             tSettings.Controls.Add(pSettingsTop);
             tSettings.Location = new Point(4, 24);
             tSettings.Name = "tSettings";
@@ -262,16 +268,45 @@
             tSettings.UseVisualStyleBackColor = true;
             tSettings.Visible = false;
             // 
-            // propSettings
+            // splitPropSettings
             // 
-            propSettings.BackColor = Color.FromArgb(207, 216, 220);
-            propSettings.Dock = DockStyle.Fill;
-            propSettings.HelpBackColor = Color.FromArgb(207, 216, 220);
-            propSettings.HelpBorderColor = Color.FromArgb(0, 184, 212);
-            propSettings.Location = new Point(0, 70);
-            propSettings.Name = "propSettings";
-            propSettings.Size = new Size(682, 485);
-            propSettings.TabIndex = 0;
+            splitPropSettings.Dock = DockStyle.Fill;
+            splitPropSettings.Location = new Point(0, 70);
+            splitPropSettings.Name = "splitPropSettings";
+            splitPropSettings.Orientation = Orientation.Horizontal;
+            // 
+            // splitPropSettings.Panel1
+            // 
+            splitPropSettings.Panel1.Controls.Add(propModelSettings);
+            // 
+            // splitPropSettings.Panel2
+            // 
+            splitPropSettings.Panel2.Controls.Add(propSimulationSettings);
+            splitPropSettings.Size = new Size(682, 485);
+            splitPropSettings.SplitterDistance = 242;
+            splitPropSettings.TabIndex = 2;
+            // 
+            // propModelSettings
+            // 
+            propModelSettings.BackColor = Color.FromArgb(207, 216, 220);
+            propModelSettings.Dock = DockStyle.Fill;
+            propModelSettings.HelpBackColor = Color.FromArgb(207, 216, 220);
+            propModelSettings.HelpBorderColor = Color.FromArgb(0, 184, 212);
+            propModelSettings.Location = new Point(0, 0);
+            propModelSettings.Name = "propModelSettings";
+            propModelSettings.Size = new Size(682, 242);
+            propModelSettings.TabIndex = 0;
+            // 
+            // propSimulationSettings
+            // 
+            propSimulationSettings.BackColor = Color.FromArgb(207, 216, 220);
+            propSimulationSettings.Dock = DockStyle.Fill;
+            propSimulationSettings.HelpBackColor = Color.FromArgb(207, 216, 220);
+            propSimulationSettings.HelpBorderColor = Color.FromArgb(0, 184, 212);
+            propSimulationSettings.Location = new Point(0, 0);
+            propSimulationSettings.Name = "propSimulationSettings";
+            propSimulationSettings.Size = new Size(682, 239);
+            propSimulationSettings.TabIndex = 1;
             // 
             // pSettingsTop
             // 
@@ -1002,6 +1037,10 @@
             pModelJSONTop.ResumeLayout(false);
             pModelJSONTop.PerformLayout();
             tSettings.ResumeLayout(false);
+            splitPropSettings.Panel1.ResumeLayout(false);
+            splitPropSettings.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitPropSettings).EndInit();
+            splitPropSettings.ResumeLayout(false);
             pSettingsTop.ResumeLayout(false);
             pSettingsTop.PerformLayout();
             tKinematics.ResumeLayout(false);
@@ -1069,7 +1108,7 @@
         private Button btnLoadModelJSON;
         private Button btnDisplayModelJSON;
         private TabPage tSettings;
-        private PropertyGrid propSettings;
+        private PropertyGrid propModelSettings;
         private Panel pSettingsTop;
         private ComboBox ddDefaultMuscleCellCore;
         private Label lDefaultMuscleCore;
@@ -1127,5 +1166,7 @@
         private TabPage tDynamics;
         private PropertyGrid propDynamics;
         private TextBox eDynamicsDescription;
+        private SplitContainer splitPropSettings;
+        private PropertyGrid propSimulationSettings;
     }
 }

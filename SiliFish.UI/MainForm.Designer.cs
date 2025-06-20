@@ -39,6 +39,7 @@ namespace SiliFish.UI
             miFileLoad = new ToolStripMenuItem();
             miFileSave = new ToolStripMenuItem();
             miFileSaveSimulationResults = new ToolStripMenuItem();
+            miFileBatchSave = new ToolStripMenuItem();
             miFileSep1 = new ToolStripSeparator();
             miFileExport = new ToolStripMenuItem();
             miFileImport = new ToolStripMenuItem();
@@ -148,7 +149,7 @@ namespace SiliFish.UI
             // 
             // mFile
             // 
-            mFile.DropDownItems.AddRange(new ToolStripItem[] { miFileLoad, miFileSave, miFileSaveSimulationResults, miFileSep1, miFileExport, miFileImport, miFileSep2, miFileNewModel, miFileClearModel, miFileSep3, miFileExit });
+            mFile.DropDownItems.AddRange(new ToolStripItem[] { miFileLoad, miFileSave, miFileSaveSimulationResults, miFileBatchSave, miFileSep1, miFileExport, miFileImport, miFileSep2, miFileNewModel, miFileClearModel, miFileSep3, miFileExit });
             mFile.Name = "mFile";
             mFile.Size = new Size(37, 19);
             mFile.Text = "File";
@@ -174,6 +175,13 @@ namespace SiliFish.UI
             miFileSaveSimulationResults.Size = new Size(270, 22);
             miFileSaveSimulationResults.Text = "Save Simulation &Results (to database)";
             miFileSaveSimulationResults.Click += miFileSaveSimulationResults_Click;
+            // 
+            // miFileBatchSave
+            // 
+            miFileBatchSave.Name = "miFileBatchSave";
+            miFileBatchSave.Size = new Size(270, 22);
+            miFileBatchSave.Text = "Batch Save";
+            miFileBatchSave.Click += miFileBatchSave_Click;
             // 
             // miFileSep1
             // 
@@ -502,7 +510,6 @@ namespace SiliFish.UI
             // btnStop
             // 
             btnStop.BackColor = Color.FromArgb(96, 125, 139);
-            btnStop.Enabled = true;
             btnStop.Font = new Font("Segoe UI", 14F);
             btnStop.ForeColor = Color.White;
             btnStop.Location = new Point(65, 104);
@@ -758,5 +765,6 @@ namespace SiliFish.UI
         private Button btnStop;
         private Button btnPause;
         private Button btnResume;
+        private ToolStripMenuItem miFileBatchSave;
     }
 }

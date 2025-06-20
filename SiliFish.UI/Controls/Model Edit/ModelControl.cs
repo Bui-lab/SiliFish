@@ -180,7 +180,8 @@ namespace SiliFish.UI.Controls
             if (ddDefaultMuscleCellCore.Items.Count == 0)
                 ddDefaultMuscleCellCore.Items.AddRange([.. CellCore.GetCoreTypes()]);
             ddDefaultMuscleCellCore.Text = Model?.Settings.DefaultMuscleCellCore;
-            propSettings.SelectedObject = Model?.Settings;
+            propModelSettings.SelectedObject = Model?.Settings;
+            propSimulationSettings.SelectedObject = Model?.SimulationSettings;
             propKinematics.SelectedObject = Model?.KinemParam;
             propDynamics.SelectedObject = Model?.DynamicsParam;
             LoadParams(Model?.Parameters);
@@ -242,7 +243,7 @@ namespace SiliFish.UI.Controls
             Model = model;
             CurrentMode = Model is ModelTemplate ? RunMode.Template : RunMode.RunningModel;
             splitCellPoolsAndCells.Panel2Collapsed = CurrentMode == RunMode.Template;
-            propModelDimensions.Enabled = propSettings.Enabled = CurrentMode == RunMode.Template;
+            propModelDimensions.Enabled = propModelSettings.Enabled = CurrentMode == RunMode.Template;
             LoadModel();
             modelUpdated = false;
             if (clearJson)

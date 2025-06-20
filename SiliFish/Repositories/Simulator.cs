@@ -46,6 +46,7 @@ namespace SiliFish.Repositories
         }
         public string Description => $"{numSimulations} simulations run in {runmode}. Total duration: {endTime - startTime}";
         public string RunParamDescription => runParam.Description;
+
         private void RunMultipleSimulations()
         {
             try

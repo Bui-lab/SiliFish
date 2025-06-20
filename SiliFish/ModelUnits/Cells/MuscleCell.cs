@@ -76,7 +76,7 @@ namespace SiliFish.ModelUnits.Cells
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = CellCore.CreateCore(coreType, cellParams, model.Settings.SimulationDeltaT);
+            Core = CellCore.CreateCore(coreType, cellParams, model.SimulationSettings.SimulationDeltaT);
             EndPlates = [];
             GapJunctions = [];
             ConductionVelocity = cv;
@@ -199,6 +199,11 @@ namespace SiliFish.ModelUnits.Cells
             tension = null;
             foreach (ChemicalSynapse jnc in EndPlates)
                 jnc.InitForSimulation(runParam, ref uniqueID);
+        }
+        public override void ResumeSimulation(RunParam runParam)
+        {
+            base.ResumeSimulation(runParam);
+            tension = null;
         }
         public override void FinalizeSimulation(RunParam runParam, SimulationDBLink dbLink)
         {

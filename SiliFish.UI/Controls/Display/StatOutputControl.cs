@@ -35,7 +35,7 @@ namespace SiliFish.UI.Controls
             if (model == null) return;
             this.simulation = simulation;
             this.model = model;
-            timeRangeStat.EndTime = model.Settings.SimulationEndTime;
+            timeRangeStat.EndTime = model.SimulationSettings.SimulationEndTime;
             cellSelectionStats.RunningModel = model;
         }
         public void CompleteRun(RunParam runParam)

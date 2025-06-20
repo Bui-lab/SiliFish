@@ -34,6 +34,7 @@ namespace SiliFish.Services.Optimization
                 return TargetRhythm == FiringRhythm.NoSpike ? Weight : 0;
             if (stat.FiringRhythm == TargetRhythm)
                 return Weight;
+            if (!PartialAllowed) return 0;
             switch (TargetRhythm)
             {
                 case FiringRhythm.NoSpike:

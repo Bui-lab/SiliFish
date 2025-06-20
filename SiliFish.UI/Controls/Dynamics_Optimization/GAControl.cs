@@ -358,6 +358,7 @@ namespace SiliFish.UI.Controls
             dgFitnessFunctions.Rows[rowInd].Tag = fitnessFunction;
             dgFitnessFunctions[colFFMode.Index, rowInd].Value = fitnessFunction.FitnessFunctionType;
             dgFitnessFunctions[colFFWeight.Index, rowInd].Value = fitnessFunction.Weight;
+            dgFitnessFunctions[colFFPartial.Index, rowInd].Value = fitnessFunction.PartialAllowed;
             dgFitnessFunctions[colFFFunction.Index, rowInd].Value = fitnessFunction.Details;
         }
         private void AddFitnessFunctionRow(FitnessFunction fitnessFunction = null)
@@ -425,13 +426,22 @@ namespace SiliFish.UI.Controls
 
         private void dgFitnessFunctions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            //weight can be directly editted on the grid
-            if (e.RowIndex < 0 || e.ColumnIndex != colFFWeight.Index)
+            //weight and partial can be directly editted on the grid
+            if (e.RowIndex < 0)
                 return;
             FitnessFunction fitnessFunction = dgFitnessFunctions.Rows[e.RowIndex].Tag as FitnessFunction;
-            if (double.TryParse(dgFitnessFunctions[colFFWeight.Index, e.RowIndex].Value?.ToString(), out double d))
+            if (e.ColumnIndex == colFFWeight.Index)
             {
-                fitnessFunction.Weight = d;
+                if (double.TryParse(dgFitnessFunctions[colFFWeight.Index, e.RowIndex].Value?.ToString(), out double d))
+                {
+                    fitnessFunction.Weight = d;
+                    dgFitnessFunctions.Rows[e.RowIndex].Tag = fitnessFunction;
+                }
+            }
+            else if (e.ColumnIndex == colFFPartial.Index)
+            {
+                DataGridViewCheckBoxCell cb = dgFitnessFunctions[colFFPartial.Index, e.RowIndex] as DataGridViewCheckBoxCell;
+                fitnessFunction.PartialAllowed = (bool)cb.Value;
                 dgFitnessFunctions.Rows[e.RowIndex].Tag = fitnessFunction;
             }
         }

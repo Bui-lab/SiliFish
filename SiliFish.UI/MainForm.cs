@@ -1,4 +1,5 @@
 using Controls;
+using Extensions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using SiliFish.Database;
@@ -25,7 +26,7 @@ namespace SiliFish.UI
         private static bool showAboutForm = true;
         public static bool currentPlotWarning = false;
         private DateTime runStart;
-        private string modelFileDefaultFolder, lastFileName;
+        protected string modelFileDefaultFolder, lastFileName;
         private ModelTemplate modelTemplate = null;
         private RunningModel runningModel = null;
         private RunParam runParam = new();
@@ -66,7 +67,7 @@ namespace SiliFish.UI
                 modelControl.SetModel(model);
                 modelOutputControl.SetRunningModel(null, model);
                 modelControl.SetSelectionToLast();
-                runParam = model.Settings.GetRunParam();
+                runParam = model.SimulationSettings.GetRunParam();
                 FillRunParams();
                 SetCurrentMode(RunMode.RunningModel, null);
                 miToolsMemoryFlush.ToolTipText =
@@ -246,7 +247,7 @@ namespace SiliFish.UI
                         return false;
                 }
             }
-            if (runningModel.Settings.JunctionLevelTracking)
+            if (runningModel.SimulationSettings.JunctionLevelTracking)
             {
                 int iMax = simulationSettings.iMax;
                 long numConn = runningModel.GetNumberOfJunctions();
@@ -260,15 +261,15 @@ namespace SiliFish.UI
 
                     DialogResult dlg = MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNoCancel);
                     if (dlg == DialogResult.Yes)
-                        runningModel.Settings.JunctionLevelTracking = false;
+                        runningModel.SimulationSettings.JunctionLevelTracking = false;
                     else if (dlg == DialogResult.No)
-                        runningModel.Settings.JunctionLevelTracking = true;
+                        runningModel.SimulationSettings.JunctionLevelTracking = true;
                     else
                         return false;
                 }
             }
             runParam = simulationSettings.GetValues();
-            runParam.TrackJunctionCurrent = runningModel.Settings.JunctionLevelTracking;
+            runParam.TrackJunctionCurrent = runningModel.SimulationSettings.JunctionLevelTracking;
             if (modelSimulator?.SimulationList.Count > 0)
             {
                 foreach (Simulation oldSim in modelSimulator?.SimulationList)
@@ -525,7 +526,8 @@ namespace SiliFish.UI
                 {
                     MainForm mf = new(new RunningModel(modelTemplate))
                     {
-                        WindowState = FormWindowState.Maximized
+                        WindowState = FormWindowState.Maximized,
+                        modelFileDefaultFolder = modelFileDefaultFolder,
                     };
                     mf.Show();
                     mf.numSimulations = 1;
@@ -541,7 +543,8 @@ namespace SiliFish.UI
             {
                 MainForm mf = new(new RunningModel(modelTemplate))
                 {
-                    WindowState = FormWindowState.Maximized
+                    WindowState = FormWindowState.Maximized,
+                    modelFileDefaultFolder = modelFileDefaultFolder,
                 };
                 mf.Show();
                 mf.numSimulations = numOfModels;
@@ -558,7 +561,8 @@ namespace SiliFish.UI
             UseWaitCursor = true;
             MainForm mf = new(new RunningModel(modelTemplate))
             {
-                WindowState = FormWindowState.Maximized
+                WindowState = FormWindowState.Maximized,
+                modelFileDefaultFolder = modelFileDefaultFolder,
             };
             mf.Show();
 
@@ -598,6 +602,7 @@ namespace SiliFish.UI
                     try
                     {
                         mb = ModelFile.Load(openFileJson.FileName, out List<string> issues);
+                        modelFileDefaultFolder = Path.GetDirectoryName(openFileJson.FileName);
                         lastFileName = openFileJson.FileName;
                         SetModel(mb, Path.GetFileNameWithoutExtension(openFileJson.FileName));
                     }
@@ -684,14 +689,15 @@ namespace SiliFish.UI
             MessageBox.Show($"There was a problem in saving the simulation to {new SFDataContext().DbFileName}");
             simulationDBWriter = null;
         }
-        private void miFileSaveSimulationResults_Click(object sender, EventArgs e)
+
+        private bool SaveSimulationResultsToDB()
         {
             try
             {
                 if (modelSimulator == null || !modelSimulator.ModelRun || modelSimulator.LastSimulation == null)
                 {
                     MessageBox.Show("There is no simulation to be saved.");
-                    return;
+                    return false;
                 }
                 //get the latest name and description, as can be updated while the simulation is run
                 ModelBase updatedModel = modelControl.GetModel();
@@ -699,17 +705,39 @@ namespace SiliFish.UI
                 if (!SaveSimulationResultsToDBStart())
                 {
                     MessageBox.Show("There is a problem with connecting to the database or the database is corrupt.");
-                    return;
+                    return false;
                 }
                 simulationDBWriter.Run();
+                return true;
             }
             catch (Exception exc)
             {
                 MessageBox.Show($"There is a problem in saving the simulation results.\r\n{exc.Message}", "Error");
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+                return false;
             }
         }
 
+        private void miFileSaveSimulationResults_Click(object sender, EventArgs e)
+        {
+            SaveSimulationResultsToDB();
+        }
+
+        private void miFileBatchSave_Click(object sender, EventArgs e)
+        {
+            if (!SaveSimulationResultsToDB())
+            {
+                MessageBox.Show("There is a problem in saving the simulation results to the database.", "Error");
+                return;
+            }
+
+            string filename = Path.Combine(modelFileDefaultFolder, $"{Model.ModelName}_MembranePotensials_RS{Model.Settings.Seed}.csv");
+            if (!SimulationFile.SaveMembranePotentials(modelSimulator.LastSimulation, filename))
+            {
+                MessageBox.Show("There is a problem in saving the membrane potentials to the CSV file.", "Error");
+                return;
+            }
+        }
         private void miFileExport_Click(object sender, EventArgs e)
         {
             SaveModelAsExcel();

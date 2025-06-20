@@ -162,6 +162,7 @@ namespace SiliFish.ModelUnits.Architecture
                     state = SimulationState.Cancelled;
                     return;
                 }
+                Model.ResumeSimulation(RunParam);
                 int lastProgress = iProgress;
                 foreach (var index in Enumerable.Range(lastProgress, iMax - lastProgress - 1))
                 {

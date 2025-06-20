@@ -84,7 +84,7 @@ namespace SiliFish.Repositories
             try
             {
                 RunningModel model = simulation.Model;
-                bool jncTracking = model.Settings.JunctionLevelTracking;
+                bool jncTracking = model.SimulationSettings.JunctionLevelTracking;
                 List<string> columnNames = [ "RecordID", "Cell Pool", "Sagittal", "Somite", "Seq", "Cell Name",
                 "Stim Start", "Stim End", "Stim Details",
                 "Spike Count", "First Spike", "Last Spike", "Spike Freq",

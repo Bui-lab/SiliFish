@@ -17,6 +17,9 @@ namespace SiliFish.Services.Optimization
         private string fitnessFunctionType;
         public string FitnessFunctionType { get { return fitnessFunctionType; } set { fitnessFunctionType = value; } }
         public double Weight { get; set; }
+        public bool PartialAllowed { get; set; } = true; //if false, the fitness function must be fully satisfied to be considered valid.
+                                                         //The fitness is either 0 or weight in that case.
+                                                         //Otherwise, the fitness is calculated based on the distance from the target value.
         public bool MinMaxExists, CurrentRequired, ModeExists;//no need to save in JSON - they are class based parameters
         public bool PreStimulus = false, PostStimulus = false;
 
@@ -49,6 +52,8 @@ namespace SiliFish.Services.Optimization
             //to prevent division with small numbers in the next step
             if (ValueMin - 1 < d && ValueMax + 1 > d)
                 return Weight;
+            if (!PartialAllowed) 
+                return 0;
             if (d < ValueMin)
                 return Weight / (ValueMin - d);
             return Weight / (d - ValueMax);

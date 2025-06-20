@@ -253,7 +253,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             Model = model;
             CellPool = pool;
-            Core = CellCore.CreateCore(Core.CoreType, Core.Parameters, model.Settings.SimulationDeltaT);
+            Core = CellCore.CreateCore(Core.CoreType, Core.Parameters, model.SimulationSettings.SimulationDeltaT);
             foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == null))//To prevent double linking
             {
                 jnc.Cell1 = this;
@@ -468,6 +468,11 @@ namespace SiliFish.ModelUnits.Cells
             Stimuli.InitForSimulation(runParam, Model.randomNumGenerator);
             foreach (GapJunction jnc in GapJunctions)
                 jnc.InitForSimulation(runParam, ref uniqueID);
+        }
+
+        public virtual void ResumeSimulation(RunParam runParam)
+        {
+            
         }
         public virtual void FinalizeSimulation(RunParam runParam, SimulationDBLink dbLink)
         {

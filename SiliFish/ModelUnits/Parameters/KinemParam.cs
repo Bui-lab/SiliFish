@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Parameters
 {
@@ -50,6 +51,8 @@ namespace SiliFish.ModelUnits.Parameters
         [Browsable(false)]
         public double ConvCoef => UseMuscleTension ? ConvCoefTension : ConvCoefPotential;
 
+        [Browsable(false), JsonIgnore]
+        public string Description => this.GetProperties("; ");
         public KinemParam() { }
 
         public KinemParam Clone()

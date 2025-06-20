@@ -21,6 +21,9 @@ namespace SiliFish.Services.Optimization
             if (rheobase < 0) return 0;
             if (ValueMin <= rheobase && ValueMax >= rheobase)
                 return Weight;
+            if (!PartialAllowed) 
+                return 0;
+
             double range = ValueMax - ValueMin;
             if (range < GlobalSettings.Epsilon)
                 range = ValueMin / 2;
