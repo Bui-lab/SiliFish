@@ -219,5 +219,10 @@ namespace SiliFish.ModelUnits.Junction
             if (inputCurrent != null)
                 inputCurrent[tIndex] = IGap;
         }
+
+        public override bool IsActive(int timepoint)
+        {
+            return Cell1.IsActive(timepoint) && Cell2.IsActive(timepoint) && base.IsActive(timepoint);
+        }
     }
 }

@@ -222,6 +222,11 @@ namespace SiliFish.ModelUnits.Junction
                 inputCurrent[tIndex] = ISyn;
         }
 
+        public override bool IsActive(int timepoint)
+        {
+            return PreNeuron.IsActive(timepoint) && base.IsActive(timepoint);
+        }
+
     }
 
 }

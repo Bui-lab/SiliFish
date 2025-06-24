@@ -368,10 +368,10 @@ namespace SiliFish.UI
         private void SetCurrentMode(RunMode mode, string name)
         {
             bool prevCollapsed = splitMain.Panel2Collapsed;
-            miFileSaveSimulationResults.Visible =
-            miToolsGenerateStatsData.Visible =
-            miToolsMemoryFlush.Visible =
-                mode == RunMode.RunningModel;
+            miFileSaveSimulationResults.Visible = miFileBatchSave.Visible = 
+                miToolsGenerateStatsData.Visible =
+                miToolsMemoryFlush.Visible =
+                    mode == RunMode.RunningModel;
             splitMain.Panel2Collapsed = mode == RunMode.Template;
             pSimulation.Visible = mode == RunMode.RunningModel;
             pGenerateModel.Visible = mode == RunMode.Template;
