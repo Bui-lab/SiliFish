@@ -446,7 +446,7 @@ namespace SiliFish.UI.Controls
                 {
                     Values.Add(row.Cells.Cast<DataGridViewCell>().Select(c => c.Value.ToString()).ToList());
                 }
-                FileUtil.SaveToCSVFile(saveFileCSV.FileName, ColumnNames, Values);
+                FileUtil.SaveToCSVFile(saveFileCSV.FileName, ColumnNames, Values, null);
             }
         }
 

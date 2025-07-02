@@ -16,6 +16,7 @@ using SiliFish.UI.Dialogs;
 using SiliFish.UI.EventArguments;
 using SiliFish.UI.Services;
 using System.Diagnostics;
+using System.Windows.Forms.Design;
 
 namespace SiliFish.UI
 {
@@ -32,6 +33,8 @@ namespace SiliFish.UI
         private RunParam runParam = new();
         private Simulator modelSimulator;
         private SimulationDBWriter simulationDBWriter;
+        private SimulationStatsWriter simulationStatsWriter;
+
         public ModelBase Model
         {
             get
@@ -81,6 +84,17 @@ namespace SiliFish.UI
             }
         }
 
+        private void AnnonateDateToMenuItem(ToolStripMenuItem menu)
+        {
+            if (menu == null)
+                return;
+            string mainText = menu.Text;
+            int index = mainText.IndexOf("(last saved at");
+            if (index >= 0)
+                mainText = mainText.Substring(0, index).Trim();
+
+            menu.Text = $"{mainText} (last saved at {DateTime.Now:ddd} {DateTime.Now:t})";
+        }
         private void FillRunParams()
         {
             simulationSettings.SetValues(runParam);
@@ -354,6 +368,11 @@ namespace SiliFish.UI
             {
                 progressBarRun.Value = (int)(simulationDBWriter.GetProgress() * progressBarRun.Maximum);
                 lProgress.Text = $"Saving simulation summary results to the database.";
+            }
+            else if (simulationStatsWriter != null)
+            {
+                progressBarRun.Value = (int)(simulationStatsWriter.GetProgress());
+                lProgress.Text = $"Saving simulation stats to file.";
             }
             else if (modelSimulator != null)
             {
@@ -676,7 +695,7 @@ namespace SiliFish.UI
                 savedModels = $"\r\nRelated models saved as {savedModels}";
             MessageBox.Show($"Simulation summary results are saved to {new SFDataContext().DbFileName}{savedSimulations}{savedModels}");
             simulationDBWriter = null;
-            miFileSaveSimulationResults.Text = $"Save Simulation Results (last saved at {DateTime.Now:ddd} {DateTime.Now:t})";
+            AnnonateDateToMenuItem(miFileSaveSimulationResults);
         }
 
         private void SaveSimulationResultsToDBAborted()
@@ -732,11 +751,7 @@ namespace SiliFish.UI
             }
 
             string filename = Path.Combine(modelFileDefaultFolder, $"{Model.ModelName}_MembranePotensials_RS{Model.Settings.Seed}.csv");
-            if (!SimulationFile.SaveMembranePotentials(modelSimulator.LastSimulation, filename))
-            {
-                MessageBox.Show("There is a problem in saving the membrane potentials to the CSV file.", "Error");
-                return;
-            }
+            SaveSimulationStatsToFileStart(FileSaveMode.MembranePotentials, filename);
         }
         private void miFileExport_Click(object sender, EventArgs e)
         {
@@ -861,80 +876,117 @@ namespace SiliFish.UI
             return false;
 
         }
+
+
+        private void completeSaveSimulationFileAction()
+        {
+            Invoke(SaveSimulationStatsToFileEnd);
+        }
+
+        private void abortSaveSimulationFileAction()
+        {
+            Invoke(SaveSimulationStatsToFileAborted);
+        }
+
+        private bool SaveSimulationStatsToFileStart(FileSaveMode mode, string filename = "")
+        {
+            try
+            {
+                if (!StatsWarning()) return false;
+                if (string.IsNullOrEmpty(filename) && saveFileCSV.ShowDialog() == DialogResult.OK)
+                {
+                    filename = saveFileCSV.FileName;
+                }
+                simulationStatsWriter = new(filename, modelSimulator.LastSimulation, completeSaveSimulationFileAction, abortSaveSimulationFileAction);
+                simulationStatsWriter.Run(mode);
+
+                btnStart.Enabled = btnResume.Enabled = btnPause.Enabled = btnStop.Enabled = false;
+                UseWaitCursor = true;
+                progressBarRun.Value = 0;
+                SetProgressVisibility(true);
+                timerRun.Enabled = true;
+                return true;
+            }
+            catch (Exception exc)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+                return false;
+            }
+        }
+
+        private void SaveSimulationStatsToFileEnd()
+        {
+            UseWaitCursor = false;
+            timerRun.Enabled = false;
+            progressBarRun.Value = progressBarRun.Maximum;
+            SetProgressVisibility(false);
+            btnStart.Enabled = btnResume.Enabled = btnPause.Enabled = btnStop.Enabled = false;
+            UtilWindows.DisplaySavedFile(simulationStatsWriter.filename);
+            FileSaveMode mode = simulationStatsWriter.mode;
+            switch (mode)
+            {
+                case FileSaveMode.SpikeFreq:
+                    AnnonateDateToMenuItem(miToolsStatsSpikeStats);
+                    break;
+                case FileSaveMode.SpikeCounts:
+                    AnnonateDateToMenuItem(miToolsStatsSpikeCounts);
+                    break;
+                case FileSaveMode.Spikes:
+                    AnnonateDateToMenuItem(miToolsStatsSpikes);
+                    break;
+                case FileSaveMode.Episodes:
+                    AnnonateDateToMenuItem(miToolsStatsEpisodes);
+                    break;
+                case FileSaveMode.MembranePotentials:
+                    AnnonateDateToMenuItem(miToolsStatsMembranePotentials);
+                    break;
+                case FileSaveMode.Currents:
+                    AnnonateDateToMenuItem(miToolsStatsCurrents);
+                    break;
+                case FileSaveMode.FullStats:
+                    AnnonateDateToMenuItem(miToolsStatsFull);
+                    break;
+            }
+            simulationStatsWriter = null;
+        }
+
+        private void SaveSimulationStatsToFileAborted()
+        {
+            UseWaitCursor = false;
+            timerRun.Enabled = false;
+            progressBarRun.Value = progressBarRun.Maximum;
+            SetProgressVisibility(false);
+            btnStart.Enabled = btnResume.Enabled = btnPause.Enabled = btnStop.Enabled = true;
+            MessageBox.Show($"There was a problem in saving the simulation to {simulationStatsWriter.filename}");
+            simulationStatsWriter = null;
+        }
         private void miToolsStatsSpikeCounts_Click(object sender, EventArgs e)
         {
-            if (!StatsWarning()) return;
-            if (saveFileCSV.ShowDialog() == DialogResult.OK)
-            {
-                if (SimulationFile.SaveSpikeCounts(modelSimulator.LastSimulation, saveFileCSV.FileName))
-                {
-                    string filename = saveFileCSV.FileName;
-                    UtilWindows.DisplaySavedFile(filename);
-                }
-            }
+            SaveSimulationStatsToFileStart(FileSaveMode.SpikeCounts);
         }
         private void miToolsStatsSpikeStats_Click(object sender, EventArgs e)
         {
-            if (!StatsWarning()) return;
-            if (saveFileCSV.ShowDialog() == DialogResult.OK)
-            {
-                string filename = saveFileCSV.FileName;
-                if (SimulationFile.SaveSpikeFreqStats(modelSimulator.LastSimulation, filename))
-                {
-                    UtilWindows.DisplaySavedFile(filename);
-                }
-            }
+            SaveSimulationStatsToFileStart(FileSaveMode.SpikeFreq);
         }
 
         private void miToolsStatsSpikes_Click(object sender, EventArgs e)
         {
-            if (!StatsWarning()) return;
-            if (saveFileCSV.ShowDialog() == DialogResult.OK)
-            {
-                if (SimulationFile.SaveSpikes(modelSimulator.LastSimulation, saveFileCSV.FileName))
-                {
-                    string filename = saveFileCSV.FileName;
-                    UtilWindows.DisplaySavedFile(filename);
-                }
-            }
+            SaveSimulationStatsToFileStart(FileSaveMode.Spikes);
         }
 
         private void miToolsStatsEpisodes_Click(object sender, EventArgs e)
         {
-            if (saveFileCSV.ShowDialog() == DialogResult.OK)
-            {
-                if (SimulationFile.SaveEpisodes(modelSimulator.LastSimulation, saveFileCSV.FileName))
-                {
-                    string filename = saveFileCSV.FileName;
-                    UtilWindows.DisplaySavedFile(filename);
-                }
-            }
+            SaveSimulationStatsToFileStart(FileSaveMode.Episodes);
         }
 
         private void miToolsStatsMembranePotentials_Click(object sender, EventArgs e)
         {
-            if (saveFileCSV.ShowDialog() == DialogResult.OK)
-            {
-                if (SimulationFile.SaveMembranePotentials(modelSimulator.LastSimulation, saveFileCSV.FileName))
-                {
-                    string filename = saveFileCSV.FileName;
-                    UtilWindows.DisplaySavedFile(filename);
-                }
-            }
+            SaveSimulationStatsToFileStart(FileSaveMode.MembranePotentials);
         }
 
         private void miToolsStatsCurrents_Click(object sender, EventArgs e)
         {
-            //TODO create a class similar to SimulationDBWriter and use it to save all the stats info
-            //to be able to use the progress bar or to be able to cancel the saving
-            if (saveFileCSV.ShowDialog() == DialogResult.OK)
-            {
-                if (SimulationFile.SaveCurrents(modelSimulator.LastSimulation, saveFileCSV.FileName))
-                {
-                    string filename = saveFileCSV.FileName;
-                    UtilWindows.DisplaySavedFile(filename);
-                }
-            }
+            SaveSimulationStatsToFileStart(FileSaveMode.Currents);
         }
         private void miToolsStatsFull_Click(object sender, EventArgs e)
         {
@@ -942,11 +994,7 @@ namespace SiliFish.UI
             if (saveFileExcel.ShowDialog() == DialogResult.OK)
             {
                 MessageBox.Show("Membrane potential and (if tracked) current information will be saved as seperate csv files for file maintainability.", "Information");
-                if (SimulationFile.SaveFullStats(modelSimulator.LastSimulation, saveFileExcel.FileName))
-                {
-                    string folder = Path.GetDirectoryName(saveFileExcel.FileName);
-                    Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", folder);
-                }
+                SaveSimulationStatsToFileStart(FileSaveMode.FullStats, saveFileExcel.FileName);
             }
         }
 

@@ -62,26 +62,6 @@ namespace SiliFish.DynamicUnits
         }
         public override double GetNextVal(double vPreSynapse, double vPost, List<double> spikeArrivalTimes, double tCurrent, DynamicsParam settings, bool excitatory)
         {
-            /*TODO copied and modified from TwoExpSyn - compare and check 
-            double g_t = 0;
-
-            double threshold = Math.Max(tLastSignificantSpike, tCurrent - settings.ThresholdMultiplier * (TauR + TauD));
-            List<double> closeBySpikes = spikeArrivalTimes.Where(t => t > threshold && t < tCurrent).ToList();
-            if (settings.SpikeTrainSpikeCount > 0)
-                closeBySpikes = closeBySpikes.TakeLast(settings.SpikeTrainSpikeCount).ToList();
-
-            foreach (var ti in closeBySpikes)
-            {
-                double t_t0 = tCurrent - ti;
-                double rise = Math.Exp(-t_t0 / TauR);
-                double decay = Math.Exp(-t_t0 / TauD);
-                double g_partial = Conductance * (rise - decay);
-                if (g_partial < GlobalSettings.Epsilon)
-                    tLastSignificantSpike = ti; //if the conductance becomes very small, no need to use in future calculations
-                g_t += g_partial;
-            }
-            double iSyn = g_t * (ERev - vPost);
-            */
             if (vPreSynapse > Vth)//pre-synaptic neuron spikes
             {
                 // mEPSC

@@ -89,7 +89,7 @@ namespace SiliFish.Helpers
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
                 errorList.Add($"There is a problem in adding the Excel sheet {sheetName}: {ex.Message}");
                 return false;
             }

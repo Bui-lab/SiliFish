@@ -13,7 +13,8 @@ namespace SiliFish.Services.Dynamics
     {
         private static (double[,] vel, double[,] angle) GenerateSpineVelAndAngle(Simulation simulation, int startIndex, int endIndex)
         {
-            if (!simulation.SimulationRun) return (null, null);
+            if (simulation == null || !simulation.SimulationRun)
+                return (null, null);
             RunningModel model = simulation.Model;
             bool useMuscleTension = model.KinemParam.UseMuscleTension;
             double halfBodyWidth = model.ModelDimensions.BodyMedialLateralDistance / 2;
@@ -78,7 +79,8 @@ namespace SiliFish.Services.Dynamics
         public static Dictionary<string, Coordinate[]> GenerateSpineCoordinates(Simulation simulation, int startIndex, int endIndex)
         {
             //Converted and modified from the code written by Yann Roussel and Tuan Bui
-            if (!simulation.SimulationRun) return null;
+            if (simulation == null || !simulation.SimulationRun)
+                return null;
             (double[,] vel, double[,] angle) = GenerateSpineVelAndAngle(simulation, startIndex, endIndex);
 
             if (vel == null || angle == null ||

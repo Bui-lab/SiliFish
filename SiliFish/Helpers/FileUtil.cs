@@ -48,7 +48,7 @@ namespace SiliFish.Helpers
             return new FileInfo(path);
         }
 
-        public static void SaveToCSVFile(string filename, List<string> ColumnNames, List<List<string>> Values)
+        public static void SaveToCSVFile(string filename, List<string> ColumnNames, List<List<string>> Values, Action<double> progressAction)
         {
             if (filename == null || ColumnNames == null || Values == null)
                 return;
@@ -56,11 +56,13 @@ namespace SiliFish.Helpers
             using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
             using StreamWriter sw = new(fs);
             sw.WriteLine(string.Join(',', ColumnNames));
-
+            int total = Values.Count;
+            int progress = 0;
             foreach (List<string> words in Values)
             {
                 string row = string.Join(',', words.Select(CSVUtil.CSVEncode).ToList());
                 sw.WriteLine(row);
+                progressAction?.Invoke((double)++progress / total);
             }
         }
         public static string SaveToTempFolder(string filename, string content)
@@ -174,7 +176,7 @@ namespace SiliFish.Helpers
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
     }

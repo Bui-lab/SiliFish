@@ -1,103 +1,120 @@
 ﻿using OfficeOpenXml;
+using SiliFish.Definitions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
+using System.Xml.Linq;
 
 namespace SiliFish.Repositories
 {
-    public class SimulationFile
+    public class SimulationStatsWriter(string fileName, Simulation simulation, Action completionAction, Action abortAction, bool singleFile = false)
     {
-        public static bool SaveSpikeFreqStats(Simulation simulation, string filename)
+        public string filename = fileName;
+        public FileSaveMode mode;
+        private readonly Simulation simulation = simulation;
+        private readonly bool singleFile = singleFile;
+        public Action saveCompletionAction = completionAction;
+        public Action saveAbortAction = abortAction;
+        private double progress = 0;
+        public double GetProgress() => progress;
+
+        private void SetProgress(double progress)
+        {
+            this.progress = progress;
+        }
+        private void SaveSpikeFreqStats()
         {
             try
             {
                 (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateSpikeFreqStats(simulation);
-                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-                return true;
+                FileUtil.SaveToCSVFile(filename: fileName, columnNames, values, SetProgress);
+                saveCompletionAction?.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception exc)
             {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exc);
+                saveAbortAction?.Invoke();
             }
         }
-        public static bool SaveSpikeCounts(Simulation simulation, string filename)
+        private void SaveSpikeCounts()
         {
             try
             {
                 (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateSpikeCounts(simulation);
-                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-                return true;
+                FileUtil.SaveToCSVFile(filename: fileName, columnNames, values, SetProgress);
+                saveCompletionAction?.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception exc)
             {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exc);
+                saveAbortAction?.Invoke();
             }
         }
-        public static bool SaveSpikes(Simulation simulation, string filename)
+        private void SaveSpikes()
         {
             try
             {
                 (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateSpikesForCSV(simulation);
-                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-                return true;
+                FileUtil.SaveToCSVFile(filename: fileName, columnNames, values, SetProgress);
+                saveCompletionAction?.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception exc)
             {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exc);
+                saveAbortAction?.Invoke();
             }
         }
 
-        public static bool SaveEpisodes(Simulation simulation, string filename)
+        private void SaveEpisodes()
         {
             try
             {
                 (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateEpisodes(simulation);
-                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-                return true;
+                FileUtil.SaveToCSVFile(filename: fileName, columnNames, values, SetProgress);
+                saveCompletionAction?.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception exc)
             {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exc);
+                saveAbortAction?.Invoke();
             }
         }
 
-        public static bool SaveMembranePotentials(Simulation simulation, string filename)
+        private void SaveMembranePotentials()
         {
             try
             {
                 (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateMembranePotentialsForCSV(simulation);
-                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-                return true;
+                FileUtil.SaveToCSVFile(filename: fileName, columnNames, values, SetProgress);
+                saveCompletionAction?.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception exc)
             {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exc);
+                saveAbortAction?.Invoke();
             }
         }
-        public static bool SaveCurrents(Simulation simulation, string filename)
+        private void SaveCurrents()
         {
             try
             {
                 (List<string> columnNames, List<List<string>> values) = SimulationStats.GenerateCurrentsForCSV(simulation);
-                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-                return true;
+                FileUtil.SaveToCSVFile(filename: fileName, columnNames, values, SetProgress);
+                saveCompletionAction?.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception exc)
             {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exc);
+                saveAbortAction?.Invoke();
             }
         }
-        public static bool SaveFullStats(Simulation simulation, string filename, bool singleFile = false)
+        private void SaveFullStats()
         {
             try
             {
@@ -138,7 +155,7 @@ namespace SiliFish.Repositories
                     {
                         filename = Path.ChangeExtension(filename, ".csv");
                         string path = FileUtil.AppendToFileName(filename, "_MembranePotentials");
-                        FileUtil.SaveToCSVFile(path, columnNames, values);
+                        FileUtil.SaveToCSVFile(path, columnNames, values, SetProgress);
                     }
                     if (simulation.Model.SimulationSettings.JunctionLevelTracking)
                     {
@@ -149,20 +166,36 @@ namespace SiliFish.Repositories
                         {
                             filename = Path.ChangeExtension(filename, ".csv");
                             string path = FileUtil.AppendToFileName(filename, "_Currents");
-                            FileUtil.SaveToCSVFile(path, columnNames, values);
+                            FileUtil.SaveToCSVFile(path, columnNames, values, SetProgress);
                         }
                     }
                 }
-            
-                package.Save();
-                return true;
-            }
 
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
+                package.Save();
+                saveCompletionAction?.Invoke();
             }
+            catch (Exception exc)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+                saveAbortAction?.Invoke();
+            }
+        }
+
+        public void Run(FileSaveMode mode)
+        {
+            this.mode = mode;
+            Thread thread = mode switch
+            {
+                FileSaveMode.SpikeFreq => new(SaveSpikeFreqStats),
+                FileSaveMode.SpikeCounts => new(SaveSpikeCounts),
+                FileSaveMode.Spikes => new(SaveSpikes),
+                FileSaveMode.Episodes => new(SaveEpisodes),
+                FileSaveMode.MembranePotentials => new(SaveMembranePotentials),
+                FileSaveMode.Currents => new(SaveCurrents),
+                FileSaveMode.FullStats => new(SaveFullStats),
+                _ => throw new ArgumentException($"Unknown mode: {mode}"),
+            };
+            thread.Start();
         }
     }
 }

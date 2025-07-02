@@ -70,7 +70,7 @@ namespace SiliFish.DynamicUnits
             double g_t = 0;
 
             double threshold = Math.Max(tLastSignificantSpike, tCurrent - settings.ThresholdMultiplier * (TauR + TauDFast + TauDSlow));
-            List<double> closeBySpikes = spikeArrivalTimes.Where(t => t > threshold && t < tCurrent).ToList();
+            List<double> closeBySpikes = spikeArrivalTimes.Where(t => t >= threshold && t < tCurrent).ToList();
             if (settings.SpikeTrainSpikeCount > 0)
                 closeBySpikes = closeBySpikes.TakeLast(settings.SpikeTrainSpikeCount).ToList();
 
@@ -81,7 +81,7 @@ namespace SiliFish.DynamicUnits
                 double fast_decay = (1 - SlowComponent) * Math.Exp(-t_t0 / TauDFast);
                 double slow_decay = SlowComponent * Math.Exp(-t_t0 / TauDSlow);
                 double g_partial = Conductance * rise * (slow_decay + fast_decay);
-                if (g_partial < GlobalSettings.Epsilon)
+                if (Math.Abs(g_partial) < GlobalSettings.Epsilon)
                     tLastSignificantSpike = ti; //if the conductance becomes very small, no need to use in future calculations
                 g_t += g_partial;
             }

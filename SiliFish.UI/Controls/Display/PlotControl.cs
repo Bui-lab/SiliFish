@@ -16,6 +16,7 @@ using SiliFish.UI.Services;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.UI.EventArguments;
+using Windows.Media.Devices;
 
 namespace SiliFish.UI.Controls
 {
@@ -29,6 +30,7 @@ namespace SiliFish.UI.Controls
         int tPlotEnd = 0;
         int numOfPlots = 0;
         PlotDefinition lastPlot = null;
+        (int StartTime, int EndTime) lastPlotTimeRange = (0, 0);
         PlotType PlotType = PlotType.MembPotential;
         PlotSelectionInterface plotSelection;
         private string tempFile;
@@ -379,7 +381,7 @@ namespace SiliFish.UI.Controls
         {
             if (sender is not PlotDefinition plot)
                 return;
-            if (!simulation.SimulationRun)
+            if (simulation == null || !simulation.SimulationRun)
                 return;
             ddPlot.Text = plot.PlotType.GetDisplayName();
             plotSelection = plot.Selection;
@@ -468,18 +470,19 @@ namespace SiliFish.UI.Controls
         {
             if (simulation == null || model == null) return ("", null);
 
+            int tSkip = simulation.RunParam.SkipDuration;
+            double dt = simulation.RunParam.DeltaT;
+            int iStart = (int)((tPlotStart + tSkip) / dt);
+            int iEnd = (int)((tPlotEnd + tSkip) / dt);
+
             (List<Cell> Cells, List<CellPool> Pools) = (null, null);
             string plotsubset = cellSelectionPlot.Visible && PlotType.GetGroup() != "episode" ? cellSelectionPlot.PoolSubset : "";
             if (plotSelection is PlotSelectionMultiCells || plotSelection is PlotSelectionUnits)
             {
-                int tSkip = simulation.RunParam.SkipDuration;
-                double dt = simulation.RunParam.DeltaT;
-                int iStart = (int)((tPlotStart + tSkip) / dt);
-                int iEnd = (int)((tPlotEnd + tSkip) / dt);
                 (Cells, Pools) = model.GetSubsetCellsAndPools(plotsubset, plotSelection, iStart, iEnd);
             }
 
-            if (lastPlot != null && lastPlot.PlotType.Equals(PlotType) &&
+            if (lastPlot != null && lastPlot.PlotType.Equals(PlotType) && lastPlotTimeRange.StartTime == iStart && lastPlotTimeRange.EndTime == iEnd &&
                 lastPlot.Selection is PlotSelectionMultiCells lpsm && plotSelection is PlotSelectionMultiCells psm)
             {
                 if (PlotType.GetGroup() == "current" && lpsm.Equals(psm) && lastPlot.PlotSubset == plotsubset)
@@ -494,6 +497,7 @@ namespace SiliFish.UI.Controls
                 PlotType = PlotType,
                 Selection = plotSelection
             };
+            lastPlotTimeRange = (iStart, iEnd);
             PlotGenerator PG = new();
             (string Title, Charts) = PG.GetPlotData(lastPlot, simulation, Cells, Pools, tPlotStart, tPlotEnd);
             errorMessage = PG.errorMessage;

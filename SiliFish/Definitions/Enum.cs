@@ -10,6 +10,7 @@ namespace SiliFish.Definitions
     //To fill dropdown with enum:
     //ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
 
+    public enum  FileSaveMode { SpikeFreq, SpikeCounts, Spikes, Episodes, MembranePotentials, Currents, FullStats }
     public enum SimulationState
     {
         [Display(Name = "Not Started")]
