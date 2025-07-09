@@ -176,7 +176,7 @@ namespace SiliFish.Repositories
             }
             catch (Exception exc)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exc);
                 saveAbortAction?.Invoke();
             }
         }

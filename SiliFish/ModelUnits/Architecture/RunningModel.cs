@@ -932,6 +932,10 @@ namespace SiliFish.ModelUnits.Architecture
             pool1.ReachToCellPoolViaChemSynapse(pool2, template, timeline);
         }
 
+        public void KinemParamsChanged()
+        {
+            SwimmingEpisodes = null; //reset swimming episodes
+        }
 
     }
 

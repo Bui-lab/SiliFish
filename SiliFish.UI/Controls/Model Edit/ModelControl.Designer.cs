@@ -380,6 +380,7 @@
             propKinematics.Name = "propKinematics";
             propKinematics.Size = new Size(682, 515);
             propKinematics.TabIndex = 1;
+            propKinematics.PropertyValueChanged += propKinematics_PropertyValueChanged;
             // 
             // pKinematicsDescription
             // 
@@ -1005,6 +1006,7 @@
             propDynamics.Name = "propDynamics";
             propDynamics.Size = new Size(682, 516);
             propDynamics.TabIndex = 27;
+            propDynamics.PropertyValueChanged += propDynamics_PropertyValueChanged;
             // 
             // eDynamicsDescription
             // 

@@ -53,17 +53,17 @@ namespace SiliFish.UI.Controls
             string.Join(',', SelectedCells.Select(c => c.ID)) : null;
         private Cell FirstSelectedCell => SelectedCells != null && SelectedCells.Count > 0 ?
                SelectedCells[0] : null;
-        
+
         private char modeIOG;//I: incoming, O; outgoing; G: gap
-        private JunctionBase SelectedJunction; 
-        private StimulusBase SelectedStimulus; 
+        private JunctionBase SelectedJunction;
+        private StimulusBase SelectedStimulus;
         private List<ModelUnitBase> SelectedUnits
         {
             get
             {
-                return SelectedCells?.Count > 0 ? SelectedCells.Cast<ModelUnitBase>().ToList():
+                return SelectedCells?.Count > 0 ? SelectedCells.Cast<ModelUnitBase>().ToList() :
                         (SelectedPools?.Count > 0 ? SelectedPools.Cast<ModelUnitBase>().ToList() :
-                        SelectedPoolTemplates?.Count > 0 ? SelectedPoolTemplates.Cast<ModelUnitBase>().ToList() : 
+                        SelectedPoolTemplates?.Count > 0 ? SelectedPoolTemplates.Cast<ModelUnitBase>().ToList() :
                         null);
             }
         }
@@ -261,7 +261,7 @@ namespace SiliFish.UI.Controls
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
                 throw;
             }
         }
@@ -1146,7 +1146,7 @@ namespace SiliFish.UI.Controls
         private void listJunctions_ItemsImport(object sender, EventArgs e)
         {
             List<ModelUnitBase> units = SelectedUnits;
-            string ofUnits = units != null ? $" of {string.Join(", ", units.Select(u=>u.ID))} " : " of full model ";
+            string ofUnits = units != null ? $" of {string.Join(", ", units.Select(u => u.ID))} " : " of full model ";
             if (!warnedImport &&
                 (Model is ModelTemplate modelTemplate && modelTemplate.HasJunctions() ||
                 Model is RunningModel runningModel && runningModel.HasJunctions()))
@@ -1366,7 +1366,7 @@ namespace SiliFish.UI.Controls
         }
         private void LoadStimuli(List<CellPool> cellpools)
         {
-            if (cellpools == null || cellpools.Count==0)
+            if (cellpools == null || cellpools.Count == 0)
             {
                 LoadStimuli();
                 return;
@@ -1376,13 +1376,13 @@ namespace SiliFish.UI.Controls
         }
         private void LoadStimuli(List<Cell> cells)
         {
-            if (cells == null || cells.Count==0)
+            if (cells == null || cells.Count == 0)
             {
                 LoadStimuli(SelectedPools);
                 return;
             }
             lStimuliTitle.Text = $"Stimuli of {string.Join(',', cells.Select(cp => cp.ID))}";
-            listStimuli.LoadItems(cells.SelectMany(c=>c.Stimuli.ListOfStimulus).Cast<object>().ToList());
+            listStimuli.LoadItems(cells.SelectMany(c => c.Stimuli.ListOfStimulus).Cast<object>().ToList());
         }
 
         private StimulusBase OpenStimulusDialog(StimulusBase stim)
@@ -1521,7 +1521,7 @@ namespace SiliFish.UI.Controls
         }
         private void listStimuli_ItemsExport(object sender, EventArgs e)
         {
-           List<ModelUnitBase> selectedUnits = SelectedUnits;
+            List<ModelUnitBase> selectedUnits = SelectedUnits;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
                 if (ModelFile.SaveStimulusToCSV(saveFileCSV.FileName, Model, selectedUnits))
@@ -1632,7 +1632,7 @@ namespace SiliFish.UI.Controls
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
             btnLoadModelJSON.Enabled = false;
         }
@@ -1653,7 +1653,7 @@ namespace SiliFish.UI.Controls
             }
             catch (Exception exc)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exc);
             }
 
         }
@@ -1734,7 +1734,7 @@ namespace SiliFish.UI.Controls
                 if (dict.Count == 0) return;
                 if (dict.Any(kvp => kvp.Key.Contains("CellPool")))
                 {
-                    listCellPools.SelectItems(dict.Where(kvp => kvp.Key.Contains("CellPool")).Select(kvp=>kvp.Value).ToList());
+                    listCellPools.SelectItems(dict.Where(kvp => kvp.Key.Contains("CellPool")).Select(kvp => kvp.Value).ToList());
                     dict = dict.Where(kvp => !kvp.Key.Contains("CellPool")).ToDictionary(k => k.Key, v => v.Value);
                 }
                 if (dict.Any(kvp => kvp.Key.Contains("Cell")))
@@ -1758,8 +1758,19 @@ namespace SiliFish.UI.Controls
 
             catch (Exception exc)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exc);
             }
+        }
+
+        private void propKinematics_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            if (Model is RunningModel model)
+                model.KinemParamsChanged();
+        }
+
+        private void propDynamics_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+
         }
     }
 }

@@ -43,7 +43,7 @@ namespace SiliFish.UI
                     FileUtil.SaveToFile(saveFileCSV.FileName, text);
                     saved = true;
                     string filename = saveFileCSV.FileName;
-                    UtilWindows.DisplaySavedFile(filename);
+                    DisplaySavedFile(filename);
                 }
                 catch (Exception exc)
                 {
