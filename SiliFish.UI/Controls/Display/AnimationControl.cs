@@ -18,7 +18,6 @@ using SiliFish.Repositories;
 using SiliFish.Services.Plotting.PlotSelection;
 using SiliFish.UI.Services;
 using SiliFish.Services.Dynamics;
-using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.UI.EventArguments;
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace SiliFish.ModelUnits.Parameters
+namespace SiliFish.Definitions
 {
     public class DynamicsParam
     {

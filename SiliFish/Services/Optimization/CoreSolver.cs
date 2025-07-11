@@ -39,6 +39,7 @@ namespace SiliFish.Services.Optimization
         static string AssemblySuffix = ", GeneticSharp.Domain";
 
         public CoreSolverSettings Settings { get; set; }
+        public DynamicsParam DynamicsParam { get; set; }
 
         private SelectionBase Selection;
         private CrossoverBase Crossover;
@@ -167,7 +168,7 @@ namespace SiliFish.Services.Optimization
             Reinsertion = (ReinsertionBase)Activator.CreateInstance(Type.GetType(Settings.ReinsertionType + AssemblySuffix));
             CreateTerminator(Settings);
 
-            IFitness Fitness = new CoreFitness(this, Settings);
+            IFitness Fitness = new CoreFitness(this, Settings, DynamicsParam);
             ChromosomeBase chromosome = new FloatingPointChromosome(Settings.MinValues, Settings.MaxValues, Settings.NumBits, Settings.DecimalDigits);
             Population initialPopulation = new(Settings.MinPopulationSize, Settings.MaxPopulationSize, chromosome);
             Algorithm = new(initialPopulation, Fitness, Selection, Crossover, Mutation)

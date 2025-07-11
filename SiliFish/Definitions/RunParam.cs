@@ -2,7 +2,7 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace SiliFish.ModelUnits.Parameters
+namespace SiliFish.Definitions
 {
     public class RunParam
     {

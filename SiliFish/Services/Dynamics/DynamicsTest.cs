@@ -1,7 +1,7 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace SiliFish.Services.Dynamics
             double[] I = stim.GetValues(endTime);
             return (TimeArray, I);
         }
-        public static List<Chart> DeltaTAnalysis(string coreType, Dictionary<string, double> parameters, StimulusSettings stimulusSettings,
+        public static List<Chart> DeltaTAnalysis(DynamicsParam dynamicsParam, string coreType, Dictionary<string, double> parameters, StimulusSettings stimulusSettings,
             double statEnd_ms, double[] dtValues, Random random)
         {
             try
@@ -44,7 +44,7 @@ namespace SiliFish.Services.Dynamics
                 {
                     (double[] TimeArray, double[] I) = GenerateStimulus(stimulusSettings, statEnd_ms, dt, random);
                     CellCore core = CellCore.CreateCore(coreType, parameters, dt);
-                    DynamicsStats stat = core.DynamicsTest(I);
+                    DynamicsStats stat = core.DynamicsTest(dynamicsParam, I);
                     charts.Add(new Chart
                     {
                         Title = dt.ToString("0.###"),
@@ -64,7 +64,7 @@ namespace SiliFish.Services.Dynamics
             }
         }
 
-        public static List<Chart> FiringAnalysis(string coreType,
+        public static List<Chart> FiringAnalysis(DynamicsParam dynamicsParam, string coreType,
             Dictionary<string, double> parameters, string param,
             NumberRangeDefinition rangeDefinition,
             StimulusSettings stimulusSettings,
@@ -74,7 +74,7 @@ namespace SiliFish.Services.Dynamics
             CellCore core = CellCore.CreateCore(coreType, parameters, dt);
             double[] paramValues = Util.GenerateValues(parameters[param], rangeDefinition);
             (double[] TimeArray, double[] I) = GenerateStimulus(stimulusSettings, statEnd_ms, dt, random);
-            DynamicsStats[] stats = core.FiringAnalysis(param, paramValues, I);
+            DynamicsStats[] stats = core.FiringAnalysis(dynamicsParam, param, paramValues, I);
             for (int iter = 0; iter < paramValues.Length; iter++)
             {
                 DynamicsStats stat = stats[iter];

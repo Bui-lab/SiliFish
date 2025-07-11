@@ -1,4 +1,5 @@
-﻿using SiliFish.Services.Dynamics;
+﻿using SiliFish.Definitions;
+using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -161,9 +162,9 @@ namespace SiliFish.DynamicUnits
             return V;
         }
 
-        public override DynamicsStats CreateDynamicsStats(double[] I)
+        public override DynamicsStats CreateDynamicsStats(DynamicsParam dynamicsParam, double[] I)
         {
-            DynamicsStats dyn = new(null, I, deltaT);
+            DynamicsStats dyn = new(dynamicsParam, I, deltaT);
             dyn.SecLists.Add("n", new double[I.Length]);
             dyn.SecLists.Add("m", new double[I.Length]);
             dyn.SecLists.Add("h", new double[I.Length]);

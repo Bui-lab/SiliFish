@@ -8,7 +8,6 @@ using SiliFish.UI.Extensions;
 using System.Data;
 using SiliFish.Repositories;
 using SiliFish.Services.Dynamics;
-using SiliFish.ModelUnits.Parameters;
 using SiliFish.Services.Plotting;
 using SiliFish.DataTypes;
 using System.Windows.Forms;

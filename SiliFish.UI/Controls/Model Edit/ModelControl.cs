@@ -309,7 +309,7 @@ namespace SiliFish.UI.Controls
         {
             if (Model == null) return null;
             ControlContainer frmControl = new(ParentForm.Location);
-            CellPoolControl cplControl = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
+            CellPoolControl cplControl = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings, Model.DynamicsParam);
             cplControl.LoadPool += Cpl_LoadPool;
             cplControl.SavePool += Cpl_SavePool;
 

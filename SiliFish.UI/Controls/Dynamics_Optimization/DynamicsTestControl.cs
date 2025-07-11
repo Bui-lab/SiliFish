@@ -1,4 +1,5 @@
 ﻿
+using Controls;
 using Extensions;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
@@ -47,6 +48,7 @@ namespace SiliFish.UI.Controls
         private bool updateParamNames = true;
         private bool skipCoreTypeChange = false;
         DynamicsStats dynamics;
+        DynamicsParam dynamicsParam;
         private double[] TimeArray;
 
         public event EventHandler ContentChanged
@@ -117,7 +119,7 @@ namespace SiliFish.UI.Controls
                     updateParamNames = false;
                     sensitivityAnalysisRheobase.SetParameters(true, [.. parameters.Keys]);
                     sensitivityAnalysisFiring.SetParameters(false, [.. parameters.Keys]);
-                    gaControl.ResetParameters(parameters);
+                    gaControl.ResetParameters(dynamicsParam, parameters);
                 }
                 FirstRun();
             }
@@ -158,7 +160,7 @@ namespace SiliFish.UI.Controls
             sensitivityAnalysisDeltaT.SetParameter("Delta t (ms)", dt);
             gaControl.DeltaT = dt;
         }
-        public DynamicsTestControl(string coreType, Dictionary<string, double> parameters, bool testMode)
+        public DynamicsTestControl(DynamicsParam dynamicsParam, string coreType, Dictionary<string, double> parameters, bool testMode)
         {
             InitializeComponent();
             InitAsync();
@@ -187,6 +189,7 @@ namespace SiliFish.UI.Controls
                 outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
             SetControlDeltaTs(DeltaT);
             pgSettings.SelectedObject = new DynamicsStatsParams();
+            this.dynamicsParam = dynamicsParam ?? new DynamicsParam();
         }
 
         private void PlotCharts(List<Chart> charts, string title, bool synchronized = true)
@@ -208,7 +211,7 @@ namespace SiliFish.UI.Controls
             {
                 ReadParameters();
                 double[] dtValues = sensitivityAnalysisDeltaT.GetValues();
-                List<Chart> charts = DynamicsTest.DeltaTAnalysis(coreType, Parameters,
+                List<Chart> charts = DynamicsTest.DeltaTAnalysis(dynamicsParam, coreType, Parameters,
                     ReadStimulusSettings(), (double)ePlotEndTime.Value, dtValues, Random);
                 PlotCharts(charts, "Δt Sensitivity Analysis");
             }
@@ -221,7 +224,7 @@ namespace SiliFish.UI.Controls
         private void SensitivityAnalysisFiring_RunAnalysis(object sender, EventArgs e)
         {
             ReadParameters();
-            List<Chart> charts = DynamicsTest.FiringAnalysis(coreType,
+            List<Chart> charts = DynamicsTest.FiringAnalysis(dynamicsParam, coreType,
                 Parameters, sensitivityAnalysisFiring.SelectedParam,
                 sensitivityAnalysisFiring.Range,
                 ReadStimulusSettings(), (double)ePlotEndTime.Value, DeltaT, Random);
@@ -519,7 +522,7 @@ namespace SiliFish.UI.Controls
                 if (rbSingleEntryStimulus.Checked)
                 {
                     double[] I = GenerateStimulus(ReadStimulusSettings());
-                    dynamics = core.DynamicsTest(I);
+                    dynamics = core.DynamicsTest(dynamicsParam, I);
                     CreatePlots();
                 }
                 else
@@ -562,7 +565,7 @@ namespace SiliFish.UI.Controls
                                 TimeLine_ms = tl
                             };
                             I.Add(GenerateStimulus(stimulusSettings));
-                            dynamicsList.Add($"Stimulus: {stim:0.#####}", core.DynamicsTest(I[iter++]));
+                            dynamicsList.Add($"Stimulus: {stim:0.#####}", core.DynamicsTest(dynamicsParam, I[iter++]));
                         }
                         CreatePlots(dynamicsList, columnNames, I);
                     }
@@ -760,6 +763,23 @@ namespace SiliFish.UI.Controls
                 core.SetParameters(coreParamValues[coreParamCounter]);
                 Parameters = core.GetParameters();
             }
+        }
+
+        private void linkDynamicsSettings_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ControlContainer controlContainer = new()
+            {
+                Text = "Settings"
+            };
+            DynamicsParam prevParam = dynamicsParam.Clone();
+            PropertyGrid propSettings = new()
+            {
+                Dock = DockStyle.Fill,
+                SelectedObject = dynamicsParam
+            };
+            controlContainer.AddControl(propSettings, null);
+            if (controlContainer.ShowDialog() != DialogResult.OK)
+                dynamicsParam = prevParam; // Revert changes if dialog is cancelled
         }
     }
 }

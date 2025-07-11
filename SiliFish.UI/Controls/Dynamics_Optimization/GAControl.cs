@@ -15,6 +15,7 @@ namespace SiliFish.UI.Controls
     {
         private static string GAFileDefaultFolder;
         private string coreType;
+        private DynamicsParam dynamicsParam;
 
         private bool exhaustiveSearch = false;
 
@@ -227,7 +228,7 @@ namespace SiliFish.UI.Controls
                 MinValueDictionary = minValues,
                 MaxValueDictionary = maxValues
             };
-            solver = new() { Settings = settings };
+            solver = new() { Settings = settings, DynamicsParam = dynamicsParam };
         }
         private void CreateExhaustiveSolverList()
         {
@@ -279,7 +280,7 @@ namespace SiliFish.UI.Controls
                                 MinValueDictionary = minValues,
                                 MaxValueDictionary = maxValues
                             };
-                            exhaustiveSolverList.Add(new CoreSolver() { Settings = settings });
+                            exhaustiveSolverList.Add(new CoreSolver() { Settings = settings, DynamicsParam = dynamicsParam });
                         }
                     }
                 }
@@ -337,7 +338,7 @@ namespace SiliFish.UI.Controls
 
             (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) = core.GetSuggestedMinMaxValues();
 
-            ResetParameters(Parameters, MinValues, MaxValues);
+            ResetParameters(dynamicsParam, Parameters, MinValues, MaxValues);
         }
         private void timerOptimization_Tick(object sender, EventArgs e)
         {
@@ -506,14 +507,15 @@ namespace SiliFish.UI.Controls
                 {
                     solver = new()
                     {
-                        Settings = GeneticAlgorithmFile.Load(openFileJson.FileName)
+                        Settings = GeneticAlgorithmFile.Load(openFileJson.FileName),
+                        DynamicsParam = dynamicsParam
                     };
                     if (solver.Settings == null)
                         throw new Exception();
                     coreType = solver.Settings.CoreType;
                     eMinChromosome.Text = solver.Settings.MinPopulationSize.ToString();
                     eMaxChromosome.Text = solver.Settings.MaxPopulationSize.ToString();
-                    ResetParameters(solver.Settings.ParamValues, solver.Settings.MinValues, solver.Settings.MaxValues);
+                    ResetParameters(dynamicsParam, solver.Settings.ParamValues, solver.Settings.MinValues, solver.Settings.MaxValues);
                     LoadFitnessFunctions();
                     ddGASelection.Text = solver.Settings.SelectionType;
                     ddGACrossOver.Text = solver.Settings.CrossOverType;
@@ -558,7 +560,7 @@ namespace SiliFish.UI.Controls
             OnGetParams.Invoke(this, EventArgs.Empty);
             ReadFitnessFunctions();
             CellCore core = CellCore.CreateCore(CoreType, Parameters, DeltaT);
-            double fitness = CoreFitness.Evaluate(targetRheobaseFunction, fitnessFunctions, core);
+            double fitness = CoreFitness.Evaluate(dynamicsParam, targetRheobaseFunction, fitnessFunctions, core);
             lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
         }
 
@@ -577,9 +579,12 @@ namespace SiliFish.UI.Controls
             ddGATermination.Visible = lGATerminationParameter.Visible = eTerminationParameter.Visible =
                 cbCustomTermination.Checked;
         }
-        public void ResetParameters(Dictionary<string, double> parameters,
-        Dictionary<string, double> MinValues = null, Dictionary<string, double> MaxValues = null)
+        public void ResetParameters(DynamicsParam dynamicsParam,
+            Dictionary<string, double> parameters,
+            Dictionary<string, double> MinValues = null, 
+            Dictionary<string, double> MaxValues = null)
         {
+            this.dynamicsParam = dynamicsParam;
             Parameters = parameters;
             dgMinMaxValues.Rows.Clear();
             if (Parameters == null) return;
@@ -595,8 +600,13 @@ namespace SiliFish.UI.Controls
                 rowIndex++;
             }
         }
-        public void ResetParameters(Dictionary<string, double> parameters, double[] MinValues, double[] MaxValues)
+        public void ResetParameters(DynamicsParam dynamicsParam,
+            Dictionary<string, double> parameters, 
+            double[] MinValues, 
+            double[] MaxValues)
         {
+            this.dynamicsParam = dynamicsParam;
+
             Parameters = parameters;
             dgMinMaxValues.Rows.Clear();
             if (Parameters == null) return;

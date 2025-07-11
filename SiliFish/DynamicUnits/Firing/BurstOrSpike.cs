@@ -1,5 +1,4 @@
 ﻿using SiliFish.Definitions;
-using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,9 +71,9 @@ namespace SiliFish.DynamicUnits
                     }
                     double maxInterval = intervals.Max();
                     double avgInterval = (intervals.Sum() - maxInterval) / intervals.Count;
-                    if (maxInterval > avgInterval * 10) //split into 2 or 3 bursts
+                    /*URGENT if (maxInterval > avgInterval * 10) //split into 2 or 3 bursts
                     {
-                        /*URGENT int ind = 0;
+                        int ind = 0;
                         BurstOrSpike b1 = new();
                         b1.SpikeTimeList.Add(burst.SpikeTimeList[0]);
                         burstsOrSpikesFiltered.Add(b1);
@@ -92,9 +91,10 @@ namespace SiliFish.DynamicUnits
                             }
                         }
                     }
-                    else{*/
+                    else{
                         burstsOrSpikesFiltered.Add(burst);
-                    }
+                    }*/
+                    burstsOrSpikesFiltered.Add(burst);
                 }
             }
             return burstsOrSpikesFiltered;

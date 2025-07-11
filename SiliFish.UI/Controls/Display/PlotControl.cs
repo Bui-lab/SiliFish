@@ -13,7 +13,6 @@ using SiliFish.ModelUnits;
 using SiliFish.Services.Plotting;
 using SiliFish.Services.Plotting.PlotSelection;
 using SiliFish.UI.Services;
-using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.UI.EventArguments;
 using Windows.Media.Devices;

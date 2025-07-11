@@ -14,6 +14,7 @@ namespace SiliFish.UI.Controls
     {
         private static string coreUnitFileDefaultFolder;
         private ModelSettings settings;
+        private DynamicsParam dynamicsParam;
         CellPoolTemplate poolBase;
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -287,7 +288,7 @@ namespace SiliFish.UI.Controls
         {
             Dictionary<string, double> dparams = poolBase.Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
             poolBase.CoreType = ddCoreType.Text;
-            DynamicsTestControl dynControl = new(poolBase.CoreType, dparams, testMode: false);
+            DynamicsTestControl dynControl = new(dynamicsParam, poolBase.CoreType, dparams, testMode: false);
             dynControl.UseUpdatedParametersRequested += Dyncontrol_UseUpdatedParams;
             frmDynamicControl = new()
             {
@@ -333,10 +334,11 @@ namespace SiliFish.UI.Controls
         }
 
         #endregion
-        public CellPoolControl(bool somiteBased, ModelSettings settings)
+        public CellPoolControl(bool somiteBased, ModelSettings settings, DynamicsParam dynamicsParam)
         {
             InitializeComponent();
             this.settings = settings;
+            this.dynamicsParam = dynamicsParam;
             SomiteBased = somiteBased;
             distConductionVelocity.AbsoluteEnforced = true;
             ddCoreType.Items.AddRange([.. CellCore.GetCoreTypes()]);// fill before celltypes

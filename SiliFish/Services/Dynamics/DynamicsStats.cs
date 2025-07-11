@@ -1,7 +1,6 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -163,9 +162,11 @@ namespace SiliFish.Services.Dynamics
                             if (iEnd == BurstsOrSpikes.Count && iEnd - 1 == iStart)
                                 break;
                             double start = BurstsOrSpikes[iStart].Start;
-                            double end = BurstsOrSpikes[iEnd - 1].End;
+                            double end = iEnd < BurstsOrSpikes.Count? 
+                                BurstsOrSpikes[iEnd].Start: 
+                                BurstsOrSpikes[iEnd - 1].End;
                             if (end > start)
-                                burstFreqs.Add(start, ((iEnd - 1 - iStart) * 1000 / (end - start), end));
+                                burstFreqs.Add(start, ((iEnd - iStart) * 1000 / (end - start), end));
                             iStart = iEnd;
                             iEnd++;
                         }
@@ -262,7 +263,10 @@ namespace SiliFish.Services.Dynamics
         { }
         public DynamicsStats(DynamicsParam settings, double[] stimulus, double dt)
         {
-            DynamicsParams ??= settings ?? new DynamicsParam();//use default values
+            if (settings != null)
+                DynamicsParams = settings;
+            else
+                DynamicsParams ??= new DynamicsParam();//use default values
             chatteringIrregularity = DynamicsParams.ChatteringIrregularity;
             oneClusterMultiplier = DynamicsParams.OneClusterMultiplier;
             tonicPadding = DynamicsParams.TonicPadding;

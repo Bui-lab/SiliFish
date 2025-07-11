@@ -1,4 +1,4 @@
-﻿using SiliFish.ModelUnits.Parameters;
+﻿using SiliFish.Definitions;
 
 namespace SiliFish.UI.Dialogs
 {

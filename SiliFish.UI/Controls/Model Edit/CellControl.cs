@@ -167,7 +167,7 @@ namespace SiliFish.UI.Controls
         private void linkTestDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Dictionary<string, double> dparams = cell.Core.GetParameters();
-            DynamicsTestControl dynControl = new(cell.Core.CoreType, dparams, testMode: false);
+            DynamicsTestControl dynControl = new(cell.Model?.DynamicsParam, cell.Core.CoreType, dparams, testMode: false);
             frmDynamicControl = new()
             {
                 WindowState = FormWindowState.Maximized

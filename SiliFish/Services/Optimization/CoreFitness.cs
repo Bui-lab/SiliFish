@@ -15,15 +15,18 @@ namespace SiliFish.Services.Optimization
         TargetRheobaseFunction TargetRheobaseFunction { get; set; }
         List<FitnessFunction> FitnessFunctions { get; set; }
 
-        public CoreFitness(CoreSolver coreUnitSolver, CoreSolverSettings settings)
+        DynamicsParam DynamicsParam { get; set; }
+
+        public CoreFitness(CoreSolver coreUnitSolver, CoreSolverSettings settings, DynamicsParam dynamicsParam)
         {
             this.coreUnitSolver = coreUnitSolver;
             CoreType = settings.CoreType;
             TargetRheobaseFunction = settings.TargetRheobaseFunction;
             FitnessFunctions = settings.FitnessFunctions;
+            DynamicsParam = dynamicsParam;
         }
 
-        public static double Evaluate(TargetRheobaseFunction targetRheobaseFunction, List<FitnessFunction> fitnessFunctions, CellCore core)
+        public static double Evaluate(DynamicsParam dynamicsParam, TargetRheobaseFunction targetRheobaseFunction, List<FitnessFunction> fitnessFunctions, CellCore core)
         {
             if (core == null)
                 return 0;
@@ -49,7 +52,7 @@ namespace SiliFish.Services.Optimization
             Dictionary<double, DynamicsStats> stats = [];
             foreach (double current in currentValues)
             {
-                DynamicsStats stat = core.DynamicsTest(current, infinity: GlobalSettings.RheobaseInfinity, dt: 0.1, warmup: warmup, includePostStimulus: includePostStimulus);
+                DynamicsStats stat = core.DynamicsTest(dynamicsParam, current, infinity: GlobalSettings.RheobaseInfinity, dt: 0.1, warmup: warmup, includePostStimulus: includePostStimulus);
                 stats.Add(current, stat);
             }
 
@@ -77,7 +80,7 @@ namespace SiliFish.Services.Optimization
             }
 
             CellCore core = CellCore.CreateCore(CoreType, instanceValues, coreUnitSolver.Settings.DeltaT);
-            return Evaluate(TargetRheobaseFunction, FitnessFunctions, core);
+            return Evaluate(DynamicsParam, TargetRheobaseFunction, FitnessFunctions, core);
         }
     }
 

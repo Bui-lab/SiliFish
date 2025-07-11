@@ -3,7 +3,6 @@ using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Parameters;
 using SiliFish.Services.Dynamics;
 using SiliFish.Services.Plotting.PlotSelection;
 using System;

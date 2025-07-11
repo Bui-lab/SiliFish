@@ -7,7 +7,6 @@ using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
-using SiliFish.ModelUnits.Parameters;
 using SiliFish.Repositories;
 using SiliFish.Services;
 using SiliFish.UI.Controls;
@@ -34,6 +33,7 @@ namespace SiliFish.UI
         private Simulator modelSimulator;
         private SimulationDBWriter simulationDBWriter;
         private SimulationStatsWriter simulationStatsWriter;
+        private Dictionary<FileSaveMode, string> StatsToSave = [];
 
         public ModelBase Model
         {
@@ -751,7 +751,10 @@ namespace SiliFish.UI
             }
 
             string filename = Path.Combine(modelFileDefaultFolder, $"{Model.ModelName}_MembranePotensials_RS{Model.Settings.Seed}.csv");
-            SaveSimulationStatsToFileStart(FileSaveMode.MembranePotentials, filename);
+            StatsToSave[FileSaveMode.MembranePotentials] = filename;
+            filename = Path.Combine(modelFileDefaultFolder, $"{Model.ModelName}_Spikes_RS{Model.Settings.Seed}.csv");
+            StatsToSave[FileSaveMode.Spikes] = filename;
+            SaveSimulationStatsToFileStart();
         }
         private void miFileExport_Click(object sender, EventArgs e)
         {
@@ -850,7 +853,7 @@ namespace SiliFish.UI
         }
         private void miToolsCellularDynamics_Click(object sender, EventArgs e)
         {
-            DynamicsTestControl dynControl = new("Izhikevich_9P", null, testMode: true);
+            DynamicsTestControl dynControl = new(Model?.DynamicsParam, "Izhikevich_9P", null, testMode: true);
             ControlContainer frmDynamics = new()
             {
                 WindowState = FormWindowState.Maximized
@@ -888,16 +891,22 @@ namespace SiliFish.UI
             Invoke(SaveSimulationStatsToFileAborted);
         }
 
-        private bool SaveSimulationStatsToFileStart(FileSaveMode mode, string filename = "")
+        private bool SaveSimulationStatsToFileStart()
         {
             try
             {
-                if (!StatsWarning()) return false;
+                if (StatsToSave.Count==0 || !StatsWarning()) 
+                    return false;
+
+                FileSaveMode mode = StatsToSave.Keys.First();
+                string filename = StatsToSave[mode]; 
+
                 if (string.IsNullOrEmpty(filename) && saveFileCSV.ShowDialog() == DialogResult.OK)
                 {
                     filename = saveFileCSV.FileName;
                 }
                 simulationStatsWriter = new(filename, modelSimulator.LastSimulation, completeSaveSimulationFileAction, abortSaveSimulationFileAction);
+                StatsToSave.Remove(mode); // Remove the used mode from the dictionary
                 simulationStatsWriter.Run(mode);
 
                 btnStart.Enabled = btnResume.Enabled = btnPause.Enabled = btnStop.Enabled = false;
@@ -948,10 +957,12 @@ namespace SiliFish.UI
                     break;
             }
             simulationStatsWriter = null;
+            SaveSimulationStatsToFileStart(); // Check if there are more stats to save
         }
 
         private void SaveSimulationStatsToFileAborted()
         {
+            StatsToSave.Clear(); // Clear the stats to save as it was aborted
             UseWaitCursor = false;
             timerRun.Enabled = false;
             progressBarRun.Value = progressBarRun.Maximum;
@@ -962,31 +973,37 @@ namespace SiliFish.UI
         }
         private void miToolsStatsSpikeCounts_Click(object sender, EventArgs e)
         {
-            SaveSimulationStatsToFileStart(FileSaveMode.SpikeCounts);
+            StatsToSave[FileSaveMode.SpikeCounts] = "";
+            SaveSimulationStatsToFileStart();
         }
         private void miToolsStatsSpikeStats_Click(object sender, EventArgs e)
         {
-            SaveSimulationStatsToFileStart(FileSaveMode.SpikeFreq);
+            StatsToSave[FileSaveMode.SpikeFreq] = "";
+            SaveSimulationStatsToFileStart();
         }
 
         private void miToolsStatsSpikes_Click(object sender, EventArgs e)
         {
-            SaveSimulationStatsToFileStart(FileSaveMode.Spikes);
+            StatsToSave[FileSaveMode.Spikes] = "";  
+            SaveSimulationStatsToFileStart();
         }
 
         private void miToolsStatsEpisodes_Click(object sender, EventArgs e)
         {
-            SaveSimulationStatsToFileStart(FileSaveMode.Episodes);
+            StatsToSave[FileSaveMode.Episodes] = "";
+            SaveSimulationStatsToFileStart();
         }
 
         private void miToolsStatsMembranePotentials_Click(object sender, EventArgs e)
         {
-            SaveSimulationStatsToFileStart(FileSaveMode.MembranePotentials);
+            StatsToSave[FileSaveMode.MembranePotentials] = "";
+            SaveSimulationStatsToFileStart();
         }
 
         private void miToolsStatsCurrents_Click(object sender, EventArgs e)
         {
-            SaveSimulationStatsToFileStart(FileSaveMode.Currents);
+            StatsToSave[FileSaveMode.Currents] = "";
+            SaveSimulationStatsToFileStart();
         }
         private void miToolsStatsFull_Click(object sender, EventArgs e)
         {
@@ -994,7 +1011,8 @@ namespace SiliFish.UI
             if (saveFileExcel.ShowDialog() == DialogResult.OK)
             {
                 MessageBox.Show("Membrane potential and (if tracked) current information will be saved as seperate csv files for file maintainability.", "Information");
-                SaveSimulationStatsToFileStart(FileSaveMode.FullStats, saveFileExcel.FileName);
+                StatsToSave[FileSaveMode.FullStats] = saveFileExcel.FileName;
+                SaveSimulationStatsToFileStart();
             }
         }
 

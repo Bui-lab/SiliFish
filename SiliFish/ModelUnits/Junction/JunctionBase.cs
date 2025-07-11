@@ -1,7 +1,7 @@
 ﻿using SiliFish.Database;
 using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.DynamicUnits.JncCore;
-using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

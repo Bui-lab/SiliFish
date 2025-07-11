@@ -178,19 +178,19 @@ namespace SiliFish.DynamicUnits
             throw exception;
         }
 
-        public virtual DynamicsStats CreateDynamicsStats(double[] I)
+        public virtual DynamicsStats CreateDynamicsStats(DynamicsParam dynamicsParam, double[] I)
         {
-            DynamicsStats dyn = new(null, I, deltaT);
+            DynamicsStats dyn = new(dynamicsParam, I, deltaT);
             return dyn;
         }
         public virtual void UpdateAdditionalDynamicStats(DynamicsStats dyn, int tIndex)
         {
         }
-        public virtual DynamicsStats SolveODE(double[] I)
+        public virtual DynamicsStats SolveODE(DynamicsParam dynamicsParam, double[] I)
         {
             Initialize();
             int iMax = I.Length;
-            DynamicsStats dyn = CreateDynamicsStats(I);
+            DynamicsStats dyn = CreateDynamicsStats(dynamicsParam, I);
 
             bool spike = false;
             for (int tIndex = 0; tIndex < iMax; tIndex++)
@@ -208,12 +208,12 @@ namespace SiliFish.DynamicUnits
             return dyn;
         }
 
-        public virtual DynamicsStats DynamicsTest(double[] I)
+        public virtual DynamicsStats DynamicsTest(DynamicsParam dynamicsParam, double[] I)
         {
-            return SolveODE(I);
+            return SolveODE(dynamicsParam, I);
         }
 
-        public virtual DynamicsStats DynamicsTest(double IValue, int infinity, double dt, int? warmup = 100, bool includePostStimulus = false)
+        public virtual DynamicsStats DynamicsTest(DynamicsParam dynamicsParam, double IValue, int infinity, double dt, int? warmup = 100, bool includePostStimulus = false)
         {
             infinity = (int)(infinity / dt);
             warmup ??= 0;
@@ -231,7 +231,7 @@ namespace SiliFish.DynamicUnits
                     I[i] = 0;
                 }
 
-            return DynamicsTest(I);
+            return DynamicsTest(dynamicsParam, I);
         }
 
         public virtual double[] RheobaseSensitivityAnalysis(string param, double[] values,
@@ -249,7 +249,7 @@ namespace SiliFish.DynamicUnits
             return rheos;
         }
 
-        public DynamicsStats[] FiringAnalysis(string param, double[] values, double[] I)
+        public DynamicsStats[] FiringAnalysis(DynamicsParam dynamicsParam, string param, double[] values, double[] I)
         {
             double origValue = Parameters[param];
             DynamicsStats[] stats = new DynamicsStats[values.Length];
@@ -257,7 +257,7 @@ namespace SiliFish.DynamicUnits
             foreach (double value in values)
             {
                 SetParameter(param, value);
-                stats[counter++] = DynamicsTest(I);
+                stats[counter++] = DynamicsTest(dynamicsParam, I);
             }
             SetParameter(param, origValue);
             return stats;

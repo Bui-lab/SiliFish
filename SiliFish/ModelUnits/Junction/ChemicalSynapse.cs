@@ -5,7 +5,6 @@ using SiliFish.DynamicUnits.JncCore;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Parameters;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;

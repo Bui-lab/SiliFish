@@ -85,9 +85,9 @@ namespace SiliFish.DynamicUnits
             if (V >= Vmax) V = Vmax;
             return V;
         }
-        public override DynamicsStats CreateDynamicsStats(double[] I)
+        public override DynamicsStats CreateDynamicsStats(DynamicsParam dynamicsParam, double[] I)
         {
-            DynamicsStats dyn = new(null, I, deltaT);
+            DynamicsStats dyn = new(dynamicsParam, I, deltaT);
             dyn.SecLists.Add("Rel. Tension", new double[I.Length]);
             dyn.SecLists.Add("Tension", new double[I.Length]);
             return dyn;

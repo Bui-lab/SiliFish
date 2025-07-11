@@ -72,6 +72,7 @@ namespace SiliFish.UI.Controls
             rbMultipleEntry = new RadioButton();
             lMultipleEntryNote = new Label();
             pFlow5 = new Panel();
+            linkDynamicsSettings = new LinkLabel();
             btnDynamicsRun = new Button();
             tParameterAnalysis = new TabPage();
             grFiring = new GroupBox();
@@ -556,7 +557,7 @@ namespace SiliFish.UI.Controls
             tStimulusTest.Location = new Point(4, 24);
             tStimulusTest.Name = "tStimulusTest";
             tStimulusTest.Padding = new Padding(3);
-            tStimulusTest.Size = new Size(306, 78);
+            tStimulusTest.Size = new Size(306, 227);
             tStimulusTest.TabIndex = 0;
             tStimulusTest.Text = "Stimulus Test";
             tStimulusTest.UseVisualStyleBackColor = true;
@@ -569,7 +570,7 @@ namespace SiliFish.UI.Controls
             pFlow.FlowDirection = FlowDirection.TopDown;
             pFlow.Location = new Point(3, 3);
             pFlow.Name = "pFlow";
-            pFlow.Size = new Size(300, 42);
+            pFlow.Size = new Size(300, 191);
             pFlow.TabIndex = 38;
             pFlow.WrapContents = false;
             // 
@@ -621,12 +622,25 @@ namespace SiliFish.UI.Controls
             // 
             // pFlow5
             // 
+            pFlow5.Controls.Add(linkDynamicsSettings);
             pFlow5.Controls.Add(btnDynamicsRun);
             pFlow5.Dock = DockStyle.Bottom;
-            pFlow5.Location = new Point(3, 45);
+            pFlow5.Location = new Point(3, 194);
             pFlow5.Name = "pFlow5";
             pFlow5.Size = new Size(300, 30);
             pFlow5.TabIndex = 40;
+            // 
+            // linkDynamicsSettings
+            // 
+            linkDynamicsSettings.AutoSize = true;
+            linkDynamicsSettings.LinkColor = Color.FromArgb(64, 64, 64);
+            linkDynamicsSettings.Location = new Point(193, 8);
+            linkDynamicsSettings.Name = "linkDynamicsSettings";
+            linkDynamicsSettings.Size = new Size(104, 15);
+            linkDynamicsSettings.TabIndex = 20;
+            linkDynamicsSettings.TabStop = true;
+            linkDynamicsSettings.Text = "Dynamics Settings";
+            linkDynamicsSettings.LinkClicked += linkDynamicsSettings_LinkClicked;
             // 
             // btnDynamicsRun
             // 
@@ -701,7 +715,7 @@ namespace SiliFish.UI.Controls
             tSensitivityAnalysis.Controls.Add(sensitivityAnalysisDeltaT);
             tSensitivityAnalysis.Location = new Point(4, 24);
             tSensitivityAnalysis.Name = "tSensitivityAnalysis";
-            tSensitivityAnalysis.Size = new Size(306, 78);
+            tSensitivityAnalysis.Size = new Size(306, 227);
             tSensitivityAnalysis.TabIndex = 2;
             tSensitivityAnalysis.Text = "Sensitivity Analysis";
             tSensitivityAnalysis.UseVisualStyleBackColor = true;
@@ -780,7 +794,7 @@ namespace SiliFish.UI.Controls
             tSettings.Location = new Point(4, 24);
             tSettings.Name = "tSettings";
             tSettings.Padding = new Padding(3);
-            tSettings.Size = new Size(320, 281);
+            tSettings.Size = new Size(320, 430);
             tSettings.TabIndex = 2;
             tSettings.Text = "Settings";
             tSettings.UseVisualStyleBackColor = true;
@@ -790,7 +804,7 @@ namespace SiliFish.UI.Controls
             pgSettings.Dock = DockStyle.Fill;
             pgSettings.Location = new Point(3, 3);
             pgSettings.Name = "pgSettings";
-            pgSettings.Size = new Size(314, 275);
+            pgSettings.Size = new Size(314, 424);
             pgSettings.TabIndex = 0;
             // 
             // pLoadSaveParams
@@ -1118,6 +1132,7 @@ namespace SiliFish.UI.Controls
             pFlow2.ResumeLayout(false);
             pFlow2.PerformLayout();
             pFlow5.ResumeLayout(false);
+            pFlow5.PerformLayout();
             tParameterAnalysis.ResumeLayout(false);
             grFiring.ResumeLayout(false);
             grFiring.PerformLayout();
@@ -1227,5 +1242,6 @@ namespace SiliFish.UI.Controls
         private LinkLabel linkImportParams;
         private General.UpDownControl upDownParams;
         private OpenFileDialog openFileCSV;
+        private LinkLabel linkDynamicsSettings;
     }
 }

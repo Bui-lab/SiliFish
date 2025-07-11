@@ -2,7 +2,6 @@
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Parameters;
 
 namespace SiliFish.UI.Controls
 {
