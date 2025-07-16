@@ -73,7 +73,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             data[i] += "," + yMultiData[i][j].ToString(GlobalSettings.PlotDataFormat);
                         }
                     }
-                    csvData = title + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray());
+                    csvData = title + "\n" + string.Join("\n", data.ToArray());
                     Chart chart = new()
                     {
                         CsvData = csvData,

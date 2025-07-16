@@ -33,6 +33,9 @@ namespace SiliFish.Definitions
             Category("Firing Patterns")]
         public double ChatteringIrregularity { get; set; } = 0.1;
 
+        public double MaxBurstInterval_InstantLowerRange = 5;
+        public double MaxBurstInterval_InstantUpperRange = 30;
+
         [Description("In ms, the maximum interval two spikes can have to be considered as part of a burst. " +
             "Used if the intervals between spikes are not increasing with time."),
             DisplayName("Max Burst Interval - no spread"),

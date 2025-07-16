@@ -526,11 +526,19 @@ namespace SiliFish.Services.Dynamics
                 return;
             }
             bool hasClusters = HasClusters();
-            if (!hasClusters && !followedByQuiescence && BurstCluster != null)//consider all spikes individually
+            if (!hasClusters)// && !followedByQuiescence && BurstCluster != null)//consider all spikes individually
             {
-                MaxBurstInterval_LowerRange = 0;
-                MaxBurstInterval_UpperRange = 0;
+                MaxBurstInterval_LowerRange = double.MaxValue / 2;//to prevent crashing when epsilon is added
+                MaxBurstInterval_UpperRange = double.MaxValue / 2;
             }
+            else
+            {
+                MaxBurstInterval_LowerRange = BurstCluster?.clusterMax ?? 0;
+                MaxBurstInterval_UpperRange = InterBurstCluster?.clusterMin ?? 0;
+            }
+
+            DynamicsParams.MaxBurstInterval_InstantLowerRange = MaxBurstInterval_LowerRange;
+            DynamicsParams.MaxBurstInterval_InstantUpperRange = MaxBurstInterval_UpperRange;
 
             burstsOrSpikes = BurstOrSpike.SpikesToBursts(DynamicsParams, dt, SpikeList, out double lastInterval);
             if (double.IsNaN(lastInterval))
