@@ -25,6 +25,7 @@ namespace SiliFish.UI
         private int numSimulations = 1;
         private static bool showAboutForm = true;
         public static bool currentPlotWarning = false;
+        private static bool showStatWarning = true;
         private DateTime runStart;
         protected string modelFileDefaultFolder, lastFileName;
         private ModelTemplate modelTemplate = null;
@@ -750,7 +751,7 @@ namespace SiliFish.UI
                 return;
             }
 
-            string filename = Path.Combine(modelFileDefaultFolder, $"{Model.ModelName}_MembranePotensials_RS{Model.Settings.Seed}.csv");
+            string filename = Path.Combine(modelFileDefaultFolder, $"{Model.ModelName}_MembranePotentials_RS{Model.Settings.Seed}.csv");
             StatsToSave[FileSaveMode.MembranePotentials] = filename;
             filename = Path.Combine(modelFileDefaultFolder, $"{Model.ModelName}_Spikes_RS{Model.Settings.Seed}.csv");
             StatsToSave[FileSaveMode.Spikes] = filename;
@@ -869,15 +870,18 @@ namespace SiliFish.UI
         {
             if (modelSimulator != null && modelSimulator.LastSimulation != null && modelSimulator.LastSimulation.SimulationRun)
             {
-                string msg = "Exporting the stats data may take a while depending on the duration of the simulation and the number of cells." +
-                    " Do you want to continue?";
-                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNo) != DialogResult.Yes)
-                    return false;
+                if (showStatWarning)
+                {
+                    showStatWarning = false; // Do not show the warning again
+                    string msg = "Exporting the stats data may take a while depending on the duration of the simulation and the number of cells." +
+                        " Do you want to continue?";
+                    if (MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                        return false;
+                }
                 return true;
             }
             MessageBox.Show("Please run a simulation to generate statistics for.");
             return false;
-
         }
 
 

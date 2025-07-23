@@ -77,7 +77,7 @@ namespace SiliFish.Repositories
                 }
                 dataContext.SaveChanges();
 
-                double[] y_axis = episodes.TailTipCoordinates.Select(coordinate=>coordinate.Y).ToArray();
+                double[] y_axis = episodes.TailTipCoordinates.Select(coordinate=>coordinate.X).ToArray();
                 int minLength = Math.Min(model.TimeArray.Length, y_axis.Length);
                 for (int i = 0; i < minLength; i++)
                 {

@@ -13,8 +13,7 @@ namespace SiliFish.UI.Dialogs
                 lMessage.Text = "The simulations will be run with the same settings sequentially multiple times and time related information will be listed. \r\n" +
                     "Only the last simulation results will be available.";
             else
-                lMessage.Text = "The simulations will be run with the same settings in parallel (hardware permitting) " +
-                    "and full information will be saved to the output folder or database.";
+                lMessage.Text = "The simulations will be run in parallel (hardware permitting) with a different random seed .";
             RunParam = runParam;
             simulationSettingsControl1.SetValues(runParam);
         }
