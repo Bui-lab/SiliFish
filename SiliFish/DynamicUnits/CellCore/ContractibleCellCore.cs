@@ -30,10 +30,6 @@ namespace SiliFish.DynamicUnits
             return Tmax * CalculateRelativeTension(Vm);
         }
 
-        public double[] CalculateRelativeTension(ValueCapsule V)
-        {
-            return V.AsArray().Select(v => CalculateRelativeTension(v)).ToArray();
-        }
         public double[] CalculateRelativeTension(double[] V)
         {
             return V.Select(v => CalculateRelativeTension(v)).ToArray();

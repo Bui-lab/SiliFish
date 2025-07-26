@@ -20,8 +20,6 @@ namespace SiliFish.Database
         public string Sagittal { get; set; }
         public int Somite {  get; set; }
         public int Seq {  get; set; }
-        public ICollection<CellValueRecord> CoreValues { get; set; } = [];
-
         public CellRecord() { }//required for SQLite
         public CellRecord(int simulationID, Cell cell) 
         { 

@@ -42,6 +42,8 @@ namespace SiliFish.Definitions
         public static bool MembranePotential_ShowSpike = true;
         public static string Plotting_BodyMidRange = "0-0"; //default is all somites
 
+        public static bool DB_SaveMembranePotential = false;
+
         public static int MaxNumberOfUnitsToList = 100;
         public static int MaxNumberOfUnitsToRender = 50_000;
 
@@ -240,8 +242,15 @@ namespace SiliFish.Definitions
             DisplayName("Body Mid Range"),
             Category("Plotting")]
         public string Plotting_BodyMidRange { get { return GlobalSettings.Plotting_BodyMidRange; } set { GlobalSettings.Plotting_BodyMidRange = value; } }
+        #endregion
 
-
+        #region Database
+        [Description("Whether membrane potential values for all cells will be saved. " +
+            "Warning: This will slow down the saving process and increase the size of the database." +
+            "Prefer using Tools->Genereate Stats Data->Membrane Potentials unless the database will be used directly for analysis."),
+        DisplayName("Save Membrane Potentials"),
+        Category("Database")]
+        public bool DB_SaveMembranePotential { get { return GlobalSettings.DB_SaveMembranePotential; } set { GlobalSettings.DB_SaveMembranePotential = value; } }
 
         #endregion
 

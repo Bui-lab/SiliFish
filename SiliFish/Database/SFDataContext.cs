@@ -16,7 +16,7 @@ public class SFDataContext: DbContext
     public DbSet<SimulationRecord> Simulations { get; set; }
     public DbSet<ModelRecord> Models { get; set; }
     public DbSet<CellRecord> Cells { get; set; }
-    public DbSet<CellValueRecord> Values { get; set; }
+    public DbSet<CellValueRecord> CellValues { get; set; }
     public DbSet<SpikeRecord> Spikes { get; set; }
     public DbSet<EpisodeRecord> Episodes { get; set; }
     public DbSet<RollingTBFRecord> RollingTBFs { get; set; }

@@ -1,5 +1,6 @@
 ﻿using SiliFish.Database;
 using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.Services;
@@ -71,6 +72,8 @@ namespace SiliFish.Repositories
                     {
                         double key = episode.RollingBeatFrequency.Keys[i];
                         double value = episode.RollingBeatFrequency.Values[i];
+                        if ((key is double.NaN) || (value is double.NaN))
+                            continue;
                         RollingTBFRecord rollingTBFRecord = new(simRecordId, key, value);
                         dataContext.Add(rollingTBFRecord);
                     }
@@ -99,6 +102,14 @@ namespace SiliFish.Repositories
                     {
                         SpikeRecord spikeRecord = new(simRecordId, cell.DbId, simulation.RunParam.GetTimeOfIndex(spikeIndex));
                         dataContext.Add(spikeRecord);
+                    }
+                    if (GlobalSettings.DB_SaveMembranePotential)
+                    {
+                        for (int i = 0; i < minLength; i++)
+                        {
+                            CellValueRecord mpRecord = new(cell.DbId, "Membrane Potential", model.TimeArray[i], cell.V[i]);
+                            dataContext.Add(mpRecord);
+                        }
                     }
                     dataContext.SaveChanges();
                     individualProgress = (double)++cellCounter / cellCount;
