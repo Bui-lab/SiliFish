@@ -86,9 +86,9 @@
             tGeneral = new TabPage();
             splitGeneral = new SplitContainer();
             lModelName = new Label();
+            eModelName = new TextBox();
             lDescription = new Label();
             eModelDescription = new TextBox();
-            eModelName = new TextBox();
             splitDimensions = new SplitContainer();
             propModelDimensions = new PropertyGrid();
             pDrawing = new Panel();
@@ -867,9 +867,10 @@
             // 
             splitGeneral.Panel1.BackColor = Color.White;
             splitGeneral.Panel1.Controls.Add(lModelName);
+            splitGeneral.Panel1.Controls.Add(eModelName);
             splitGeneral.Panel1.Controls.Add(lDescription);
             splitGeneral.Panel1.Controls.Add(eModelDescription);
-            splitGeneral.Panel1.Controls.Add(eModelName);
+            splitGeneral.Panel1MinSize = 80;
             // 
             // splitGeneral.Panel2
             // 
@@ -878,6 +879,8 @@
             splitGeneral.SplitterDistance = 104;
             splitGeneral.SplitterWidth = 2;
             splitGeneral.TabIndex = 62;
+            splitGeneral.SplitterMoved += splitGeneral_SplitterMoved;
+            splitGeneral.SizeChanged += splitGeneral_SizeChanged;
             // 
             // lModelName
             // 
@@ -888,32 +891,30 @@
             lModelName.TabIndex = 0;
             lModelName.Text = "Model Name";
             // 
+            // eModelName
+            // 
+            eModelName.Location = new Point(101, 6);
+            eModelName.Name = "eModelName";
+            eModelName.Size = new Size(578, 23);
+            eModelName.TabIndex = 1;
+            // 
             // lDescription
             // 
             lDescription.AutoSize = true;
             lDescription.Location = new Point(3, 36);
             lDescription.Name = "lDescription";
             lDescription.Size = new Size(67, 15);
-            lDescription.TabIndex = 1;
+            lDescription.TabIndex = 2;
             lDescription.Text = "Description";
             // 
             // eModelDescription
             // 
-            eModelDescription.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             eModelDescription.Location = new Point(101, 33);
             eModelDescription.Multiline = true;
             eModelDescription.Name = "eModelDescription";
             eModelDescription.ScrollBars = ScrollBars.Vertical;
             eModelDescription.Size = new Size(578, 68);
-            eModelDescription.TabIndex = 7;
-            // 
-            // eModelName
-            // 
-            eModelName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            eModelName.Location = new Point(101, 6);
-            eModelName.Name = "eModelName";
-            eModelName.Size = new Size(578, 23);
-            eModelName.TabIndex = 6;
+            eModelDescription.TabIndex = 3;
             // 
             // splitDimensions
             // 
@@ -1006,7 +1007,6 @@
             propDynamics.Name = "propDynamics";
             propDynamics.Size = new Size(682, 516);
             propDynamics.TabIndex = 27;
-            propDynamics.PropertyValueChanged += propDynamics_PropertyValueChanged;
             // 
             // eDynamicsDescription
             // 

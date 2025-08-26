@@ -209,7 +209,9 @@ namespace SiliFish.UI.Controls
 
         private void DisplayNumberOfPlots(List<Cell> Cells, List<CellPool> Pools)
         {
-            if (PlotType == PlotType.TailMovementAndVROutput || PlotType == PlotType.TailMovementFreq)
+            if (PlotType == PlotType.TailMovementFreq)
+                numOfPlots = 2;
+            else if (PlotType == PlotType.TailMovementAndVROutput)
             {
                 switch ((plotSelection as PlotSelectionMultiCells).SomiteSelection)
                 {
@@ -232,9 +234,6 @@ namespace SiliFish.UI.Controls
                         numOfPlots = model.ModelDimensions.NumberOfSomites - (plotSelection as PlotSelectionMultiCells).NSomite + 1;
                         break;
                 }
-
-                if (PlotType == PlotType.TailMovementFreq)
-                    numOfPlots *= 2;
             }
             else
             {

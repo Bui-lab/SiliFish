@@ -18,6 +18,7 @@ using SiliFish.UI.Controls.General;
 using SiliFish.UI.Services;
 using static OfficeOpenXml.ExcelErrorValue;
 using System.Reflection;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace SiliFish.UI.Controls
 {
@@ -94,6 +95,7 @@ namespace SiliFish.UI.Controls
 
             tabModel.BackColor = Color.White;
             eModelJSON.AddContextMenu();
+            reviewControlSizes();
         }
 
 
@@ -1768,9 +1770,22 @@ namespace SiliFish.UI.Controls
                 model.KinemParamsChanged();
         }
 
-        private void propDynamics_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        private void splitGeneral_SizeChanged(object sender, EventArgs e)
         {
+            reviewControlSizes();
+        }
 
+        private void splitGeneral_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            reviewControlSizes();
+        }
+
+        private void reviewControlSizes()
+        {
+            eModelDescription.Top = lDescription.Top;
+            eModelDescription.Height = splitGeneral.SplitterDistance - 72;
+            eModelName.Width = splitGeneral.Width - 144;
+            eModelDescription.Width = splitGeneral.Width - 144;
         }
     }
 }

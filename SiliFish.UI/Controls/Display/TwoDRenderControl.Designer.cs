@@ -35,8 +35,8 @@ namespace SiliFish.UI.Controls
             cb2DMuscleCells = new CheckBox();
             cb2DInterneuron = new CheckBox();
             cb2DMotoneuron = new CheckBox();
-            ud2DNodeSize = new General.UpDownControl();
-            ud2DLinkSize = new General.UpDownControl();
+            ud2DNodeSize = new SiliFish.UI.Controls.General.UpDownControl();
+            ud2DLinkSize = new SiliFish.UI.Controls.General.UpDownControl();
             cb2DOffline = new CheckBox();
             cb2DShowUnselectedNodes = new CheckBox();
             cb2DHideNonspiking = new CheckBox();
@@ -342,7 +342,7 @@ namespace SiliFish.UI.Controls
             linkSaveHTML2D.LinkColor = Color.FromArgb(64, 64, 64);
             linkSaveHTML2D.Location = new Point(629, 13);
             linkSaveHTML2D.Name = "linkSaveHTML2D";
-            linkSaveHTML2D.Size = new Size(69, 15);
+            linkSaveHTML2D.Size = new Size(70, 15);
             linkSaveHTML2D.TabIndex = 23;
             linkSaveHTML2D.TabStop = true;
             linkSaveHTML2D.Text = "Save HTML ";
@@ -381,8 +381,8 @@ namespace SiliFish.UI.Controls
             // 
             // TwoDRenderControl
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             Controls.Add(gr2DLegend);
             Controls.Add(gr2DCellPoolLegend);
             Controls.Add(p2DRenderOptions);

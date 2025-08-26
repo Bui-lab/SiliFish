@@ -125,8 +125,8 @@
             // 
             // browseFile
             // 
-            browseFile.FileName = "SiliFish.sqlite";
-            browseFile.Filter = "Sqlite files|*.sqlite";
+            browseFile.FileName = "SiliFish.db";
+            browseFile.Filter = "Sqlite files|*.db;*.sqlite";
             // 
             // GlobalSettingsControl
             // 

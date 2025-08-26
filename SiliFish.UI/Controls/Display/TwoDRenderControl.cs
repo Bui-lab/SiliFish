@@ -115,11 +115,13 @@ namespace SiliFish.UI.Controls
             gr2DCellPoolLegend.Controls.Clear();
             int padding = 0;
             int bottom = 0;
-            int height = GlobalSettings.OptimizedForPrinting ? 30 : 20;
+            int height = GlobalSettings.OptimizedForPrinting ? 40 : 30;
             int fontSize = GlobalSettings.OptimizedForPrinting ? 16 : 10;
-            double right = gr2DCellPoolLegend.Right;
-            gr2DCellPoolLegend.Width = GlobalSettings.OptimizedForPrinting ? 160 : 120;
+            double right = Right - 10;
+            gr2DCellPoolLegend.Width = GlobalSettings.OptimizedForPrinting ? 240 : 160;
             gr2DCellPoolLegend.Left = (int)(right - gr2DCellPoolLegend.Width);
+            gr2DLegend.Left = (int)(right - gr2DLegend.Width);
+
             foreach (var cellPool in cellPools.GroupBy(cp => cp.CellGroup))
             {
                 Color color = cellPool.First().Color;
@@ -132,7 +134,7 @@ namespace SiliFish.UI.Controls
                     Dock = DockStyle.Top,
                     BackColor = color
                 };
-                label.Font = new Font(label.Font.Name, height/2); ;
+                label.Font = new Font(label.Font.Name, fontSize); ;
                 int grayValue = (int)(color.R * 0.3 + color.G * 0.59 + color.B * 0.11);
                 if (grayValue < 50)
                     label.ForeColor = Color.White;
@@ -142,6 +144,7 @@ namespace SiliFish.UI.Controls
                 bottom = label.Bottom;
             }
             gr2DCellPoolLegend.Height = bottom + padding - gr2DCellPoolLegend.Top;
+            gr2DLegend.Top = Height - gr2DLegend.Height - padding;
             bool navigated = false;
             webView2DRender.NavigateTo(html, "2DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
             if (!navigated)

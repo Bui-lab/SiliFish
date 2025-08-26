@@ -1,6 +1,7 @@
 using OfficeOpenXml;
 using SiliFish.Definitions;
 using SiliFish.Services;
+using System.Reflection;
 
 namespace SiliFish.UI
 {
@@ -21,21 +22,28 @@ namespace SiliFish.UI
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            MainForm = new MainForm();
-            GlobalSettingsProperties gs = new();
-            gs = GlobalSettingsProperties.Load();//reload from global.settings
-
-            // Update the line causing the error by creating an instance of EPPlusLicense and calling the method on it.
-            EPPlusLicense license = new();
-            license.SetNonCommercialPersonal("Emine Topcu @ Bui Lab - uOttawa");
-
-            Application.Run(MainForm);
-            foreach (string f in GlobalSettings.TempFiles)
+            try
             {
-                try { File.Delete(f); }
-                catch { }
+                MainForm = new MainForm();
+                GlobalSettingsProperties gs = new();
+                gs = GlobalSettingsProperties.Load();//reload from global.settings
+
+                // Update the line causing the error by creating an instance of EPPlusLicense and calling the method on it.
+                EPPlusLicense license = new();
+                license.SetNonCommercialPersonal("Emine Topcu @ Bui Lab - uOttawa");
+
+                Application.Run(MainForm);
+                foreach (string f in GlobalSettings.TempFiles)
+                {
+                    try { File.Delete(f); }
+                    catch { }
+                }
+                ExceptionHandler.CompleteLogging();
             }
-            ExceptionHandler.CompleteLogging();
+            catch(Exception exc) 
+            {
+                MessageBox.Show(exc.Message + exc.StackTrace);
+            }
         }
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)

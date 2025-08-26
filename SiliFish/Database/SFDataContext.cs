@@ -39,7 +39,7 @@ public class SFDataContext: DbContext
     {
         if (temp)
         {
-            DbFileName = $"{GlobalSettings.TempFolder}\\{FileUtil.GetUniqueFileName()}.sqlite";
+            DbFileName = $"{GlobalSettings.TempFolder}\\{FileUtil.GetUniqueFileName()}.db";
             GlobalSettings.AddTempFile(DbFileName);//to ensure deletion at the end
             GlobalSettings.AddTempFile(DbFileName + "-shm");
             GlobalSettings.AddTempFile(DbFileName + "-wal");
