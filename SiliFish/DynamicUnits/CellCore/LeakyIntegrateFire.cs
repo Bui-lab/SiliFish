@@ -18,7 +18,7 @@ namespace SiliFish.DynamicUnits
         public double TimeConstant { get { return R * C; } }
 
         [JsonIgnore, Browsable(false)]
-        public override double VSpikeThreshold { get => Vt; }//to determine whether there is a spike or not
+        public override double VSpikeThreshold { get => (Vt + Vmax)/2; }//to determine whether there is a spike or not
 
         [Description("The threshold membrane potential for a spike.")]
         public double Vt { get; set; } = -57;
@@ -53,11 +53,11 @@ namespace SiliFish.DynamicUnits
 
             if (V >= Vthreshold && V < Vmax)
             {
-                spike = true;
                 V = Vmax;
             }
             else if (V >= Vmax)
             {
+                spike = true;
                 V = Vreset;
             }
             else

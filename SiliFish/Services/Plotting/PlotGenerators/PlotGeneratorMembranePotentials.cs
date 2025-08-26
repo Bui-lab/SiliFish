@@ -45,7 +45,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         columnTitles += $"{cell.ID},";
                     colorPerChart.Add(cell.CellPool.Color);
                     yMultiData.Add(cell.V.ToArray()[iStart..iEnd]);
-                    List<int> spikeTrains = cell.SpikeTrain?.Where(s => s >= iStart && s <= iEnd).ToList();
+                    
+                    List<int> spikeTrains = cell.GetSpikeIndices(iStart, iEnd); 
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                     {
                         string value = cell.V?[iStart + i].ToString(GlobalSettings.PlotDataFormat) ?? "";
@@ -55,7 +56,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             if ((bool)(spikeTrains?.Contains(iStart + i)))
                                 data[i] += value + ",";
                             else
-                                data[i] += "null,";
+                                data[i] += "NaN,";
                         }
                     }
                 }

@@ -215,7 +215,7 @@ namespace SiliFish.Repositories
                             IDs.Add(cell.CellPool.ID);
                             firstPass = false;
                         }
-                        List<double> spikeTimes = cell.SpikeTrain.Where(s => s >= spikeStart && s <= spikeEnd).Select(s => s * simulation.RunParam.DeltaT).ToList();
+                        List<double> spikeTimes = cell.GetSpikeIndices(spikeStart, spikeEnd).Select(s => s * simulation.RunParam.DeltaT).ToList();
                         dataSets.Add(new XYDataSet(cell.ID, spikeTimes, Enumerable.Repeat(rowCounter, spikeTimes.Count)));
                         rowCounter++;
                     }

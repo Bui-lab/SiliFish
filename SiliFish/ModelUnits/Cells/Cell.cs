@@ -37,7 +37,7 @@ namespace SiliFish.ModelUnits.Cells
             return (Cell)Activator.CreateInstance(GetTypeOfCell(cellType));
         }
         protected virtual string Discriminator => "cell";
-        protected List<int> spikeTrain = [];
+        protected List<int> firingCellSpikeTrain = []; //used only during simulation
 
         public CellPool CellPool;
         public Coordinate Coordinate;
@@ -170,7 +170,8 @@ namespace SiliFish.ModelUnits.Cells
         }
 
         [JsonIgnore, Browsable(false)]
-        public List<int> SpikeTrain { get => spikeTrain; }
+        // Used only during simulation - for statistics, use Cell.GetSpikeIndices() that works for non firing cell types as well (like LeakyIntegrate)
+        public List<int> FiringCellSpikeTrain { get => firingCellSpikeTrain; } 
 
         public List<string> ExportValues()
         {
@@ -463,7 +464,7 @@ namespace SiliFish.ModelUnits.Cells
             if (ConductionVelocity < GlobalSettings.Epsilon)
                 ConductionVelocity = Model.Settings.cv;
             Core.Initialize(runParam.DeltaT, ref uniqueID);
-            spikeTrain.Clear();
+            firingCellSpikeTrain.Clear();
             Stimuli.InitForSimulation(runParam, Model.randomNumGenerator);
             foreach (GapJunction jnc in GapJunctions)
                 jnc.InitForSimulation(runParam, ref uniqueID);
@@ -486,11 +487,11 @@ namespace SiliFish.ModelUnits.Cells
             double vprev = Core.VMomentary;
             double v = Core.GetNextVal(stim, ref spike);
             if (spike)
-                spikeTrain.Add(t - 1);
+                firingCellSpikeTrain.Add(t - 1);
             else //check whether there is spiking without reaching the Vmax
             {
                 if (vprev > Core.VSpikeThreshold && v < Core.VSpikeThreshold && stim < 0)
-                    spikeTrain.Add(t - 2);//half spike that doesn't register due to negative stimulus
+                    firingCellSpikeTrain.Add(t - 2);//half spike that doesn't register due to negative stimulus
             }
             if (v < minV)
                 v = minV;

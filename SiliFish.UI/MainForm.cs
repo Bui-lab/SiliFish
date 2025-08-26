@@ -388,7 +388,7 @@ namespace SiliFish.UI
         private void SetCurrentMode(RunMode mode, string name)
         {
             bool prevCollapsed = splitMain.Panel2Collapsed;
-            miFileSaveSimulationResults.Visible = miFileBatchSave.Visible = 
+            miFileSaveSimulationResults.Visible = miFileBatchSave.Visible =
                 miToolsGenerateStatsData.Visible =
                 miToolsMemoryFlush.Visible =
                     mode == RunMode.RunningModel;
@@ -899,11 +899,11 @@ namespace SiliFish.UI
         {
             try
             {
-                if (StatsToSave.Count==0 || !StatsWarning()) 
+                if (StatsToSave.Count == 0 || !StatsWarning())
                     return false;
 
                 FileSaveMode mode = StatsToSave.Keys.First();
-                string filename = StatsToSave[mode]; 
+                string filename = StatsToSave[mode];
 
                 if (string.IsNullOrEmpty(filename) && saveFileCSV.ShowDialog() == DialogResult.OK)
                 {
@@ -988,7 +988,7 @@ namespace SiliFish.UI
 
         private void miToolsStatsSpikes_Click(object sender, EventArgs e)
         {
-            StatsToSave[FileSaveMode.Spikes] = "";  
+            StatsToSave[FileSaveMode.Spikes] = "";
             SaveSimulationStatsToFileStart();
         }
 
@@ -1128,7 +1128,5 @@ namespace SiliFish.UI
         {
             this.Close();
         }
-
-
     }
 }

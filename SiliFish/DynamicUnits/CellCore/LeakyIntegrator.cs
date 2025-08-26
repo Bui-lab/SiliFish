@@ -23,7 +23,7 @@ namespace SiliFish.DynamicUnits
         public double Vcontraction { get; set; } = GlobalSettings.BiologicalMaxPotential;
 
         [JsonIgnore, Browsable(false)]
-        public override double VSpikeThreshold { get => Vcontraction; }//to determine whether there is a spike or not
+        public override double VSpikeThreshold { get => (Vcontraction + Vmax)/2; }//to determine whether there is a spike or not
 
 
         public override double Vthreshold { get => Vcontraction; set => Vcontraction = value; }
@@ -72,17 +72,16 @@ namespace SiliFish.DynamicUnits
             return errors.Count + warnings.Count == preCount;
         }
 
-        public override double GetNextVal(double Stim, ref bool spike)
+        public override double GetNextVal(double Stim, ref bool _)
         {
             double I = Stim;
-            spike = false;
             // ODE eqs
             double dv = (-1 / (R * C)) * (V - Vr) + I / C;
             double vNew = V + dv * deltaT;
-            if (V < Vcontraction && vNew >= Vcontraction)
-                spike = true;
+            double vPrev = V;
             V = vNew;
-            if (V >= Vmax) V = Vmax;
+            if (V >= Vmax) 
+                V = Vmax; 
             return V;
         }
         public override DynamicsStats CreateDynamicsStats(DynamicsParam dynamicsParam, double[] I)

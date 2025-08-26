@@ -75,7 +75,6 @@ namespace SiliFish.UI
             modelControl = new ModelControl();
             pGenerateModel = new Panel();
             btnGenerateModel = new Button();
-            linkLabel4 = new LinkLabel();
             pSimulation = new Panel();
             btnResume = new Button();
             btnStart = new Button();
@@ -425,7 +424,6 @@ namespace SiliFish.UI
             // pGenerateModel
             // 
             pGenerateModel.Controls.Add(btnGenerateModel);
-            pGenerateModel.Controls.Add(linkLabel4);
             pGenerateModel.Dock = DockStyle.Bottom;
             pGenerateModel.Location = new Point(0, 453);
             pGenerateModel.Name = "pGenerateModel";
@@ -446,19 +444,6 @@ namespace SiliFish.UI
             btnGenerateModel.Text = "Generate Model from Template";
             btnGenerateModel.UseVisualStyleBackColor = false;
             btnGenerateModel.Click += btnGenerateModel_Click;
-            // 
-            // linkLabel4
-            // 
-            linkLabel4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            linkLabel4.AutoSize = true;
-            linkLabel4.ForeColor = Color.White;
-            linkLabel4.LinkColor = Color.FromArgb(64, 64, 64);
-            linkLabel4.Location = new Point(807, 11);
-            linkLabel4.Name = "linkLabel4";
-            linkLabel4.Size = new Size(71, 15);
-            linkLabel4.TabIndex = 5;
-            linkLabel4.TabStop = true;
-            linkLabel4.Text = "Clear Model";
             // 
             // pSimulation
             // 
@@ -690,7 +675,6 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)splitMain).EndInit();
             splitMain.ResumeLayout(false);
             pGenerateModel.ResumeLayout(false);
-            pGenerateModel.PerformLayout();
             pSimulation.ResumeLayout(false);
             pSimulation.PerformLayout();
             ResumeLayout(false);
@@ -715,7 +699,6 @@ namespace SiliFish.UI
         private ModelOutputControl modelOutputControl;
         private ModelControl modelControl;
         private Panel pGenerateModel;
-        private LinkLabel linkLabel4;
         private Button btnGenerateModel;
         private Panel pDistinguisher;
         private Panel pDistinguisherTop;
