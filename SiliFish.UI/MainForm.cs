@@ -52,6 +52,7 @@ namespace SiliFish.UI
                 modelTemplate = new();
                 modelControl.SetModel(modelTemplate);
                 SetCurrentMode(RunMode.Template, null);
+                modelOutputControl.PlottingSelection += modelOutputControl_PlottingSelection;
             }
             catch (Exception ex)
             {
@@ -70,6 +71,7 @@ namespace SiliFish.UI
 
                 modelControl.SetModel(model);
                 modelOutputControl.SetRunningModel(null, model);
+                modelOutputControl.PlottingSelection += modelOutputControl_PlottingSelection;
                 modelControl.SetSelectionToLast();
                 runParam = model.SimulationSettings.GetRunParam();
                 FillRunParams();

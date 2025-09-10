@@ -383,10 +383,17 @@ namespace SiliFish.UI.Controls
                 return;
             ddPlot.Text = plot.PlotType.GetDisplayName();
             plotSelection = plot.Selection;
-            tPlotStart = timeRangePlot.StartTime;
-            tPlotEnd = timeRangePlot.EndTime;
+            (tPlotStart, tPlotEnd) = (plot.PlotTimeStart, plot.PlotTimeEnd);
+            if (tPlotEnd == 0 && tPlotStart == 0)//not set - take the current values
+            {
+                tPlotStart = timeRangePlot.StartTime;
+                tPlotEnd = timeRangePlot.EndTime;
+            }
             if (tPlotEnd > simulation.RunParam.MaxTime)
                 tPlotEnd = simulation.RunParam.MaxTime;
+
+            timeRangePlot.StartTime = tPlotStart;
+            timeRangePlot.EndTime = tPlotEnd;
 
             cellSelectionPlot.SetPlot(plot);
             if (plot.Selection is PlotSelectionUnits selectedUnits)
@@ -493,7 +500,9 @@ namespace SiliFish.UI.Controls
             {
                 PlotSubset = plotsubset,
                 PlotType = PlotType,
-                Selection = plotSelection
+                Selection = plotSelection, 
+                PlotTimeStart = tPlotStart, 
+                PlotTimeEnd = tPlotEnd
             };
             lastPlotTimeRange = (iStart, iEnd);
             PlotGenerator PG = new();

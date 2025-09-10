@@ -7,6 +7,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class ModelOutputControl : UserControl
     {
+        public event EventHandler PlottingSelection;
         Simulation simulation = null;
         RunningModel model = null;
         bool rendered2D = false;
@@ -14,6 +15,12 @@ namespace SiliFish.UI.Controls
         public ModelOutputControl()
         {
             InitializeComponent();
+            plotControl.PlottingSelection += PlotControl_PlottingSelection;
+        }
+
+        private void PlotControl_PlottingSelection(object sender, EventArgs e)
+        {
+            PlottingSelection?.Invoke(this, e);
         }
 
         private void ModelOutputControl_Load(object sender, EventArgs e)

@@ -8,13 +8,17 @@ namespace SiliFish.DataTypes
         public string PlotSubset { get; set; }
         public PlotType PlotType { get; set; }
         public PlotSelectionInterface Selection { get; set; }
+        public int PlotTimeStart { get; set; } = 0;
+        public int PlotTimeEnd { get; set; } = 0;
+
         public PlotDefinition()
         {
         }
 
         public override string ToString()
         {
-            return $"{PlotType}-{PlotSubset}:{Selection}";
+            string timeRange = PlotTimeStart == 0 && PlotTimeEnd == 0 ? "" : $"[{PlotTimeStart}-{PlotTimeEnd}]";
+            return $"{PlotType}-{PlotSubset}:{Selection} {timeRange}";
         }
 
  

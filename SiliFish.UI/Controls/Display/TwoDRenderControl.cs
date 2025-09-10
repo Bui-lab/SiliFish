@@ -117,12 +117,12 @@ namespace SiliFish.UI.Controls
             int bottom = 0;
             int height = GlobalSettings.OptimizedForPrinting ? 40 : 30;
             int fontSize = GlobalSettings.OptimizedForPrinting ? 16 : 10;
-            double right = Right - 10;
+            double right = Right - 15;
             gr2DCellPoolLegend.Width = GlobalSettings.OptimizedForPrinting ? 240 : 160;
             gr2DCellPoolLegend.Left = (int)(right - gr2DCellPoolLegend.Width);
             gr2DLegend.Left = (int)(right - gr2DLegend.Width);
 
-            foreach (var cellPool in cellPools.GroupBy(cp => cp.CellGroup))
+            foreach (var cellPool in cellPools.OrderByDescending(cp=>cp.CellGroup).GroupBy(cp => cp.CellGroup))
             {
                 Color color = cellPool.First().Color;
                 Label label = new()
