@@ -47,10 +47,9 @@ namespace SiliFish.DataTypes
             const int RIGHT = 1;
             int nMax = model.TimeArray.Length;
             double dt = simulation.RunParam.DeltaT;
-            double offset = simulation.RunParam.SkipDuration;
             int delay = (int)(model.KinemParam.EpisodeBreak / dt);
             SwimmingEpisode lastEpisode = null;
-            int i = (int)(offset / dt);
+            int i = 0;
             int beat_peak = -1;
             while (i < nMax)
             {

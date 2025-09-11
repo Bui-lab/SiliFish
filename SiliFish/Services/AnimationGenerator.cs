@@ -131,13 +131,12 @@ namespace SiliFish.Services
                 return null;
 
             int tMax = simulation.RunParam.MaxTime;
-            int tSkip = simulation.RunParam.SkipDuration;
             double dt = simulation.RunParam.DeltaT;
 
             if (tEnd < tStart || tEnd > tMax)
                 tEnd = tMax;
-            int iStart = (int)((tStart + tSkip) / dt);
-            int iEnd = (int)((tEnd + tSkip) / dt);
+            int iStart = (int)(tStart / dt);
+            int iEnd = (int)(tEnd / dt);
             if (iEnd >= simulation.Model.TimeArray.Length)
                 iEnd = simulation.Model.TimeArray.Length - 1;
 

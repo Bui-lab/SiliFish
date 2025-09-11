@@ -88,7 +88,6 @@ namespace SiliFish.ModelUnits.Junction
                 DeltaT = dt,
                 TrackJunctionCurrent = true,
                 MaxTime = nMax,
-                SkipDuration = 0//runparam is temporarily used for the above parameters, skip duration is not relevant
             };
             InitForSimulation(runParam, ref uniqueID);
             if (!Active) return;

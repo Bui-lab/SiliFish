@@ -475,10 +475,9 @@ namespace SiliFish.UI.Controls
         {
             if (simulation == null || model == null) return ("", null);
 
-            int tSkip = simulation.RunParam.SkipDuration;
             double dt = simulation.RunParam.DeltaT;
-            int iStart = (int)((tPlotStart + tSkip) / dt);
-            int iEnd = (int)((tPlotEnd + tSkip) / dt);
+            int iStart = (int)(tPlotStart / dt);
+            int iEnd = (int)(tPlotEnd / dt);
 
             (List<Cell> Cells, List<CellPool> Pools) = (null, null);
             string plotsubset = cellSelectionPlot.Visible && PlotType.GetGroup() != "episode" ? cellSelectionPlot.PoolSubset : "";

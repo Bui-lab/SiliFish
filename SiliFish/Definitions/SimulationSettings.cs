@@ -15,11 +15,6 @@ namespace SiliFish.Definitions
             Category("Simulation")]
         public int SimulationEndTime { get; set; } = 1000;
 
-        [Description("In ms - the default duration to skip."),
-            DisplayName("Simulation Skip Duration"),
-            Category("Simulation")]
-        public int SimulationSkipTime { get; set; } = 0;
-
         [Description("In ms - the default time unit."),
             DisplayName("Default δt"),
             Category("Simulation")]
@@ -36,7 +31,6 @@ namespace SiliFish.Definitions
         {
             RunParam param = new()
             {
-                SkipDuration = SimulationSkipTime,
                 MaxTime = SimulationEndTime,
                 DeltaT = SimulationDeltaT,
                 TrackJunctionCurrent = JunctionLevelTracking

@@ -24,7 +24,6 @@ namespace SiliFish.ModelUnits.Architecture
     public class RunningModel : ModelBase
     {
         public double DeltaT { get; private set; }
-        public int SkipDuration { get; private set; }
         public int MaxTime { get; private set; }
         public Random randomNumGenerator { get; private set; }
 
@@ -843,7 +842,6 @@ namespace SiliFish.ModelUnits.Architecture
             {
                 if (runParam.iMax <= 0) return false;
                 DeltaT = runParam.DeltaT;
-                SkipDuration = runParam.SkipDuration;
                 MaxTime = runParam.MaxTime;
                 randomNumGenerator = random;
                 if (!neuronPools.Any(p => p.GetCells().Any()) &&

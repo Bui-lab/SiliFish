@@ -275,7 +275,7 @@ namespace SiliFish.Definitions
             Category("Dynamics")]
         public int RollingFreqBeatCount { get { return GlobalSettings.RollingFreqBeatCount; } set { GlobalSettings.RollingFreqBeatCount = value; } }
 
-        [Description("The number of beats to the left and right to calculate the rolling TBF."),
+        [Description("The number of spikes a cell needs to generate (during a specific period) to be considered an active cell."),
             DisplayName("Activity Threshold Spike Count"),
             Category("Dynamics")]
         public int ActivityThresholdSpikeCount { get { return GlobalSettings.ActivityThresholdSpikeCount; } set { GlobalSettings.ActivityThresholdSpikeCount = value; } }

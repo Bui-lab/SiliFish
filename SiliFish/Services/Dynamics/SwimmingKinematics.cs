@@ -135,17 +135,16 @@ namespace SiliFish.Services.Dynamics
             double episodeBreak = model.KinemParam.EpisodeBreak;
             List<int> leftSpikes = [];
             List<int> rightSpikes = [];
-            int iSkip = (int)(simulation.RunParam.SkipDuration / simulation.RunParam.DeltaT);
             foreach (Cell c in leftMNs)
-                leftSpikes.AddRange(c.GetSpikeIndices(iSkip));
+                leftSpikes.AddRange(c.GetSpikeIndices(0));
             foreach (Cell c in rightMNs)
-                rightSpikes.AddRange(c.GetSpikeIndices(iSkip));
+                rightSpikes.AddRange(c.GetSpikeIndices(0));
             leftSpikes.Sort();
             rightSpikes.Sort();
 
             SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodesByMNSpikes(model.TimeArray, model.DynamicsParam, simulation.RunParam.DeltaT,
                 leftSpikes, rightSpikes, episodeBreak);
-            double[] range = new double[model.TimeArray.Length - iSkip];
+            double[] range = new double[model.TimeArray.Length];
             foreach (SwimmingEpisode episode in Episodes.Episodes)
             {
                 foreach (Beat beat in episode.Beats)
@@ -156,12 +155,12 @@ namespace SiliFish.Services.Dynamics
                     if (beat.Direction == SagittalPlane.Left)
                     {
                         double value = leftMNs.Max(MN => MN.V.MaxValue(startInd, endInd));
-                        range[middleInd - iSkip] = -value;
+                        range[middleInd] = -value;
                     }
                     else //if (beat.Direction == SagittalPlane.Right)
                     {
                         double value = rightMNs.Max(MN => MN.V.MaxValue(startInd, endInd));
-                        range[middleInd - iSkip] = value;
+                        range[middleInd] = value;
                     }
                 }
 

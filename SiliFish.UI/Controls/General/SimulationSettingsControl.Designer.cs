@@ -28,40 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            eSkip = new NumericUpDown();
-            lSkip = new Label();
             edt = new NumericUpDown();
             eTimeEnd = new NumericUpDown();
             ldt = new Label();
             lTimeEnd = new Label();
-            ((System.ComponentModel.ISupportInitialize)eSkip).BeginInit();
             ((System.ComponentModel.ISupportInitialize)edt).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eTimeEnd).BeginInit();
             SuspendLayout();
-            // 
-            // eSkip
-            // 
-            eSkip.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            eSkip.Location = new Point(62, 29);
-            eSkip.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            eSkip.Name = "eSkip";
-            eSkip.Size = new Size(76, 23);
-            eSkip.TabIndex = 40;
-            // 
-            // lSkip
-            // 
-            lSkip.AutoSize = true;
-            lSkip.Location = new Point(1, 32);
-            lSkip.Name = "lSkip";
-            lSkip.Size = new Size(29, 15);
-            lSkip.TabIndex = 37;
-            lSkip.Text = "Skip";
             // 
             // edt
             // 
             edt.DecimalPlaces = 2;
             edt.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            edt.Location = new Point(62, 55);
+            edt.Location = new Point(62, 29);
             edt.Name = "edt";
             edt.Size = new Size(76, 23);
             edt.TabIndex = 41;
@@ -81,7 +60,7 @@
             // ldt
             // 
             ldt.AutoSize = true;
-            ldt.Location = new Point(1, 58);
+            ldt.Location = new Point(1, 32);
             ldt.Name = "ldt";
             ldt.Size = new Size(19, 15);
             ldt.TabIndex = 38;
@@ -92,23 +71,20 @@
             lTimeEnd.AutoSize = true;
             lTimeEnd.Location = new Point(1, 6);
             lTimeEnd.Name = "lTimeEnd";
-            lTimeEnd.Size = new Size(56, 15);
+            lTimeEnd.Size = new Size(57, 15);
             lTimeEnd.TabIndex = 36;
             lTimeEnd.Text = "Time End";
             // 
-            // StimulationSettingsControl
+            // SimulationSettingsControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(eSkip);
-            Controls.Add(lSkip);
             Controls.Add(edt);
             Controls.Add(eTimeEnd);
             Controls.Add(ldt);
             Controls.Add(lTimeEnd);
-            Name = "StimulationSettingsControl";
-            Size = new Size(143, 84);
-            ((System.ComponentModel.ISupportInitialize)eSkip).EndInit();
+            Name = "SimulationSettingsControl";
+            Size = new Size(143, 60);
             ((System.ComponentModel.ISupportInitialize)edt).EndInit();
             ((System.ComponentModel.ISupportInitialize)eTimeEnd).EndInit();
             ResumeLayout(false);
@@ -116,9 +92,6 @@
         }
 
         #endregion
-
-        private NumericUpDown eSkip;
-        private Label lSkip;
         private NumericUpDown edt;
         private NumericUpDown eTimeEnd;
         private Label ldt;
