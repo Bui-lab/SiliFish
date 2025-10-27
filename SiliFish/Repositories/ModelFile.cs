@@ -764,7 +764,8 @@ namespace SiliFish.Repositories
                 if (contents.Length <= 1) return false;
 
                 string columns = contents[0];
-                if (string.Compare(model.Version, "3.0.4") < 0)//ID added to the export in version 3.0.4
+                bool oldExport = !columns.StartsWith("Cell Pool ID (Read only),");
+                if (oldExport) //ID added to the export in version 3.0.4
                     columns = "Cell Pool ID (Read only)," + columns;
                 int iter = 1;
                 if (columns != string.Join(",", CellPoolTemplate.ColumnNames))//same columns are used for cell pool templates and cell pools
@@ -779,7 +780,7 @@ namespace SiliFish.Repositories
                     {
                         CellPoolTemplate cpt = new();
                         List<string> xlcells = CSVUtil.SplitCells(contents[iter++]);
-                        if (string.Compare(model.Version, "3.0.4") < 0)//ID added to the export in version 3.0.4
+                        if (oldExport)
                             xlcells.Insert(0, "");
                         cpt.ImportValues(xlcells);
                         modelTemplate.AddCellPool(cpt);
@@ -795,7 +796,7 @@ namespace SiliFish.Repositories
                     {
                         CellPool cp = new();
                         List<string> xlcells = CSVUtil.SplitCells(contents[iter++]);
-                        if (string.Compare(model.Version, "3.0.4") < 0)//ID added to the export in version 3.0.4
+                        if (oldExport)
                             xlcells.Insert(0, "");
                         cp.ImportValues(xlcells);
                         modelRun.AddCellPool(cp);
@@ -905,7 +906,8 @@ namespace SiliFish.Repositories
                         while (iter < contents.Length)
                         {
                             ipt = new();
-                            ipt.ImportValues(CSVUtil.SplitCells(contents[iter++]));
+                            List<string> xlcells = CSVUtil.SplitCells(contents[iter++]);
+                            ipt.ImportValues(xlcells);
                             //check whether it is part of what 
                             bool jncCheck = gap && ipt.JunctionType == JunctionType.Gap &&
                                     (cpt == null || ipt.SourcePool == cpt.CellGroup || ipt.TargetPool == cpt.CellGroup);
@@ -927,7 +929,8 @@ namespace SiliFish.Repositories
                     while (iter < contents.Length)
                     {
                         InterPoolTemplate ipt = new();
-                        ipt.ImportValues(CSVUtil.SplitCells(contents[iter++]));
+                        List<string> xlcells = CSVUtil.SplitCells(contents[iter++]);
+                        ipt.ImportValues(xlcells);
                         //check whether it is part of what 
                         bool jncCheck = gap && ipt.JunctionType == JunctionType.Gap ||
                             (chemout || chemin) && ipt.JunctionType != JunctionType.Gap;
@@ -1124,7 +1127,9 @@ namespace SiliFish.Repositories
                 ExcelWorksheet worksheet = workbook.Worksheets["Cell Pools"];
                 if (worksheet == null) return false;
                 List<string> contents = ExcelUtil.ReadXLCellsFromLine(worksheet, 1);
-                if (string.Compare(model.Version, "3.0.4") < 0)//ID added to the export in version 3.0.4
+                string columns = contents[0];
+                bool oldExport = !columns.StartsWith("Cell Pool ID (Read only),");
+                if (oldExport) //ID added to the export in version 3.0.4
                     contents.Insert(0, "Cell Pool ID (Read only)");
 
                 if (!contents.Equivalent(CellPoolTemplate.ColumnNames))
@@ -1141,6 +1146,8 @@ namespace SiliFish.Repositories
                             break;
                         CellPoolTemplate cpt = new();
                         cpt.ImportValues(contents);
+                        if (oldExport)
+                            contents.Insert(0, "");
                         modelTemplate.AddCellPool(cpt);
                     }
                 }
@@ -1153,6 +1160,8 @@ namespace SiliFish.Repositories
                         if (contents.IsEmpty())
                             break;
                         CellPool cp = new();
+                        if (oldExport)
+                            contents.Insert(0, "");
                         cp.ImportValues(contents);
                         modelRun.AddCellPool(cp);
                     }
@@ -1189,8 +1198,10 @@ namespace SiliFish.Repositories
                 ExcelWorksheet worksheet = workbook.Worksheets["Cells"];
                 if (worksheet == null) return false;
                 List<string> contents = ExcelUtil.ReadXLCellsFromLine(worksheet, 1);
-                if (string.Compare(model.Version, "3.0.4") < 0)//ID added to the export in version 3.0.4
-                    contents.Insert(0, "Cell ID (Read only)");
+                string columns = contents[0];
+                bool oldExport = !columns.StartsWith("Cell ID (Read only),)");
+                if (oldExport) //ID added to the export in version 3.0.4
+                    columns = "Cell ID (Read only)," + columns;
 
                 if (!contents.Equivalent(Cell.ColumnNames))
                     return false;
@@ -1200,7 +1211,7 @@ namespace SiliFish.Repositories
                 while (true)
                 {
                     contents = ExcelUtil.ReadXLCellsFromLine(worksheet, rowInd++, colCount);
-                    if (string.Compare(model.Version, "3.0.4") < 0)//ID added to the export in version 3.0.4
+                    if (oldExport)
                         contents.Insert(0, "");//insert the missing ID column
 
                     if (contents.IsEmpty())
@@ -1257,9 +1268,14 @@ namespace SiliFish.Repositories
                     ExcelWorksheet worksheet = workbook.Worksheets[sheetName];
                     if (worksheet == null) return sheetIndex > 0;
                     List<string> contents = ExcelUtil.ReadXLCellsFromLine(worksheet, 1);
+                    string columns = contents[0];
                     int rowInd = 2;
                     if (model is ModelTemplate modelTemplate)
                     {
+                        bool oldExport = !columns.StartsWith("Cell Pool ID (Read only),");
+                        if (oldExport) //ID added to the export in version 3.0.4
+                            columns = "Cell Pool ID (Read only)," + columns;
+
                         if (!contents.Equivalent(InterPoolTemplate.ColumnNames))
                             return false;
                         int colCount = contents.Count;
@@ -1277,10 +1293,11 @@ namespace SiliFish.Repositories
                     }
                     else if (model is RunningModel modelRun)
                     {
-                        if (string.Compare(model.Version, "3.0.4") < 0)//ID added to the export in version 3.0.4
-                            contents.Insert(0, "ID (Read only)");
+                        bool oldExport = !columns.StartsWith("ID (Read only),)");
+                        if (oldExport) //ID added to the export in version 3.0.4
+                            columns = "ID (Read only)," + columns;
 
-                        if (!contents.Equivalent(InterPoolBase.ColumnNames))
+                        if (columns != string.Join(",", InterPoolBase.ColumnNames))
                             return false;
                         int jncTypeInd = InterPoolBase.ColumnNames.IndexOf("Junction Type");
                         int colCount = contents.Count;
@@ -1291,7 +1308,7 @@ namespace SiliFish.Repositories
                             contents = ExcelUtil.ReadXLCellsFromLine(worksheet, rowInd++, colCount);
                             if (contents.IsEmpty())
                                 break;
-                            if (string.Compare(model.Version, "3.0.4") < 0)//ID added to the export in version 3.0.4
+                            if (oldExport)
                                 contents.Insert(0, "");
                             JunctionBase jb = null;
 
